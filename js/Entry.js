@@ -16,7 +16,8 @@ export default class Entry extends Component {
                         onPress={()=>navigate('Login')}>
                     Login
                 </Button>
-                <Button containerStyle={styles.containerStyle} style={styles.style}onPress={()=>console.log("foo")}>
+                <Button containerStyle={styles.containerStyle} style={styles.style}
+                        onPress={()=>navigate('PhoneRegistration')}>
                     Registration
                 </Button>
             </View>
