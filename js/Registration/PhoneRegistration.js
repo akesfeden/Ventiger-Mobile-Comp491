@@ -4,16 +4,17 @@ import {
 	TextInput,
 	Text
 } from 'react-native'
-import Button from 'react-native-button'
+
 import styles from './styles'
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
-
 import { connect } from 'react-redux'
 import {
 	registerPhone,
 	removeRegistration
 } from '../actions/registration-actions'
+
+import Next from './Components/Next'
 
 ////import { NavigationActions } from 'react-navigation'
 
@@ -25,7 +26,8 @@ class PhoneRegistration extends Component {
 
 	constructor(props) {
 		super(props)
-		console.log(props)
+		// console.log(props)
+		// TODO: cleanup the state?
 		this.state = {
 			phone: "",
 			buttonPressed: false,
@@ -33,6 +35,7 @@ class PhoneRegistration extends Component {
 			waitingForRedux: false,
 			shouldNavigate: false
 		}
+		this._shouldDisabled.bind(this)
 	}
 
 	_renderErrorText() {
@@ -61,10 +64,7 @@ class PhoneRegistration extends Component {
 	}
 
 	_shouldDisabled() {
-		return false
-		/*return !this.props.phone
-			|| this.props.data.loading
-			|| this.props.data.phoneExists*/
+		return !Boolean(this.state.phone)
 	}
 
 	componentWillUnmount() {
@@ -105,15 +105,10 @@ class PhoneRegistration extends Component {
 						   editable={this.state.editable}
 				/>
 				{ this._renderErrorText.bind(this)() }
-				<Button containerStyle={styles.containerStyle}
-						containerStyleDisabled
-						style={styles.style}
-						styleDisabled={styles.style}
-						disabled={this._shouldDisabled.bind(this)()}
-						onPress={this._next.bind(this)}
-				>
-					Next
-				</Button>
+				<Next text="Next"
+					  onPress={this._next.bind(this)}
+					  disabled={this._shouldDisabled.bind(this)()}
+				/>
 			</View>
 		)
 	}

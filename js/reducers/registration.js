@@ -13,7 +13,8 @@ export default function registration (state={}, action) {
 	if (action.type === REGISTER_PHONE ||
 		action.type === REGISTER_NAME ||
 		action.type === REGISTER_PASSWORD ||
-		action.type === SET_ID
+		action.type === SET_ID ||
+		action.type === COMPLETE
 	) {
 		return {
 			...state,
@@ -31,11 +32,6 @@ export default function registration (state={}, action) {
 			}
 		})
 		return newState
-	}
-	if (action.type === COMPLETE) {
-		return {
-			...action.data
-		}
 	}
 	return state
 }

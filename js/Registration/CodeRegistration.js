@@ -4,12 +4,13 @@ import {
 	TextInput,
 	Text
 } from 'react-native'
-import Button from 'react-native-button'
+//import Button from 'react-native-button'
 import styles from './styles'
 import { gql, graphql } from 'react-apollo'
 import { connect } from 'react-redux'
 import { completeRegistration } from '../actions/registration-actions'
 import { NavigationActions } from 'react-navigation'
+import NextButton from './Components/Next'
 
 
 class CodeRegistration extends Component {
@@ -80,15 +81,9 @@ class CodeRegistration extends Component {
 						   onChangeText={this._handleTextChange.bind(this)}
 				/>
 				{ this._renderErrorText.bind(this)() }
-				<Button containerStyle={styles.containerStyle}
-						containerStyleDisabled
-						style={styles.style}
-						styleDisabled={styles.style}
-						disabled={this._shouldDisabled.bind(this)()}
-						onPress={this._complete.bind(this)}
-				>
-					Complete
-				</Button>
+				<NextButton text="Next"
+							disabled={this._shouldDisabled.bind(this)()}
+							onPress={this._complete.bind(this)}/>
 			</View>
 		)
 	}

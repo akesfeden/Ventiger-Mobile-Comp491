@@ -4,7 +4,7 @@ import {
 	TextInput,
 	Text
 } from 'react-native'
-import Button from 'react-native-button'
+import Next from './Components/Next'
 import styles from './styles'
 import {
 	registerPassword,
@@ -25,9 +25,6 @@ class PasswordRegistration extends Component {
 		this.state = {
 			repeatPassword: ""
 		}
-		this._handlePasswordEntry.bind(this)
-		this._handleRepeatPasswordEntry.bind(this)
-		this._shouldButtonBeActive.bind(this)
 	}
 
 	_handlePasswordEntry(password) {
@@ -62,6 +59,8 @@ class PasswordRegistration extends Component {
 
 	_nextScreen() {
 		//this.props.completeRegistration(this.props.registerBody)
+		//TODO: handle mutation error
+		console.log('body', this.props.registerBody)
 		this.props.mutate({variables: {body: this.props.registerBody}})
 			.then(res => {
 				console.log(res)
@@ -69,6 +68,7 @@ class PasswordRegistration extends Component {
 				this.props.navigation.navigate("CodeRegistration")
 			})
 			.catch(err => {
+				//this.setState({})
 				console.error(err)
 			})
 		//
@@ -85,21 +85,14 @@ class PasswordRegistration extends Component {
 				<TextInput placeholder="Repeat Password"
 						   secureTextEntry={true}
 						   style={styles.textInput}
-						   onChangeText={(text) =>
-						   	this.setState(
-						   		{...this.state, repeatPassword: text})}
+						   onChangeText={this._handleRepeatPasswordEntry.bind(this)}
 
 				/>
 				{this._renderErrorMessage()}
-				<Button containerStyle={styles.containerStyle}
-						containerStyleDisabled
-						style={styles.style}
-						styleDisabled={styles.style}
-						disabled={!this._shouldButtonBeActive()}
-						onPress={this._nextScreen.bind(this)}
-				>
-					Next
-				</Button>
+				<Next text="Next"
+					  onPress={this._nextScreen.bind(this)}
+					  disabled={!this._shouldButtonBeActive.bind(this)()}
+				/>
 			</View>
 		)
 	}
@@ -127,7 +120,12 @@ const PasswordRegisterWithData = graphql(registerUser)(PasswordRegistration)
 export default connect(
 	(state) => ({
 		password: state.registration.password,
-		registerBody: state.registration
+		// TODO: Email support
+		registerBody: {
+			phone: state.registration.phone,
+			password: state.registration.password,
+			name: state.registration.name
+		}
 	}),
 	(dispatch) => ({
 		onPasswordChange(password) {

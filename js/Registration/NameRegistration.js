@@ -4,7 +4,7 @@ import {
 	TextInput,
 	Text
 } from 'react-native'
-import Button from 'react-native-button'
+import Next from './Components/Next'
 import styles from './styles'
 import { registerName } from '../actions/registration-actions'
 import { connect } from 'react-redux'
@@ -34,14 +34,9 @@ class NameRegistration extends Component {
 						   style={styles.textInput}
 						   onChangeText={this._handleNameEntry.bind(this)}
 				/>
-				<Button containerStyle={styles.containerStyle}
-						containerStyleDisabled={styles.containerStyleDisabled}
-						style={styles.style}
-						styleDisabled={styles.style}
-						disabled={!this._shouldButtonBeActive()}
-						onPress={this._nextScreen.bind(this)}>
-					Next
-				</Button>
+				<Next text="Next"
+					  disabled={!this._shouldButtonBeActive()}
+					  onPress={this._nextScreen.bind(this)} />
 			</View>
 		)
 	}
