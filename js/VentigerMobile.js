@@ -9,7 +9,7 @@ const store = createStore(client)
 export default class VentigerMobile extends Component {
 	render() {
 		return (
-			// TODO: change main scene based in persistence layer
+			// TODO: change main scene based on persistence layer
 			<ApolloProvider client={client} store={store}>
 				<Navigator renderScene="Entry"/>
 			</ApolloProvider>
