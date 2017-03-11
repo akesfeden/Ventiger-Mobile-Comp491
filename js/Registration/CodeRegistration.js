@@ -79,9 +79,10 @@ class CodeRegistration extends Component {
 				<TextInput placeholder='Your Validation Code'
 						   style={styles.textInput}
 						   onChangeText={this._handleTextChange.bind(this)}
+						   autoFocus={true}
 				/>
 				{ this._renderErrorText.bind(this)() }
-				<NextButton text="Next"
+				<NextButton text="Compete Registration"
 							disabled={this._shouldDisabled.bind(this)()}
 							onPress={this._complete.bind(this)}/>
 			</View>

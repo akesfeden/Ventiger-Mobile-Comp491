@@ -103,6 +103,7 @@ class PhoneRegistration extends Component {
 						   keyboardType={'phone-pad'}
 						   onChangeText={this._handlePhoneChange.bind(this)}
 						   editable={this.state.editable}
+						   autoFocus={true}
 				/>
 				{ this._renderErrorText.bind(this)() }
 				<Next text="Next"

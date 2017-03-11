@@ -81,8 +81,12 @@ class PasswordRegistration extends Component {
 						   style={styles.textInput}
 						   secureTextEntry={true}
 						   onChangeText={this._handlePasswordEntry.bind(this)}
+						   autoFocus={true}
+						   onSubmitEditing={() => this.refs.Repeat.focus()}
+
 				/>
 				<TextInput placeholder="Repeat Password"
+						   ref = "Repeat"
 						   secureTextEntry={true}
 						   style={styles.textInput}
 						   onChangeText={this._handleRepeatPasswordEntry.bind(this)}

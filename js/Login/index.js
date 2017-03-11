@@ -54,6 +54,7 @@ class Login extends Component {
 						   value={this.state.phone}
 						   style={styles.textInput}
 						   keyboardType={'phone-pad'}
+						   autoFocus={true}
 				/>
 				<TextInput placeholder="Password"
 						   secureTextEntry={true}

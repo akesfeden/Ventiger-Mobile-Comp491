@@ -33,6 +33,8 @@ class NameRegistration extends Component {
 				<TextInput placeholder="Name"
 						   style={styles.textInput}
 						   onChangeText={this._handleNameEntry.bind(this)}
+						   autoFocus={true}
+						   autoCapitalize={'words'}
 				/>
 				<Next text="Next"
 					  disabled={!this._shouldButtonBeActive()}
