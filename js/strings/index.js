@@ -1,4 +1,3 @@
-const strings = require('./strings.en')
 const deviceInfo = require('react-native-device-info')
 
 function getStrings() {
