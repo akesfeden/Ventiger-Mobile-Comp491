@@ -1,26 +1,23 @@
 import React, { Component } from 'react'
 import { View, Text } from 'react-native'
 import Button from 'react-native-button'
-import { NavigationActions } from 'react-navigation'
+//import { NavigationActions } from 'react-navigation'
+import { logout as logoutAction } from '../actions/login-actions'
+import { connect } from 'react-redux'
 
-export default class Profile extends Component {
+class Profile extends Component {
 	static navigationOptions = {
 		title: "Ventiger"
 	}
-	static logoutAction = NavigationActions.reset({
-		index: 0,
-		actions: [
-			NavigationActions.navigate({routeName: 'Entry'})
-		]
-	})
 
 	_logout() {
-		this.props.navigation.dispatch(Profile.logoutAction)
+		this.props.logout()
+		//this.props.navigation.dispatch(Profile.logoutAction)
 
 	}
 
 	render() {
-		const { navigate } = this.props.navigation
+		//const { navigate } = this.props.navigation
 		return (
 			<View style={{marginTop:10}}>
 				<Text>Ohey</Text>
@@ -35,3 +32,12 @@ export default class Profile extends Component {
 		)
 	}
 }
+
+export default connect(
+	(state) => ({ name: state.login }),
+	(dispatch) => ({
+		logout() {
+			dispatch(logoutAction())
+		}
+	})
+)(Profile)

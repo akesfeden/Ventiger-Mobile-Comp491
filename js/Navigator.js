@@ -7,10 +7,11 @@ import PasswordRegistration from './Registration/PasswordRegistration'
 import NameRegistration from './Registration/NameRegistration'
 import CodeRegistration from './Registration/CodeRegistration'
 
+
 export default StackNavigator({
 	Entry: {screen: Entry},
 	Login: {screen: Login},
-	Profile: {screen: Profile},
+	//Profile: {screen: Profile},
 	PhoneRegistration: {screen: PhoneRegistration},
 	NameRegistration: {screen: NameRegistration},
 	PasswordRegistration: {screen: PasswordRegistration},

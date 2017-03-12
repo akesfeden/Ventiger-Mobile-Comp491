@@ -9,6 +9,9 @@ import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import { NavigationActions } from 'react-navigation'
 import globalStrings from '../strings'
+import token from '../token'
+import { connect } from 'react-redux'
+import { loginCheck } from '../actions/login-actions'
 
 const strings = globalStrings.login
 
@@ -19,7 +22,7 @@ class Login extends Component {
 
 	constructor(props) {
 		super(props)
-		console.log(strings)
+		//console.log(strings)
 		this.state = {
 			password: '',
 			email: '',
@@ -27,12 +30,12 @@ class Login extends Component {
 			usePhone: true,
 			disabled: true
 		}
-		this.loginAction = NavigationActions.reset({
+		/*this.loginAction = NavigationActions.reset({
 			index: 0,
 			actions: [
 				NavigationActions.navigate({routeName: 'Profile'})
 			]
-		})
+		})*/
 	}
 
 	_performLogin() {
@@ -40,11 +43,13 @@ class Login extends Component {
 			phone: this.state.phone,
 			password: this.state.password
 		}
-		//TODO: cache token somewhere safe
+		//TODO: cache token somewhere safe, refactor this
 		this.props.mutate({variables: {body}})
-			.then(({data}) => {
-				console.log(data)
-				this.props.navigation.dispatch(this.loginAction)
+			.then(async ({data}) => {
+				console.log("data", data)
+				await token().saveToken(data.login.token)
+				this.props.checkLogin()
+				//this.props.navigation.dispatch(this.loginAction)
 			})
 			.catch((error) => {
 				console.log(error)
@@ -54,7 +59,8 @@ class Login extends Component {
 	render() {
 		return (
 			<View style={styles.container}>
-				<TextInput placeholder={strings.phone} onChangeText={(text) => this.setState({...this.state, phone: text})}
+				<TextInput placeholder={strings.phone}
+						   onChangeText={(text) => this.setState({...this.state, phone: text})}
 						   value={this.state.phone}
 						   style={styles.textInput}
 						   keyboardType={'phone-pad'}
@@ -96,4 +102,12 @@ const loginMutation = gql`
 
 const LoginWithData = graphql(loginMutation)(Login)
 
-export default LoginWithData
+export default connect(
+	(state) => ({ name: state.login }),
+	(dispatch) => ({
+		checkLogin() {
+			dispatch(loginCheck())
+		}
+	})
+)(LoginWithData)
+
