@@ -14,10 +14,11 @@ import {
 from '../actions/registration-actions'
 import { connect } from 'react-redux'
 import { gql, graphql } from 'react-apollo'
+import strings from '../strings'
 
 class PasswordRegistration extends Component {
 	static navigationOptions = {
-		title: "Password"
+		title: strings.registration.password
 	}
 
 	constructor(props) {
@@ -48,7 +49,7 @@ class PasswordRegistration extends Component {
 			|| this.state.repeatPassword)
 			&& !(this.props.password === this.state.repeatPassword)) {
 			return (
-				<Text>Passwords mismatch :(</Text>
+				<Text>{strings.registration.errorMismatchPassword}</Text>
 			)
 		}
 	}
@@ -77,7 +78,7 @@ class PasswordRegistration extends Component {
 	render() {
 		return (
 			<View style={styles.container}>
-				<TextInput placeholder="Password"
+				<TextInput placeholder={strings.registration.password}
 						   style={styles.textInput}
 						   secureTextEntry={true}
 						   onChangeText={this._handlePasswordEntry.bind(this)}
@@ -85,7 +86,7 @@ class PasswordRegistration extends Component {
 						   onSubmitEditing={() => this.refs.Repeat.focus()}
 
 				/>
-				<TextInput placeholder="Repeat Password"
+				<TextInput placeholder={strings.registration.repeatPassword}
 						   ref = "Repeat"
 						   secureTextEntry={true}
 						   style={styles.textInput}
@@ -93,7 +94,7 @@ class PasswordRegistration extends Component {
 
 				/>
 				{this._renderErrorMessage()}
-				<Next text="Next"
+				<Next text={strings.registration.next}
 					  onPress={this._nextScreen.bind(this)}
 					  disabled={!this._shouldButtonBeActive.bind(this)()}
 				/>

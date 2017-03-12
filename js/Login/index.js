@@ -8,14 +8,18 @@ import styles from './styles'
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import { NavigationActions } from 'react-navigation'
+import globalStrings from '../strings'
+
+const strings = globalStrings.login
 
 class Login extends Component {
 	static navigationOptions = {
-		title: "Login"
+		title: strings.title
 	}
 
 	constructor(props) {
 		super(props)
+		console.log(strings)
 		this.state = {
 			password: '',
 			email: '',
@@ -50,13 +54,13 @@ class Login extends Component {
 	render() {
 		return (
 			<View style={styles.container}>
-				<TextInput placeholder="Phone" onChangeText={(text) => this.setState({...this.state, phone: text})}
+				<TextInput placeholder={strings.phone} onChangeText={(text) => this.setState({...this.state, phone: text})}
 						   value={this.state.phone}
 						   style={styles.textInput}
 						   keyboardType={'phone-pad'}
 						   autoFocus={true}
 				/>
-				<TextInput placeholder="Password"
+				<TextInput placeholder={strings.password}
 						   secureTextEntry={true}
 						   onChangeText={(text) => {
 						   		this.setState({...this.state, password: text})
@@ -69,7 +73,7 @@ class Login extends Component {
 						style={styles.style}
 						styleDisabled={styles.style}
 						onPress={this._performLogin.bind(this)}>
-					Login
+					{strings.title}
 				</Button>
 			</View>
 		);

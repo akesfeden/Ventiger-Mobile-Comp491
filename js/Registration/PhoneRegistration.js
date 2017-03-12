@@ -4,7 +4,6 @@ import {
 	TextInput,
 	Text
 } from 'react-native'
-
 import styles from './styles'
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
@@ -13,15 +12,15 @@ import {
 	registerPhone,
 	removeRegistration
 } from '../actions/registration-actions'
-
 import Next from './Components/Next'
-
+import globalStrings from '../strings'
+const strings = globalStrings.registration
 ////import { NavigationActions } from 'react-navigation'
 
 // TODO: Clean up code
 class PhoneRegistration extends Component {
 	static navigationOptions = {
-		title: "Registration"
+		title: strings.title
 	}
 
 	constructor(props) {
@@ -48,12 +47,12 @@ class PhoneRegistration extends Component {
 		}*/
 		if (this.state.waitingForRedux) {
 			return (
-				<Text>Checking Phone Availability...</Text>
+				<Text>{strings.phoneLoadingMessage}</Text>
 			)
 		}
 		if (this.props.data && (this.props.data.phoneValid == false)) {
 			return (
-				<Text>Phone exists :(</Text>
+				<Text>{strings.errorMismatch}</Text>
 			)
 		}
 	}
@@ -98,7 +97,7 @@ class PhoneRegistration extends Component {
 
 		return (
 			<View style={styles.container}>
-				<TextInput placeholder="Phone"
+				<TextInput placeholder={strings.phone}
 						   style={styles.textInput}
 						   keyboardType={'phone-pad'}
 						   onChangeText={this._handlePhoneChange.bind(this)}
@@ -106,7 +105,7 @@ class PhoneRegistration extends Component {
 						   autoFocus={true}
 				/>
 				{ this._renderErrorText.bind(this)() }
-				<Next text="Next"
+				<Next text={strings.next}
 					  onPress={this._next.bind(this)}
 					  disabled={this._shouldDisabled.bind(this)()}
 				/>

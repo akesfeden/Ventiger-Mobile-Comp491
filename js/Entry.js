@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import { View } from 'react-native';
 import Button from 'react-native-button';
 import VStyleSheet from './VStyleSheet'
+import strings from './strings'
 
 export default class Entry extends Component {
     static navigationOptions = {
-        title: "Welcome"
+        title: strings.entry.title
     }
     render() {
         const { navigate } = this.props.navigation
@@ -14,11 +15,11 @@ export default class Entry extends Component {
                 <Button
                         containerStyle={styles.containerStyle} style={styles.style}
                         onPress={()=>navigate('Login')}>
-                    Login
+					{strings.login.title}
                 </Button>
                 <Button containerStyle={styles.containerStyle} style={styles.style}
                         onPress={()=>navigate('PhoneRegistration')}>
-                    Registration
+					{strings.registration.title}
                 </Button>
             </View>
         );

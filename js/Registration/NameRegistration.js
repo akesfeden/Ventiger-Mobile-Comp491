@@ -8,10 +8,11 @@ import Next from './Components/Next'
 import styles from './styles'
 import { registerName } from '../actions/registration-actions'
 import { connect } from 'react-redux'
+const strings = require('../strings').default.registration
 
 class NameRegistration extends Component {
 	static navigationOptions = {
-		title: "Your Name"
+		title: strings.nameTitle
 	}
 
 	_handleNameEntry(name) {
@@ -30,13 +31,13 @@ class NameRegistration extends Component {
 	render() {
 		return (
 			<View style={styles.container}>
-				<TextInput placeholder="Name"
+				<TextInput placeholder={strings.name}
 						   style={styles.textInput}
 						   onChangeText={this._handleNameEntry.bind(this)}
 						   autoFocus={true}
 						   autoCapitalize={'words'}
 				/>
-				<Next text="Next"
+				<Next text={strings.next}
 					  disabled={!this._shouldButtonBeActive()}
 					  onPress={this._nextScreen.bind(this)} />
 			</View>

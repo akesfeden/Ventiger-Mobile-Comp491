@@ -11,11 +11,12 @@ import { connect } from 'react-redux'
 import { completeRegistration } from '../actions/registration-actions'
 import { NavigationActions } from 'react-navigation'
 import NextButton from './Components/Next'
+const strings = require('../strings').default.registration
 
 
 class CodeRegistration extends Component {
 	static navigationOptions = {
-		title: "Validation Code",
+		title: strings.codeTitle
 
 	}
 
@@ -46,6 +47,7 @@ class CodeRegistration extends Component {
 		return this.state.disabled
 	}
 
+	// TODO: Specialized error text
 	_renderErrorText() {
 		if(this.state.error) {
 			return (
@@ -76,13 +78,13 @@ class CodeRegistration extends Component {
 	render() {
 		return (
 			<View style={styles.container}>
-				<TextInput placeholder='Your Validation Code'
+				<TextInput placeholder={strings.codeEntry}
 						   style={styles.textInput}
 						   onChangeText={this._handleTextChange.bind(this)}
 						   autoFocus={true}
 				/>
 				{ this._renderErrorText.bind(this)() }
-				<NextButton text="Compete Registration"
+				<NextButton text={strings.complete}
 							disabled={this._shouldDisabled.bind(this)()}
 							onPress={this._complete.bind(this)}/>
 			</View>
