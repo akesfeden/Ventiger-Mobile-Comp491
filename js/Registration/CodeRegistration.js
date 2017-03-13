@@ -8,7 +8,8 @@ import {
 import styles from './styles'
 import { gql, graphql } from 'react-apollo'
 import { connect } from 'react-redux'
-import { completeRegistration } from '../actions/registration-actions'
+import token from '../token'
+import { loginCheck } from '../actions/login-actions'
 import { NavigationActions } from 'react-navigation'
 import NextButton from './Components/Next'
 const strings = require('../strings').default.registration
@@ -27,12 +28,12 @@ class CodeRegistration extends Component {
 			error: "",
 			disabled: true
 		}
-		this.completeAction = NavigationActions.reset({
+		/*this.completeAction = NavigationActions.reset({
 			index: 0,
 			actions: [
 				NavigationActions.navigate({routeName: 'Profile'})
 			]
-		})
+		})*/
 	}
 
 	_handleTextChange(code) {
@@ -63,12 +64,13 @@ class CodeRegistration extends Component {
 			_id: this.props._id,
 			code: this.state.code
 		}})
-			.then(res => {
+			.then(async (res) => {
 				console.log(res)
+				await token().saveToken(res.data.sendValidationCode.token)
 				this.props.completeRegistration(res)
-				this.props.navigation.dispatch(
+				/*this.props.navigation.dispatch(
 					this.completeAction
-				)
+				)*/
 			})
 			.catch(err => {
 				console.error(err)
@@ -106,9 +108,9 @@ const CodeRegistrationWithData = graphql(sendCode)(CodeRegistration)
 export default connect(
 	(state) => ({ _id: state.registration._id }),
 	(dispatch) => ({
-		completeRegistration (res) {
-			const authInfo = res.data.sendValidationCode
-			dispatch(completeRegistration(authInfo))
+		completeRegistration () {
+			// const authInfo = res.data.sendValidationCode
+			dispatch(loginCheck())
 		}
 	})
 )(CodeRegistrationWithData)
