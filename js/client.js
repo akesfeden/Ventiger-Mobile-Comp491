@@ -1,5 +1,5 @@
 import ApolloClient, { createNetworkInterface, toIdValue } from 'apollo-client'
-
+import token from './token'
 // TODO: refactor api address
 const apiAddress = "http://localhost:8001/api/graphql"
 
@@ -15,10 +15,19 @@ function dataIdFromObject(result) {
 	return null
 }
 
+const networkInterface = createNetworkInterface({uri: apiAddress})
+networkInterface.use([{
+	async applyMiddleware(req, next) {
+		if (!req.options.headers) {
+			req.options.headers = {}
+		}
+		req.options.headers['Authorization'] = await token().getToken()
+		next()
+	}}
+])
+
 const client = new ApolloClient({
-	networkInterface: createNetworkInterface({
-		uri: apiAddress
-	}),
+	networkInterface,
 	addTypename: true,
 	dataIdFromObject: dataIdFromObject,
 	/*customResolvers: {
