@@ -12,12 +12,16 @@ class Calendar extends Component {
 		title: strings.calendar,
 		tabBar: {
 			label: strings.calendar,
-			icon: ({tintColor}) => (
-				<Image
-					source={require('./Calendar_icon_2.svg.png')}
-					style={{height: 30, width: 35}}
-				/>
-			)
+			icon: (args) => {
+				console.log('icon args', args)
+				const { tintColor } = args
+				return (
+					<Image
+						source={require('./Calendar_icon_2.svg.png')}
+						style={{height: 30, width: 35, tintColor: tintColor}}
+					/>
+				)
+			}
 		}
 	}
 

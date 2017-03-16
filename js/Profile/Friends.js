@@ -10,7 +10,7 @@ export default class Friends extends Component {
 			icon: ({tintColor}) => (
 				<Image
 					source={require('./children-icon.png')}
-					style={{height: 30, width: 35}}
+					style={{height: 30, width: 35, tintColor: tintColor}}
 				/>
 			)
 		}
