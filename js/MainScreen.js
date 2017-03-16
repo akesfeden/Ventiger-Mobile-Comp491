@@ -20,11 +20,13 @@ class MainScreen extends Component {
 			return null
 		}
 		if (this.props.loggedIn) {
+
 			// console.log('here')
 			return (
 				<ProfileNavigator/>
 			)
 		}
+		//this.props.resetClient()
 		return (
 			<Navigator/>
 		)

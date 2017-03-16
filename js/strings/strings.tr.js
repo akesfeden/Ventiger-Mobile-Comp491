@@ -21,5 +21,13 @@ module.exports = {
 		phone: "Telefon Numarası",
 		password: "Şifre",
 		title: "Giriş Yap"
+	},
+	profile: {
+		calendar: "Takvim",
+		logout: "Çıkış Yap",
+		friends: "Arkadaşlar",
+		settings: "Ayarlar",
+		loading: "Yükleniyor",
+		editProfile: "Profilimi Düzenle"
 	}
 }

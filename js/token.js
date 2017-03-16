@@ -22,6 +22,7 @@ class TokenStore {
 	}
 
 	removeToken() {
+		this.token = null
 		return AsyncStorage.removeItem(tokenName)
 	}
 }

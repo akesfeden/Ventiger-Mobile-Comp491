@@ -21,5 +21,13 @@ module.exports = {
 		phone: "Phone",
 		password: "Password",
 		title: "Login"
+	},
+	profile: {
+		calendar: "Calendar",
+		logout: "Logout",
+		friends: "Friends",
+		settings: "Settings",
+		loading: "Loading",
+		editProfile: "Edit Profile"
 	}
 }

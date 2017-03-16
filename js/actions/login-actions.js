@@ -13,6 +13,7 @@ export async function logout() {
 	let isLoggedIn = null
 	try {
 		await token().removeToken()
+		console.log("token", await token().getToken())
 		isLoggedIn = false
 	} catch (e) {
 		console.error(e)

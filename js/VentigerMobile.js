@@ -7,14 +7,13 @@ import token from './token'
 import MainScreen from './MainScreen'
 
 const store = createStore(client)
-
 export default class VentigerMobile extends Component {
 
 	render() {
 		return (
 			// TODO: change main scene based on persistence layer
 			<ApolloProvider client={client} store={store}>
-				<MainScreen/>
+				<MainScreen />
 			</ApolloProvider>
 		)
 	}

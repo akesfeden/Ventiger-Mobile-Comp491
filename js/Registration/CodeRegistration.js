@@ -84,7 +84,7 @@ class CodeRegistration extends Component {
 						   style={styles.textInput}
 						   onChangeText={this._handleTextChange.bind(this)}
 						   autoFocus={true}
-						   autoCapitalize={false}
+						   autoCapitalize={"none"}
 				/>
 				{ this._renderErrorText.bind(this)() }
 				<NextButton text={strings.complete}
