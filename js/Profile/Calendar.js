@@ -16,14 +16,20 @@ class Calendar extends Component {
 				console.log('icon args', args)
 				const { tintColor } = args
 				return (
-					<Image
-						source={require('./Icons/Calendar_icon_2.svg.png')}
-						style={{height: 30, width: 35, tintColor: tintColor}}
+					<Icon name="ios-calendar"
+						  size={30}
+						  color={tintColor}
 					/>
 				)
 			}
 		}
 	}
+
+	/*<Image
+	 source={require('./Icons/Calendar_icon_2.svg.png')}
+	 style={{height: 30, width: 35, tintColor: tintColor}}
+	 />
+	 */
 
 	/*componentWillMount() {
 		Icon.getImageSource('md-arrow-back', 30).then((source) => this.setState({ navIcon: source }));
@@ -32,6 +38,12 @@ class Calendar extends Component {
 	_settings() {
 		const { navigate } = this.props.navigation
 		navigate('Settings')
+	}
+
+	componentWillMount() {
+		if (!this.props.loading) {
+			this.props.refetch()
+		}
 	}
 
 	_renderProfile() {
@@ -47,9 +59,7 @@ class Calendar extends Component {
 	render() {
 		//const { navigate } = this.props.navigation
 		// console.log(this.props.data)
-		if (!this.props.loading) {
-			this.props.refetch()
-		}
+
 		return (
 			<Grid>
 				<Row size={2}>
