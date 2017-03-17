@@ -31,28 +31,6 @@ class Settings extends Component {
 		this.props.reset()
 	}
 
-	_updateInfo() {
-		this.props.updateInfo({
-			name: this.state.name
-		})
-	}
-
-	_changePassword() {
-		console.log(this.state)
-		this.props.mutate({variables: {
-			oldPassword: this.state.oldPassword,
-			newPassword: this.state.newPassword
-		}}).then(res => {
-			if (res.data.changePassword) {
-				console.log('Success...')
-			} else {
-				console.log('Fail...')
-			}
-		}).catch(err => {
-			console.error(err)
-		})
-	}
-
 	render() {
 		return (
 			<View>
@@ -60,10 +38,15 @@ class Settings extends Component {
 					<ListItem
 						title="Edit Personal Info"
 						leftIcon={{name: 'info'}}
+						onPress={
+							() => this.props.navigation.navigate('NameSettings')}
 					/>
 					<ListItem
 						title="Change Password"
 						leftIcon={{name: 'fingerprint'}}
+						onPress={
+							() => this.props.navigation.navigate('PasswordSettings')
+						}
 					/>
 				</List>
 				<Button
@@ -152,33 +135,12 @@ class Settings extends Component {
 	}
 }
 
-const getInfo = gql`
-	query {
-		viewer {
-			profile {
-				_id
-				name
-			}
-		}
-	}
-`
-const updateInfo = gql`
-	mutation ($info: ProfileEdit!){
-		changeProfileInfo(info: $info) {
-			_id
-			name
-		}
-	}
-`
+
 
 // ($oldPassword: String!, $newPassword: String!) {
-const changePassword = gql`
-	mutation ($oldPassword: Password!, $newPassword: Password!){
-		changePassword(oldPassword: $oldPassword, newPassword: $newPassword)
-	}
-`
 
-const SettingsWithInfoData = compose(
+
+/*const SettingsWithInfoData = compose(
 	// Connection to online state
 	graphql(getInfo),
 	graphql(updateInfo, {
@@ -189,9 +151,9 @@ const SettingsWithInfoData = compose(
 			}
 		})
 	})
-)(Settings)
+)(Settings)*/
 
-const SettingsWithPasswordChange = graphql(changePassword)(SettingsWithInfoData)
+//const SettingsWithPasswordChange = graphql(changePassword)(SettingsWithInfoData)
 
 export default connect(
 	(state) => ({ name: state.login }),
@@ -203,4 +165,4 @@ export default connect(
 			//dispatch({type: 'APOLLO_STORE_RESET'})
 		}
 	})
-)(SettingsWithPasswordChange)
+)(Settings)

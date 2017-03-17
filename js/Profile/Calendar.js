@@ -17,7 +17,7 @@ class Calendar extends Component {
 				const { tintColor } = args
 				return (
 					<Image
-						source={require('./Calendar_icon_2.svg.png')}
+						source={require('./Icons/Calendar_icon_2.svg.png')}
 						style={{height: 30, width: 35, tintColor: tintColor}}
 					/>
 				)
