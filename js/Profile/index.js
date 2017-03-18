@@ -1,8 +1,10 @@
 import { TabNavigator } from 'react-navigation'
 import Calendar from './Calendar'
 import Friends from './Friends'
+import Events from './Events'
 
 export default TabNavigator({
 	Calendar: { screen: Calendar },
-	Friends: { screen: Friends}
+	Friends: { screen: Friends},
+	Events: { screen: Events}
 })
