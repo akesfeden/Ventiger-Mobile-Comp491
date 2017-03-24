@@ -65,7 +65,8 @@ class Calendar extends Component {
 				<Row size={2}>
 					<Col size={1}>
 						<Image
-							source={{uri: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg'}}
+							//source={{uri: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg'}}
+							source={{uri: 'https://img.tinychan.org/img/1360567490218199.jpg'}}
 							style={{"width":100, "height":100, marginTop: 10,
 							 borderRadius: 50, alignSelf: 'center'}}
 						/>
