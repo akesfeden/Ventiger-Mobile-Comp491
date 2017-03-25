@@ -9,7 +9,11 @@ import Icon from 'react-native-vector-icons/Ionicons';
 
 class Calendar extends Component {
 	static navigationOptions = {
-		title: strings.calendar,
+		title:
+		({state}) => {
+			return (state.params && state.params.name)
+				|| strings.calendar
+		},
 		tabBar: {
 			label: strings.calendar,
 			icon: (args) => {
@@ -59,7 +63,6 @@ class Calendar extends Component {
 	render() {
 		//const { navigate } = this.props.navigation
 		// console.log(this.props.data)
-
 		return (
 			<Grid>
 				<Row size={2}>
@@ -100,9 +103,9 @@ class Calendar extends Component {
 }
 
 const getProfile = gql`
-	query{
+	query ($_id:ID){
 		viewer {
-			profile {
+			profile(_id:$_id){
 				name
 				_id
 			}
@@ -111,6 +114,16 @@ const getProfile = gql`
 `
 
 const CalendarWithData = graphql(getProfile, {
+	options: ({navigation}) => ({
+		variables: {
+			_id: (
+				(navigation
+				&& navigation.state
+				&& navigation.state.params
+				&& navigation.state.params._id
+			) || null)
+		}
+	}),
 	props: ({ ownProps, data: { loading, viewer, refetch}}) => {
 		console.log(viewer)
 		return {
