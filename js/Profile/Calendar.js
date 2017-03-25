@@ -3,7 +3,8 @@ import { View, Text, Image } from 'react-native'
 import { Grid, Row, Col, Button} from 'react-native-elements'
 import { graphql, gql } from 'react-apollo'
 const strings = require('../strings').default.profile
-import Icon from 'react-native-vector-icons/Ionicons';
+import Icon from 'react-native-vector-icons/Ionicons'
+import FriendRequestsButton from './FriendRequestsButton'
 
 class Calendar extends Component {
 	static navigationOptions = {
@@ -24,7 +25,10 @@ class Calendar extends Component {
 					/>
 				)
 			}
-		}
+		},
+		/*header: {
+			right: <FriendRequestsButton />
+		}*/
 	}
 
 	_settings() {
@@ -32,10 +36,10 @@ class Calendar extends Component {
 		navigate('Settings')
 	}
 
-	componentWillMount() {
-		if (!this.props.loading) {
-			this.props.refetch()
-		}
+	componentDidMount() {
+
+
+
 	}
 
 	_renderProfile() {
@@ -79,8 +83,7 @@ class Calendar extends Component {
 	}
 
 	render() {
-		//const { navigate } = this.props.navigation
-		// console.log(this.props.data)
+		this.props.refetch()
 		return (
 			<Grid>
 				<Row size={2}>
