@@ -1,7 +1,5 @@
 import React, { Component } from 'react'
 import { View, Text, Image } from 'react-native'
-//import Button from 'react-native-button'
-//import {Text, Icon, Container, Content, Left, Right, Grid } from 'native-base'
 import { Grid, Row, Col, Button} from 'react-native-elements'
 import { graphql, gql } from 'react-apollo'
 const strings = require('../strings').default.profile
@@ -28,16 +26,6 @@ class Calendar extends Component {
 			}
 		}
 	}
-
-	/*<Image
-	 source={require('./Icons/Calendar_icon_2.svg.png')}
-	 style={{height: 30, width: 35, tintColor: tintColor}}
-	 />
-	 */
-
-	/*componentWillMount() {
-		Icon.getImageSource('md-arrow-back', 30).then((source) => this.setState({ navIcon: source }));
-	}*/
 
 	_settings() {
 		const { navigate } = this.props.navigation
