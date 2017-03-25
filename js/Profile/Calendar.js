@@ -60,6 +60,36 @@ class Calendar extends Component {
 		return null
 	}
 
+	_renderSettingsButton() {
+		if (!this.props.navigation.state.params) {
+			return (
+				<Button
+					icon={{name: 'edit'}}
+					buttonStyle={{
+							marginTop: 0, marginLeft: 15,
+							marginRight: 15, paddingBottom: 7,
+							paddingTop: 5,
+							backgroundColor: '#5f93ff'
+					}}
+					title={'Edit Profile'}
+					onPress={this._settings.bind(this)}
+				/>
+			)
+		}
+		return (
+			<Button
+				icon={{name: 'settings'}}
+				buttonStyle={{
+					marginTop: 0, marginLeft: 15,
+					marginRight: 15, paddingBottom: 7,
+					paddingTop: 5,
+					backgroundColor: '#a804ff'
+				}}
+				title={'Friendship Settings'}
+			/>
+		)
+	}
+
 	render() {
 		//const { navigate } = this.props.navigation
 		// console.log(this.props.data)
@@ -81,17 +111,8 @@ class Calendar extends Component {
 									  }}>
 								{this._renderProfile()}
 							</Text>
-							<Button
-								icon={{name: 'edit'}}
-								buttonStyle={{
-									marginTop: 0, marginLeft: 15,
-									marginRight: 15, paddingBottom: 7,
-									paddingTop: 5,
-									backgroundColor: '#5f93ff'
-								}}
-								title={'Edit Profile'}
-								onPress={this._settings.bind(this)}
-							/>
+							{this._renderSettingsButton()}
+
 					</Col>
 
 				</Row>
