@@ -22,6 +22,7 @@ class Friends extends Component {
 		this.state = {
 			_selectedIndex: 0
 		}
+		this.numRefetch = 0
 	}
 
 	componentDidMount() {
@@ -95,26 +96,13 @@ class Friends extends Component {
 		return null
 	}
 
-	/*_updateIndex(selectedIndex) {
-		this.setState({...this.state, selectedIndex})
-	}
-
-	_getOptions() {
-		return [
-			{element: () => <Text>Friends</Text>},
-			{element: () => <Text>Contacts</Text>}
-		]
-	}*/
-
 	render() {
-		console.log('friends', this.props.data)
-		//const { navigate } = this.props.navigation
-		/*<ButtonGroup
-		 onPress={this._updateIndex.bind(this)}
-		 selectedIndex={this.state._selectedIndex}
-		 buttons={this._getOptions()}
-		 containerStyle={{height: 30}}
-		 />*/
+		this.props.data.refetch()
+		/*if (this.numRefetch == 0) {
+			console.log('.....\nMounted\n.....')
+			this.props.data.refetch()
+			this.numRefetch++
+		}*/
 		return (
 			<View>
 				<List>

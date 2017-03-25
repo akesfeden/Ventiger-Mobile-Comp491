@@ -29,6 +29,7 @@ class Settings extends Component {
 	_logout() {
 		this.props.logout()
 		this.props.reset()
+		//global.destroyEverything()
 	}
 
 	render() {

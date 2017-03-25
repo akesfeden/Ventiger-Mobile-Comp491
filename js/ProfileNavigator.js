@@ -5,6 +5,7 @@ import PasswordSettings from './Profile/PasswordSettings'
 import Calendar from './Profile/Calendar'
 import { StackNavigator } from 'react-navigation'
 
+
 export default StackNavigator({
 	Profile: {screen: Profile},
 	Settings: {screen: Settings},

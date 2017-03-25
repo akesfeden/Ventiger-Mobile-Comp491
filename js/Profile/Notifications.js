@@ -8,11 +8,11 @@ import { NavigationActions } from 'react-navigation'
 
 class Friends extends Component {
 	static navigationOptions = {
-		title: "Friends",
+		title: "Notifications",
 		tabBar: {
-			label: "Friends",
+			label: "Notifications",
 			icon: ({tintColor}) => (
-				<Icon name="ios-people" size={30} color={tintColor} />
+				<Icon name="ios-notifications" size={30} color={tintColor} />
 			)
 		}
 	}
@@ -21,26 +21,10 @@ class Friends extends Component {
 		super(props)
 	}
 
-	componentDidMount() {
-		this._loadContacts()
-
-	}
-
 	_getFriendRequests() {
 		return this.props.data
 			&& this.props.data.viewer
 			&& this.props.data.viewer.friendRequests
-	}
-
-	_onFriendSelect(i) {
-		console.log('here')
-		/*const friends = this._getFriendRequests()
-		if (friends) {
-			const selectionData = friends[i]
-			const { navigate } = this.props.navigation
-			console.log(this.props.navigation)
-			navigate('PersonCalendar', selectionData)
-		}*/
 	}
 
 	_renderFriends() {
@@ -55,7 +39,6 @@ class Friends extends Component {
 						avatar={{uri:"https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg"}}
 						key={i}
 						title={friend.name}
-						onPress={() => this._onFriendSelect(i)}
 					/>
 				)
 			})
@@ -64,9 +47,10 @@ class Friends extends Component {
 	}
 
 	render() {
+		this.props.data.refetch()
 		return (
 			<View>
-				<List>
+				<List horizontal={true}>
 					{this._renderFriends()}
 				</List>
 				<Text>

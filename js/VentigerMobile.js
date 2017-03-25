@@ -6,7 +6,7 @@ import createStore from './store'
 import token from './token'
 import MainScreen from './MainScreen'
 
-const store = createStore(client)
+let store = createStore(client)
 export default class VentigerMobile extends Component {
 
 	render() {

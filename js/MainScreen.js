@@ -35,7 +35,7 @@ class MainScreen extends Component {
 				
 
 export default connect(
-	(state) => ({ loggedIn: state.login.isLoggedIn }),
+	(state) => ({ loggedIn: (state.login.isLoggedIn) }),
 	(dispatch) => ({
 		checkLogin() {
 			dispatch(loginCheck())
