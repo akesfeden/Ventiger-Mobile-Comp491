@@ -19,11 +19,9 @@ class ProfileSettings extends Component {
 	}
 	//_send
 	_updateInfo() {
-
 		this.props.updateInfo({
 			name: this.state.name
 		})
-		this.props.data.refetch()
 	}
 
 	_renderSuccess() {
@@ -65,7 +63,7 @@ class ProfileSettings extends Component {
 					autoCapitalize={'words'}
 					defaultValue={this._getProfileData()}
 					onFocus={this._storeInitial.bind(this)}
-				></TextInput>
+				/>
 				{this._renderSuccess()}
 				<Button
 					title='Update'

@@ -11,7 +11,7 @@ function dataIdFromObject(result) {
 	if (result._id && !result.__typename) {
 		return result._id
 	}
-
+	// console.log('result', result)
 	return null
 }
 
