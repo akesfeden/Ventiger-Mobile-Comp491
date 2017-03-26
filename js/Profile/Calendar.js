@@ -4,6 +4,7 @@ import { Grid, Row, Col, Button} from 'react-native-elements'
 import { graphql, gql, compose } from 'react-apollo'
 const strings = require('../strings').default.profile
 import Icon from 'react-native-vector-icons/Ionicons'
+import isLoggedIn from '../login-check'
 import FriendRequestsButton from './FriendRequestsButton'
 
 class Calendar extends Component {
@@ -107,7 +108,11 @@ class Calendar extends Component {
 	}
 
 	render() {
-		//this.props.refetch()
+		console.log(isLoggedIn())
+		if (isLoggedIn()) {
+			console.log('refetched...')
+			this.props.refetch()
+		}
 		return (
 			<Grid>
 				<Row size={2}>

@@ -21,7 +21,8 @@ networkInterface.use([{
 		if (!req.options.headers) {
 			req.options.headers = {}
 		}
-		req.options.headers['Authorization'] = await token().getToken()
+		const _token = await token().getToken()
+		req.options.headers['Authorization'] = _token
 		next()
 	}}
 ])

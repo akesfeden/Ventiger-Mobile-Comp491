@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import {  Image } from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons'
 import { graphql, gql, compose } from 'react-apollo'
+import loginCheck from '../login-check'
 
 import { Container, ListItem, Text, Content,
 	Col, Grid, Thumbnail, Left, Right, Body } from 'native-base'
@@ -98,7 +99,9 @@ class Notifications extends Component {
 	}
 
 	render(){
-		//this.props.data.refetch()
+		if (loginCheck()) {
+			this.props.data.refetch()
+		}
 		return (
 			<Container>
 				<Content>

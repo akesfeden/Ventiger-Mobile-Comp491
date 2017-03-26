@@ -7,6 +7,7 @@ const Contacts = require('react-native-contacts')
 import { Container, Content, List as NList, ListItem as NListItem} from 'native-base'
 import { connect } from 'react-redux'
 import { registerContacts } from '../actions/profile-actions'
+import loginCheck from '../login-check'
 
 class Friends extends Component {
 	static navigationOptions = {
@@ -83,9 +84,9 @@ class Friends extends Component {
 	}
 
 	_onContactSelect(i) {
-		const {_id } = this._getContacts()[i]
+		const contact = this._getContacts()[i]
 		this.props.navigation.navigate('PersonCalendar',
-			{_id})
+			contact)
 	}
 
 	_renderContacts() {
@@ -118,6 +119,9 @@ class Friends extends Component {
 		}*/
 		console.log("Friends data", this.props.data)
 		console.log("my contacts: ", this.props.contacts)
+		if (loginCheck()) {
+			this.props.data.refetch()
+		}
 		return (
 			<Container>
 				<Content>

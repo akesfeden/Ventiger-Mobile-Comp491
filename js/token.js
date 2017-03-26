@@ -6,6 +6,7 @@ class TokenStore {
 	static instance = null
 
 	saveToken(token) {
+		this.loggedIn = true
 		AsyncStorage.setItem(tokenName, token)
 	}
 
