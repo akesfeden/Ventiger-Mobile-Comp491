@@ -30,6 +30,7 @@ const client = new ApolloClient({
 	networkInterface,
 	addTypename: true,
 	dataIdFromObject: dataIdFromObject,
+	//shouldBatch: true
 	/*customResolvers: {
 	 Mutation: {
 	 login: (_, args) => toIdValue(dataIdFromObject({

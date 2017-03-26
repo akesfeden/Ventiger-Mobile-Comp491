@@ -98,10 +98,10 @@ class Notifications extends Component {
 	}
 
 	render(){
-		this.props.data.refetch()
+		//this.props.data.refetch()
 		return (
 			<Container>
-				<Content style={{horizontal:true}}>
+				<Content>
 					<ListItem itemDivider><Text>Friend Requests</Text></ListItem>
 						{this._renderFriends()}
 				</Content>

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { View, Text, Image } from 'react-native'
 import { Grid, Row, Col, Button} from 'react-native-elements'
-import { graphql, gql } from 'react-apollo'
+import { graphql, gql, compose } from 'react-apollo'
 const strings = require('../strings').default.profile
 import Icon from 'react-native-vector-icons/Ionicons'
 import FriendRequestsButton from './FriendRequestsButton'
@@ -26,20 +26,11 @@ class Calendar extends Component {
 				)
 			}
 		},
-		/*header: {
-			right: <FriendRequestsButton />
-		}*/
 	}
 
 	_settings() {
 		const { navigate } = this.props.navigation
 		navigate('Settings')
-	}
-
-	componentDidMount() {
-
-
-
 	}
 
 	_renderProfile() {
@@ -53,37 +44,70 @@ class Calendar extends Component {
 	}
 
 	_renderSettingsButton() {
-		if (!this.props.navigation.state.params) {
-			return (
-				<Button
-					icon={{name: 'edit'}}
-					buttonStyle={{
+		if (!this.props.relation) {
+			return null
+		}
+		switch (this.props.relation) {
+			case "MYSELF":
+				return (
+					<Button
+						icon={{name: 'edit'}}
+						buttonStyle={{
+								marginTop: 0, marginLeft: 15,
+								marginRight: 15, paddingBottom: 7,
+								paddingTop: 5,
+								backgroundColor: '#5f93ff'
+						}}
+						title={'Edit Profile'}
+						onPress={this._settings.bind(this)}
+					/>
+				)
+			case "FRIEND":
+				return (
+					<Button
+						icon={{name: 'settings'}}
+						buttonStyle={{
 							marginTop: 0, marginLeft: 15,
 							marginRight: 15, paddingBottom: 7,
 							paddingTop: 5,
-							backgroundColor: '#5f93ff'
-					}}
-					title={'Edit Profile'}
-					onPress={this._settings.bind(this)}
-				/>
-			)
+							backgroundColor: '#a804ff'
+						}}
+						title={'Friendship Settings'}
+					/>
+				)
+			// TODO: Add request sent
+			default:
+				return (
+					<Button
+						icon={{name: 'add'}}
+						buttonStyle={{
+							marginTop: 0, marginLeft: 15,
+							marginRight: 15, paddingBottom: 7,
+							paddingTop: 5,
+							backgroundColor: '#4dc37a'
+						}}
+						title={'Send Friend Request'}
+						onPress={() => this.props.addFriend({_id: this.props.profile._id})}
+					/>
+				)
 		}
-		return (
-			<Button
-				icon={{name: 'settings'}}
-				buttonStyle={{
-					marginTop: 0, marginLeft: 15,
-					marginRight: 15, paddingBottom: 7,
-					paddingTop: 5,
-					backgroundColor: '#a804ff'
-				}}
-				title={'Friendship Settings'}
-			/>
-		)
+	}
+
+	_renderCalendar() {
+		if (this.props.relation) {
+			switch (this.props.relation) {
+				case 'MYSELF':
+				case 'FRIEND':
+					return (
+						<Row size={8} style={{ marginTop:5, backgroundColor: '#eaeeff'}}></Row>
+					)
+			}
+		}
+		return null
 	}
 
 	render() {
-		this.props.refetch()
+		//this.props.refetch()
 		return (
 			<Grid>
 				<Row size={2}>
@@ -114,6 +138,7 @@ class Calendar extends Component {
 	}
 }
 
+//TODO: reconsider when having nested relation
 const getProfile = gql`
 	query ($_id:ID){
 		viewer {
@@ -121,29 +146,48 @@ const getProfile = gql`
 				name
 				_id
 			}
+			relation(_id: $_id)
 		}
 	}
 `
 
-const CalendarWithData = graphql(getProfile, {
-	options: ({navigation}) => ({
-		variables: {
-			_id: (
-				(navigation
-				&& navigation.state
-				&& navigation.state.params
-				&& navigation.state.params._id
-			) || null)
-		}
-	}),
-	props: ({ ownProps, data: { loading, viewer, refetch}}) => {
-		console.log(viewer)
-		return {
-			loading,
-			profile: viewer && viewer.profile,
-			refetch
-		}
+const addFriend = gql`
+	mutation($_id:ID!) {
+		addFriend(_id:$_id)
 	}
-})(Calendar)
+`
+
+const CalendarWithData = compose(
+	graphql(getProfile, {
+			options: ({navigation}) => ({
+				variables: {
+					_id: (
+					(navigation
+						&& navigation.state
+						&& navigation.state.params
+						&& navigation.state.params._id
+					) || null)
+				}
+			}),
+			props: ({ownProps, data: {loading, viewer, refetch}}) => {
+				console.log(viewer)
+				return {
+					loading,
+					profile: viewer && viewer.profile,
+					relation: viewer && viewer.relation,
+					refetch
+				}
+			}
+		}
+	),
+	graphql(addFriend, {
+		props: ({mutate}) => ({
+			addFriend: ({_id}) => {
+				console.log("mutate ", _id)
+				mutate({variables: {_id}})
+			}
+		})
+	})
+)(Calendar)
 
 export default CalendarWithData

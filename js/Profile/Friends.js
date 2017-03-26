@@ -4,7 +4,9 @@ import Icon from 'react-native-vector-icons/Ionicons'
 import { graphql, gql } from 'react-apollo'
 import { List, ListView, ListItem } from 'react-native-elements'
 const Contacts = require('react-native-contacts')
-import { NavigationActions } from 'react-navigation'
+import { Container, Content, List as NList, ListItem as NListItem} from 'native-base'
+import { connect } from 'react-redux'
+import { registerContacts } from '../actions/profile-actions'
 
 class Friends extends Component {
 	static navigationOptions = {
@@ -19,6 +21,7 @@ class Friends extends Component {
 
 	constructor(props) {
 		super(props)
+		console.log(this.props)
 		this.state = {
 			_selectedIndex: 0
 		}
@@ -26,44 +29,23 @@ class Friends extends Component {
 	}
 
 	componentDidMount() {
-		this._loadContacts()
 
 	}
 
-	_loadContacts() {
-		Contacts.getAll((err, contacts) => {
-			if (err) {
-				console.error(err)
-				return
-			}
-			console.log('contacts ', contacts)
-			let phoneNumbers = []
-			contacts.forEach(c => {
-				console.log('number', c.phoneNumbers)
-				phoneNumbers = phoneNumbers.concat(c.phoneNumbers)
-			})
-			phoneNumbers = phoneNumbers
-				.map(number => number.number.replace(/\D/g,''))
-			console.log(phoneNumbers)
-			//console.log(phoneNumbers.replace(/\D/g,''))
-			/*const phoneNumbers = contacts
-				.map(contact => contact.phoneNumbers)
-				.reduceRight((coll, item) => coll.concat(item))
-			/*({
-					name: contact.givenName + " " + contact.familyName,
-					phoneNumbers: contact.phoneNumbers
-				}))*/
-				//.reduce((c1, c2) => console.log(c1, c2) )
-				//.reduce((x, y) => x.concat(y))
-			//console.log('phone numbers', phoneNumbers)
-
-		})
+	componentWillMount() {
+		this.props.loadContacts()
 	}
 
 	_getFriends() {
 		return this.props.data
 			&& this.props.data.viewer
 			&& this.props.data.viewer.friends
+	}
+
+	_getContacts() {
+		return this.props.data
+		 	&& this.props.data.viewer
+			&& this.props.data.viewer.contacts
 	}
 
 	_onFriendSelect(i) {
@@ -80,7 +62,8 @@ class Friends extends Component {
 	_renderFriends() {
 		//console.log('data', this.props.data)
 		if (this._getFriends()) {
-			const friends = this.props.data.viewer.friends
+			const friends = this._getFriends()
+
 			return friends.map((friend, i) => {
 				return (
 
@@ -99,59 +82,95 @@ class Friends extends Component {
 		return null
 	}
 
+	_onContactSelect(i) {
+		const {_id } = this._getContacts()[i]
+		this.props.navigation.navigate('PersonCalendar',
+			{_id})
+	}
+
+	_renderContacts() {
+		if (this._getFriends()) {
+			const contacts = this._getContacts()
+			// TODO: add relation support
+			return contacts
+				.map((friend, i) => {
+				return (
+					<ListItem
+						roundAvatar
+						avatar={{uri:"https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg"}}
+						key={i}
+						title={friend.name +  "(" + friend.relation + ")"}
+						style={{marginBottom: 10}}
+						onPress={() => this._onContactSelect(i)}
+					/>
+				)
+			})
+		}
+		return null
+	}
+
 	render() {
-		this.props.data.refetch()
+		//this.props.data.refetch()
 		/*if (this.numRefetch == 0) {
 			console.log('.....\nMounted\n.....')
 			this.props.data.refetch()
 			this.numRefetch++
 		}*/
+		console.log("Friends data", this.props.data)
+		console.log("my contacts: ", this.props.contacts)
 		return (
-			<View>
-				<List>
-					{this._renderFriends()}
-				</List>
-				<Text>
-					Other stuff
-				</Text>
-			</View>
+			<Container>
+				<Content>
+					<List>
+						{this._renderFriends()}
+					</List>
+				</Content>
+				<Content>
+					<NListItem itemHeader>
+						<Text>Your contacts in Ventiger</Text>
+					</NListItem>
+					<List>
+						{this._renderContacts()}
+					</List>
+				</Content>
+			</Container>
 		)
 	}
 }
 
-/*
- ($phones: [String])
- contacts (phones: $phones) {
- 	name
- 	_id
- }
-* */
 const getData = gql`
-	query {
-		viewer {		
+	query ($phones: [String]!){
+		viewer {	
 			friends(sortedBy: "name") {
 				_id
 				name
+			}
+			contacts(phones: $phones) {
+				_id
+				name
+				relation
 			}
 		}
 	}
 `
 
-export default graphql(getData)(Friends)
-/*const PhoneWithData = graphql(phoneCheck, {
-	options: ({phone}) => {
-		//console.log('phone', phone)
-		return {
-			variables: {phone: (phone ? phone : "")}
-		}
-	}
-})(PhoneRegistration)
-
-export default graphql(getContacts, {
+const FriendsWithData = graphql(getData, {
 	options: ({contacts}) => {
 		return {
-			variables: {phone: (phone ? phone : "")}
+			variables: {
+				phones: contacts
+			}
 		}
 	}
-})(Friends)*/
+})(Friends)
+
+export default connect(
+	(state) => ({ contacts: state.profile.contacts }),
+	(dispatch) => ({
+		loadContacts() {
+			dispatch(registerContacts())
+		},
+	})
+)(FriendsWithData)
+
 
