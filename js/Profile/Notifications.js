@@ -69,6 +69,10 @@ class Notifications extends Component {
 		</Col>)]
 	}
 
+	_renderFriend() {
+
+	}
+
 	//TODO: see profile bug fix
 	_renderFriends() {
 
@@ -99,10 +103,10 @@ class Notifications extends Component {
 	}
 
 	render(){
-		if (loginCheck()) {
+		if (Object.keys(this.state.accepted).length === 0 && Object.keys(this.state.rejected).length === 0 && loginCheck()) {
 			this.props.data.refetch()
 		}
-		return (
+		/*return (
 			<Container>
 				<Content>
 					<ListItem itemDivider><Text>Friend Requests</Text></ListItem>
@@ -114,7 +118,9 @@ class Notifications extends Component {
 					</ListItem>
 				</Content>
 			</Container>
-		)
+		)*/
+		return null
+
 	}
 }
 

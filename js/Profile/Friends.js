@@ -4,7 +4,7 @@ import Icon from 'react-native-vector-icons/Ionicons'
 import { graphql, gql } from 'react-apollo'
 import { List, ListView, ListItem } from 'react-native-elements'
 const Contacts = require('react-native-contacts')
-import { Container, Content, List as NList, ListItem as NListItem} from 'native-base'
+import { Container, Content, List as NList, ListItem as NListItem, Col} from 'native-base'
 import { connect } from 'react-redux'
 import { registerContacts } from '../actions/profile-actions'
 import loginCheck from '../login-check'
@@ -67,7 +67,6 @@ class Friends extends Component {
 
 			return friends.map((friend, i) => {
 				return (
-
 					<ListItem
 						roundAvatar
 						avatar={{uri:"https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg"}}
@@ -76,9 +75,9 @@ class Friends extends Component {
 						onPress={() => this._onFriendSelect(i)}
 						style={{marginBottom: 10}}
 					/>
-
 				)
 			})
+
 		}
 		return null
 	}
