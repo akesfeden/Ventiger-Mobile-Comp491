@@ -1,13 +1,15 @@
 import React, { Component } from 'react'
-import { View, Text, Image } from 'react-native'
+import { View, Image } from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons'
 import { graphql, gql } from 'react-apollo'
 import { List, ListView, ListItem } from 'react-native-elements'
 const Contacts = require('react-native-contacts')
-import { Container, Content, List as NList, ListItem as NListItem} from 'native-base'
+import { Button, Container, Content, Card, Col, Text,ListItem as NListItem} from 'native-base'
+import UserCardItem from './Components/UserCardItem'
 import { connect } from 'react-redux'
 import { registerContacts } from '../actions/profile-actions'
 import loginCheck from '../login-check'
+
 
 class Friends extends Component {
 	static navigationOptions = {
@@ -67,6 +69,16 @@ class Friends extends Component {
 
 			return friends.map((friend, i) => {
 				return (
+					<UserCardItem
+						renderContent={() => (
+							<Text>{friend.name}</Text>
+						)}
+						onPress={() => this._onFriendSelect(i)}
+						key={i}
+						imageURL="https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg"
+					/>
+				)
+				/*return (
 
 					<ListItem
 						roundAvatar
@@ -77,7 +89,7 @@ class Friends extends Component {
 						style={{marginBottom: 10}}
 					/>
 
-				)
+				)*/
 			})
 		}
 		return null
@@ -90,12 +102,12 @@ class Friends extends Component {
 	}
 
 	_renderContacts() {
-		if (this._getFriends()) {
+		if (this._getContacts()) {
 			const contacts = this._getContacts()
 			// TODO: add relation support
 			return contacts
 				.map((friend, i) => {
-				return (
+				/*return (
 					<ListItem
 						roundAvatar
 						avatar={{uri:"https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg"}}
@@ -104,7 +116,28 @@ class Friends extends Component {
 						style={{marginBottom: 10}}
 						onPress={() => this._onContactSelect(i)}
 					/>
-				)
+				)*/
+					return (
+						<UserCardItem
+							key={i}
+							imageURL="https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg"
+							renderContent={() => (
+								<Text>{friend.name}</Text>
+							)}
+							renderButtons={() => (
+									<Col
+										size={UserCardItem.contentSize / 2}
+										style={{alignSelf: 'center'}}
+										>
+										<Button small>
+											<Text>Add Friend</Text>
+										</Button>
+									</Col>
+								)
+							}
+							onPress={() => this._onContactSelect(i)}
+						/>
+					)
 			})
 		}
 		return null
@@ -122,20 +155,28 @@ class Friends extends Component {
 		if (loginCheck()) {
 			this.props.data.refetch()
 		}
+		/*
+		 <List>
+		 {this._renderFriends()}
+		 </List>
+		* */
 		return (
 			<Container>
 				<Content>
-					<List>
+					<Card>
+						<NListItem header>
+							<Text>Friends</Text>
+						</NListItem>
 						{this._renderFriends()}
-					</List>
+					</Card>
 				</Content>
 				<Content>
-					<NListItem itemHeader>
-						<Text>Your contacts in Ventiger</Text>
-					</NListItem>
-					<List>
+					<Card>
+						<NListItem header>
+							<Text>Your contacts using Ventiger</Text>
+						</NListItem>
 						{this._renderContacts()}
-					</List>
+					</Card>
 				</Content>
 			</Container>
 		)

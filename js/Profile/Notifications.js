@@ -3,6 +3,7 @@ import {  Image } from 'react-native'
 import VIcon from 'react-native-vector-icons/Ionicons'
 import { graphql, gql, compose } from 'react-apollo'
 import loginCheck from '../login-check'
+import UserCardItem from './Components/UserCardItem'
 const strings = require('../strings').default.notifications
 //console.log('strings', strings)
 
@@ -69,58 +70,52 @@ class Notifications extends Component {
 					surname = friend.name.substring(lastSpace+1, friend.name.length)
 				}
 				if (this.state.accepted[friend._id]) {
-					return (<CardItem key={i}>
-						<Grid>
-							<Col size={3}>
-								<Image
-									//source={{uri: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg'}}
-									source={{uri: 'https://img.tinychan.org/img/1360567490218199.jpg'}}
-									style={{"width":50, "height":50, marginTop: 0,
-											borderRadius: 25, alignSelf: 'center'}}
-								/>
-
-							</Col>
-							<Col size={5} style={{alignSelf: 'center'}}>
-								<Text>{name}</Text>
-								<Text>{surname}</Text>
-							</Col>
-							<Col size={8} style={{alignSelf: 'center'}}>
-								<Button onPress={()=>this.props.navigation.navigate('PersonCalendar', friend)} small><Text>
-									{strings.seeProfile}
-								</Text></Button>
-							</Col>
-						</Grid>
-					</CardItem>
-					)
+					return (
+						<UserCardItem
+							renderContent={() => {
+								return [
+									(<Text>{name}</Text>),
+									(<Text>{surname}</Text>)
+								]
+							}}
+							key={i}
+							renderButtons={() => (
+								<Col size={UserCardItem.contentSize/2} style={{alignSelf: 'center'}}>
+									<Button onPress={()=>this.props.navigation.navigate('PersonCalendar', friend)} small>
+										<Text>
+											{strings.seeProfile}
+										</Text>
+									</Button>
+								</Col>
+								)
+							}
+							imageURL="https://img.tinychan.org/img/1360567490218199.jpg"
+						/>)
 				}
 				return (
-					<CardItem key={i}>
-						<Grid>
-							<Col size={3}>
-								<Image
-									//source={{uri: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg'}}
-									source={{uri: 'https://img.tinychan.org/img/1360567490218199.jpg'}}
-									style={{"width":50, "height":50, marginTop: 0,
-											borderRadius: 25, alignSelf: 'center'}}
-								/>
-
-							</Col>
-							<Col size={5} style={{alignSelf: 'center'}}>
-								<Text>{name}</Text>
-								<Text>{surname}</Text>
-							</Col>
-							<Col size={4} style={{alignSelf: 'center'}}>
+					<UserCardItem
+						renderContent={() => {
+							return [
+								(<Text>{name}</Text>),
+								(<Text>{surname}</Text>)
+							]
+						}}
+						imageURL="https://img.tinychan.org/img/1360567490218199.jpg"
+						renderButtons={() => {
+							return [
+								(<Col size={UserCardItem.contentSize/2} style={{alignSelf: 'center'}}>
 								<Button onPress={()=>this._acceptFriend(i)} success small><Text>
 									{strings.accept}
 								</Text></Button>
-							</Col>
-							<Col size={4} style={{alignSelf: 'center'}}>
+								</Col>),
+							(<Col size={UserCardItem.contentSize/2} style={{alignSelf: 'center'}}>
 								<Button onPress={() => this._rejectFriend(i)} danger small><Text>
 									{strings.reject}
 								</Text></Button>
-							</Col>
-						</Grid>
-					</CardItem>
+							</Col>)]
+						}}
+						key={i}
+					/>
 				)
 			})
 	}
@@ -137,7 +132,7 @@ class Notifications extends Component {
 			<Container>
 				<Content>
 					<Card>
-						<ListItem itemDivider>
+						<ListItem header>
 							<Text>Friend Requests</Text>
 						</ListItem>
 						{this._renderFriendRequests()}
