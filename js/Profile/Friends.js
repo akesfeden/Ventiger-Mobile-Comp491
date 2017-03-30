@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import {List} from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import {compose, gql, graphql} from "react-apollo";
-import {Button, Col, Container, Content, Icon as LIcon, ListItem as NListItem, Text} from "native-base";
+import {Button, Col, Container, Content, Icon as LIcon, List as NList, ListItem as NListItem, Text} from "native-base";
 import UserCardItem from "./Components/UserCardItem";
 import {connect} from "react-redux";
 import {registerContacts} from "../actions/profile-actions";
@@ -203,11 +203,9 @@ class Friends extends Component {
 				<Content>
 					<NList>
 						{this._renderFriends()}
-					</NList>
-					<NListItem header>
-						<Text>{strings.contactsTitle}</Text>
-					</NListItem>
-					<NList>
+						<NListItem>
+							<Text>Your contacts</Text>
+						</NListItem>
 						{this._renderContacts()}
 					</NList>
 				</Content>

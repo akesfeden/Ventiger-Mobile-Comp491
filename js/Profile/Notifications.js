@@ -3,8 +3,7 @@ import VIcon from "react-native-vector-icons/Ionicons";
 import {compose, gql, graphql} from "react-apollo";
 import loginCheck from "../login-check";
 import UserCardItem from "./Components/UserCardItem";
-import {Button, Card, Col, Container, Content, ListItem, Text} from "native-base";
-const strings = require('../strings').default.notifications
+import {Button, Card, Col, Container, Content, ListItem, Text} from "native-base"
 //console.log('strings', strings)
 const strings = require('../strings').default.notifications
 
