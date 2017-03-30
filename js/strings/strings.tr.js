@@ -28,7 +28,8 @@ module.exports = {
 		friends: "Arkadaşlar",
 		settings: "Ayarlar",
 		loading: "Yükleniyor",
-		editProfile: "Profilimi Düzenle"
+		editProfile: "Profilimi Düzenle",
+		unfriend: "Arkadaşlardan Çıkar"
 	},
 	notifications: {
 		accept: 'Kabul Et',

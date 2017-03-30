@@ -74,6 +74,9 @@ class Calendar extends Component {
 							backgroundColor: '#a804ff'
 						}}
 						title={'Friendship Settings'}
+						onPress={() => {
+							this.props.navigation.navigate('FriendshipSettings', this.props.profile)
+						}}
 					/>
 				)
 			// TODO: Add request sent

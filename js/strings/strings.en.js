@@ -28,7 +28,8 @@ module.exports = {
 		friends: "Friends",
 		settings: "Settings",
 		loading: "Loading",
-		editProfile: "Edit Profile"
+		editProfile: "Edit Profile",
+		unfriend: "Remove Friend"
 	},
 	notifications: {
 		accept: 'Accept',
