@@ -7,6 +7,7 @@ import {
 import { Button } from 'react-native-elements'
 import styles from '../Login/styles'
 import { graphql, gql, compose } from 'react-apollo'
+import loginCheck from '../login-check'
 
 class ProfileSettings extends Component {
 
@@ -53,6 +54,9 @@ class ProfileSettings extends Component {
 
 	render() {
 		console.log(this.state.nameEdited)
+		if (loginCheck()) {
+			this.props.data.refetch()
+		}
 		return (
 			<View>
 				<TextInput

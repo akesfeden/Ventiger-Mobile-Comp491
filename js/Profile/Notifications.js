@@ -99,7 +99,7 @@ class Notifications extends Component {
 	}
 
 	render(){
-		if (Object.keys(this.state.accepted).length == 0 && Object.keys(this.state.accepted).length && loginCheck()) {
+		if (Object.keys(this.state.accepted).length == 0 && Object.keys(this.state.accepted).length == 0 && loginCheck()) {
 			this.props.data.refetch()
 		}
 		return (
