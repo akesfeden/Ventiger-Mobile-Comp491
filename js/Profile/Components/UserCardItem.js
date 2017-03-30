@@ -14,7 +14,7 @@ export default class UserCardItem extends Component {
 	render() {
 		console.log('Card Item Key', this.props.key)
 		return (
-			<CardItem key={this.props.key} onPress={this.props.onPress}>
+			<CardItem key={this.props.key} onPress={this.props.onPress} style={{...this.props.styles}}>
 				<Grid>
 					<Col size={3}>
 						<Image

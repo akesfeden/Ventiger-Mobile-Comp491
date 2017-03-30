@@ -139,7 +139,11 @@ class Calendar extends Component {
 					</Col>
 
 				</Row>
-				<Row size={8} style={{ marginTop:5, backgroundColor: '#eaeeff'}}>
+				<Row size={5} style={{ marginTop:5, backgroundColor: '#eaeeff'}}>
+					<Text>Today</Text>
+				</Row>
+				<Row size={3} style={{ marginTop:0, backgroundColor: '#fff9c4'}}>
+					<Text>Undetermined</Text>
 				</Row>
 			</Grid>
 		)

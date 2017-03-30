@@ -1,10 +1,14 @@
 import React, { Component } from 'react'
-import { View, Image } from 'react-native'
+import { View, Image, List } from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons'
-import { graphql, gql } from 'react-apollo'
-import { List, ListView, ListItem } from 'react-native-elements'
+import { graphql, gql, compose } from 'react-apollo'
+//import { List, ListView, ListItem } from 'react-native-elements'
 const Contacts = require('react-native-contacts')
-import { Button, Container, Content, Card, Col, Text,ListItem as NListItem} from 'native-base'
+import { Button, Container, Content,
+	Card, Col, Text,ListItem as NListItem,
+	Icon as LIcon, List as NList, Grid, Row, Header,
+	Item, Input
+} from 'native-base'
 import UserCardItem from './Components/UserCardItem'
 import { connect } from 'react-redux'
 import { registerContacts } from '../actions/profile-actions'
@@ -69,14 +73,17 @@ class Friends extends Component {
 
 			return friends.map((friend, i) => {
 				return (
-					<UserCardItem
-						renderContent={() => (
-							<Text>{friend.name}</Text>
-						)}
-						onPress={() => this._onFriendSelect(i)}
-						key={i}
-						imageURL="https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg"
-					/>
+
+					<NListItem style={{marginLeft: 0, paddingLeft:0, paddingRight:0, paddingTop:0, paddingBottom:0}}>
+						<UserCardItem
+							renderContent={() => (
+								<Text>{friend.name}</Text>
+							)}
+							onPress={() => this._onFriendSelect(i)}
+							key={i}
+							imageURL="https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg"
+						/>
+					</NListItem>
 				)
 				/*return (
 
@@ -101,10 +108,17 @@ class Friends extends Component {
 			contact)
 	}
 
+	_onAddFriend(i) {
+		const contact = this._getContacts()[i]
+		console.log('friend addition ', contact, i)
+		this.props.addFriend(contact._id)
+	}
+
 	_renderContacts() {
 		if (this._getContacts()) {
 			const contacts = this._getContacts()
 			// TODO: add relation support
+			console.log(contacts)
 			return contacts
 				.map((friend, i) => {
 				/*return (
@@ -118,29 +132,60 @@ class Friends extends Component {
 					/>
 				)*/
 					return (
-						<UserCardItem
-							key={i}
-							imageURL="https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg"
-							renderContent={() => (
-								<Text>{friend.name}</Text>
-							)}
-							renderButtons={() => (
-									<Col
-										size={UserCardItem.contentSize / 2}
-										style={{alignSelf: 'center'}}
-										>
-										<Button small>
-											<Text>Add Friend</Text>
-										</Button>
-									</Col>
-								)
-							}
-							onPress={() => this._onContactSelect(i)}
-						/>
+						<NListItem style={{marginLeft: 0, paddingLeft:0, paddingRight:0, paddingTop:0, paddingBottom:0}}>
+							<UserCardItem
+								key={i}
+								imageURL="https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg"
+								renderContent={() => (
+									<Text>{friend.name}</Text>
+								)}
+								renderButtons={() => (
+										<Col
+											size={2 * UserCardItem.contentSize / 3}
+											style={{alignSelf: 'center'}}
+											>
+											{this._renderContactButton(i)}
+										</Col>
+									)
+								}
+								onPress={() => this._onContactSelect(i)}
+							/>
+						</NListItem>
 					)
 			})
 		}
 		return null
+	}
+
+	_renderContactButton(i) {
+		const contact = this._getContacts()[i]
+		switch (contact.relation) {
+			case 'REQUESTED':
+				return (
+					<Button
+						small
+						success>
+						<Text>View in Requests</Text>
+					</Button>
+				)
+			case 'REQUESTER':
+				return (
+					<Button
+						small
+						warning
+					>
+						<Text>Cancel Request</Text>
+					</Button>
+				)
+			default:
+				return (<Button small
+					onPress={() => this._onAddFriend(i)}
+					>
+					<LIcon name="add"/>
+					<Text>Add Friend</Text>
+				</Button>
+				)
+		}
 	}
 
 	render() {
@@ -155,28 +200,14 @@ class Friends extends Component {
 		if (loginCheck()) {
 			this.props.data.refetch()
 		}
-		/*
-		 <List>
-		 {this._renderFriends()}
-		 </List>
-		* */
 		return (
 			<Container>
 				<Content>
-					<Card>
-						<NListItem header>
-							<Text>Friends</Text>
-						</NListItem>
-						{this._renderFriends()}
-					</Card>
-				</Content>
-				<Content>
-					<Card>
-						<NListItem header>
-							<Text>Your contacts using Ventiger</Text>
-						</NListItem>
-						{this._renderContacts()}
-					</Card>
+					{this._renderFriends()}
+					<NListItem header>
+						<Text>Contacts in Ventiger</Text>
+					</NListItem>
+					{this._renderContacts()}
 				</Content>
 			</Container>
 		)
@@ -199,15 +230,53 @@ const getData = gql`
 	}
 `
 
-const FriendsWithData = graphql(getData, {
-	options: ({contacts}) => {
-		return {
-			variables: {
-				phones: contacts
-			}
+const addFriend = gql`
+	mutation($_id:ID!) {
+		addFriend(_id:$_id)
+	}
+`
+
+const acceptFriend = gql`
+	mutation($_id: ID!) {
+		acceptFriend(_id: $_id) {
+			_id
+			name
 		}
 	}
-})(Friends)
+`
+
+const rejectFriend = gql`
+	mutation($_id: ID!) {
+		rejectFriend(_id: $_id)
+	}
+`
+
+
+
+const FriendsWithData = compose(
+	graphql(getData, {
+		options: ({contacts}) => {
+			if (!contacts) {
+				console.warn('Contacts are not loaded')
+				contacts = []
+			}
+			return {
+				variables: {
+					phones: contacts
+				}
+			}
+		}
+	}),
+	graphql(addFriend, {
+		props: ({mutate}) => ({
+			addFriend: (_id) => {
+				console.log("mutate ", _id)
+				mutate({variables: {_id}})
+			}
+		})
+	})
+)(Friends)
+
 
 export default connect(
 	(state) => ({ contacts: state.profile.contacts }),
