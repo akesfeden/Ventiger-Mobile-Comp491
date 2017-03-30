@@ -1,11 +1,10 @@
-import React, { Component } from 'react'
-import { View, Text, Image } from 'react-native'
-import { Grid, Row, Col, Button} from 'react-native-elements'
-import { graphql, gql, compose } from 'react-apollo'
+import React, {Component} from "react";
+import {Image, Text} from "react-native";
+import {Button, Col, Grid, Row} from "react-native-elements";
+import {compose, gql, graphql} from "react-apollo";
+import Icon from "react-native-vector-icons/Ionicons";
+import isLoggedIn from "../login-check";
 const strings = require('../strings').default.profile
-import Icon from 'react-native-vector-icons/Ionicons'
-import isLoggedIn from '../login-check'
-import FriendRequestsButton from './FriendRequestsButton'
 
 class Calendar extends Component {
 	static navigationOptions = {
@@ -52,29 +51,29 @@ class Calendar extends Component {
 			case "MYSELF":
 				return (
 					<Button
-						icon={{name: 'edit'}}
-						buttonStyle={{
+                        icon={{name: 'edit'}}
+                        buttonStyle={{
 								marginTop: 0, marginLeft: 15,
 								marginRight: 15, paddingBottom: 7,
 								paddingTop: 5,
 								backgroundColor: '#5f93ff'
 						}}
-						title={'Edit Profile'}
-						onPress={this._settings.bind(this)}
+                        title={strings.editProfile}
+                        onPress={this._settings.bind(this)}
 					/>
 				)
 			case "FRIEND":
 				return (
 					<Button
-						icon={{name: 'settings'}}
-						buttonStyle={{
+                        icon={{name: 'settings'}}
+                        buttonStyle={{
 							marginTop: 0, marginLeft: 15,
 							marginRight: 15, paddingBottom: 7,
 							paddingTop: 5,
 							backgroundColor: '#a804ff'
 						}}
-						title={'Friendship Settings'}
-						onPress={() => {
+                        title={strings.friendshipSettings}
+                        onPress={() => {
 							this.props.navigation.navigate('FriendshipSettings', this.props.profile)
 						}}
 					/>
@@ -83,15 +82,15 @@ class Calendar extends Component {
 			default:
 				return (
 					<Button
-						icon={{name: 'add'}}
-						buttonStyle={{
+                        icon={{name: 'add'}}
+                        buttonStyle={{
 							marginTop: 0, marginLeft: 15,
 							marginRight: 15, paddingBottom: 7,
 							paddingTop: 5,
 							backgroundColor: '#4dc37a'
 						}}
-						title={'Send Friend Request'}
-						onPress={() => this.props.addFriend({_id: this.props.profile._id})}
+                        title={strings.sendFriendRequest}
+                        onPress={() => this.props.addFriend({_id: this.props.profile._id})}
 					/>
 				)
 		}

@@ -1,21 +1,18 @@
-import React, { Component } from 'react'
-import {  Image } from 'react-native'
-import VIcon from 'react-native-vector-icons/Ionicons'
-import { graphql, gql, compose } from 'react-apollo'
-import loginCheck from '../login-check'
-import UserCardItem from './Components/UserCardItem'
+import React, {Component} from "react";
+import VIcon from "react-native-vector-icons/Ionicons";
+import {compose, gql, graphql} from "react-apollo";
+import loginCheck from "../login-check";
+import UserCardItem from "./Components/UserCardItem";
+import {Button, Card, Col, Container, Content, ListItem, Text} from "native-base";
 const strings = require('../strings').default.notifications
 //console.log('strings', strings)
-
-import { Container, ListItem, Text, Content,
-	Col, Grid, Left, Right, Body, Card, CardItem
-	, Icon, Button, Row } from 'native-base'
+const strings = require('../strings').default.notifications
 
 class Notifications extends Component {
 	static navigationOptions = {
-		title: "Notifications",
+        title: strings.title,
 		tabBar: {
-			label: "Notifications",
+            label: strings.label,
 			icon: ({tintColor}) => (
 				<VIcon name="ios-notifications" size={30} color={tintColor} />
 			)
@@ -133,7 +130,7 @@ class Notifications extends Component {
 				<Content>
 					<Card>
 						<ListItem header>
-							<Text>Friend Requests</Text>
+                            <Text>{strings.friendRequests}</Text>
 						</ListItem>
 						{this._renderFriendRequests()}
 					</Card>
@@ -141,7 +138,7 @@ class Notifications extends Component {
 				</Content>
 				<Content>
 					<ListItem itemDivider>
-						<Text>Event Invitations</Text>
+                        <Text>{strings.invitations}</Text>
 					</ListItem>
 				</Content>
 			</Container>

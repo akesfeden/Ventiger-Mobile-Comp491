@@ -15,7 +15,8 @@ module.exports = {
 		errorMismatch: "Phone exists :(",
 		errorMismatchPassword: "Password mismatch :(",
 		phoneLoadingMessage: "Checking Phone Availability...",
-		codeEntry: "Your Validation Code"
+        codeEntry: "Your Validation Code",
+        error: "Error..."
 	},
 	login: {
 		phone: "Phone",
@@ -24,18 +25,45 @@ module.exports = {
 	},
 	profile: {
 		calendar: "Calendar",
-		logout: "Logout",
 		friends: "Friends",
-		settings: "Settings",
 		loading: "Loading",
 		editProfile: "Edit Profile",
-		unfriend: "Remove Friend"
+        friendshipSettings: 'Friendship Settings',
+        sendFriendRequest: 'Send Friend Request',
+        unfriend: "Remove Friend"
 	},
-	notifications: {
-		accept: 'Accept',
-		reject: 'Reject',
-		friendRequests: 'Friend Requests',
-		invitations: 'Event Invitations',
-		seeProfile: 'See Profile'
+    events: {
+        title: "Events",
+        label: "Events"
+    },
+    friends: {
+        title: "Friends",
+        label: "Friends",
+        contactsTitle: "Your contacts in Ventiger"
+    },
+    settings: {
+        title: "Settings",
+        logout: "Logout",
+        editPersonalInfo: "Edit Personal Info",
+        changePassword: "Change Password"
+    },
+    passwordSettings: {
+        oldPasswordPlaceholder: "Old Password",
+        newPasswordPlaceholder: "New Password",
+        repeatPasswordPlaceholder: "Repeat Password",
+        updateTitle: "Update"
+    },
+    profileSettings: {
+        namePlaceholder: "Name",
+        updatePlaceholder: "Update"
+    },
+    notifications: {
+        title: "Notifications",
+        label: "Notifications",
+        seeProfile: "See Profile",
+        accept: "Accept",
+        reject: "Reject",
+        friendRequests: "Friend Requests",
+        invitations: "Event Invitations"
 	}
 }

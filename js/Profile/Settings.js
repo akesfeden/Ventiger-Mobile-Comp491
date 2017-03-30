@@ -1,19 +1,17 @@
-import React, { Component } from 'react'
-import { View, Text, TextInput } from 'react-native'
+import React, {Component} from "react";
+import {View} from "react-native";
 //import Button from 'react-native-button'
 //import { NavigationActions } from 'react-navigation'
-import { logout as logoutAction } from '../actions/login-actions'
-import { connect } from 'react-redux'
-import { graphql, gql, compose, withApollo } from 'react-apollo'
+import {logout as logoutAction} from "../actions/login-actions";
+import {connect} from "react-redux";
+import {withApollo} from "react-apollo";
 //import { Button, Container, Text, Content, Icon } from 'native-base'
-import { Button, List, ListItem } from 'react-native-elements'
-const strings = require('../strings').default.profile
-import Icons from 'react-native-vector-icons/EvilIcons'
-import styles from '../Registration/styles'
+import {Button, List, ListItem} from "react-native-elements";
+const strings = require('../strings').default.settings
 
 class Settings extends Component {
 	static navigationOptions = {
-		title: strings.settings
+        title: strings.title
 	}
 
 	constructor(props) {
@@ -36,13 +34,13 @@ class Settings extends Component {
 			<View>
 				<List>
 					<ListItem
-						title="Edit Personal Info"
+						title={strings.editPersonalInfo}
 						leftIcon={{name: 'info'}}
 						onPress={
 							() => this.props.navigation.navigate('NameSettings')}
 					/>
 					<ListItem
-						title="Change Password"
+						title={strings.changePassword}
 						leftIcon={{name: 'fingerprint'}}
 						onPress={
 							() => this.props.navigation.navigate('PasswordSettings')
