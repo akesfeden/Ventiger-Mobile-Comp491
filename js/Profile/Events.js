@@ -1,13 +1,12 @@
-import React, { Component } from 'react'
-import { View, Text, Image } from 'react-native'
-const strings = require('../strings').default.profile
-import Icon from 'react-native-vector-icons/Ionicons';
+import React, {Component} from "react";
+import Icon from "react-native-vector-icons/Ionicons";
+const strings = require('../strings').default.events
 
 export default class Events extends Component {
 	static navigationOptions = {
-		title: "Events",
+        title: strings.title,
 		tabBar: {
-			label: "Events",
+            label: strings.label,
 			icon: (args) => {
 				//console.log('icon args', args)
 				const { tintColor } = args

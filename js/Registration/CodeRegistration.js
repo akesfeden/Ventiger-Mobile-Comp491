@@ -1,17 +1,12 @@
-import React, {Component, PropTypes} from 'react'
-import {
-	View,
-	TextInput,
-	Text
-} from 'react-native'
+import React, {Component} from "react";
+import {Text, TextInput, View} from "react-native";
 //import Button from 'react-native-button'
-import styles from './styles'
-import { gql, graphql } from 'react-apollo'
-import { connect } from 'react-redux'
-import token from '../token'
-import { loginCheck } from '../actions/login-actions'
-import { NavigationActions } from 'react-navigation'
-import NextButton from './Components/Next'
+import styles from "./styles";
+import {gql, graphql} from "react-apollo";
+import {connect} from "react-redux";
+import token from "../token";
+import {loginCheck} from "../actions/login-actions";
+import NextButton from "./Components/Next";
 const strings = require('../strings').default.registration
 
 
@@ -52,7 +47,7 @@ class CodeRegistration extends Component {
 	_renderErrorText() {
 		if(this.state.error) {
 			return (
-				<Text>Error...</Text>
+				<Text>{strings.error}</Text>
 			)
 		}
 	}

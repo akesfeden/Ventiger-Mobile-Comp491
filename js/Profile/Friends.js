@@ -1,25 +1,22 @@
-import React, { Component } from 'react'
-import { View, Image, List } from 'react-native'
-import Icon from 'react-native-vector-icons/Ionicons'
-import { graphql, gql, compose } from 'react-apollo'
+import React, {Component} from "react";
+import {List} from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
+import {compose, gql, graphql} from "react-apollo";
+import {Button, Col, Container, Content, Icon as LIcon, ListItem as NListItem, Text} from "native-base";
+import UserCardItem from "./Components/UserCardItem";
+import {connect} from "react-redux";
+import {registerContacts} from "../actions/profile-actions";
+import loginCheck from "../login-check";
 //import { List, ListView, ListItem } from 'react-native-elements'
 const Contacts = require('react-native-contacts')
-import { Button, Container, Content,
-	Card, Col, Text,ListItem as NListItem,
-	Icon as LIcon, List as NList, Grid, Row, Header,
-	Item, Input
-} from 'native-base'
-import UserCardItem from './Components/UserCardItem'
-import { connect } from 'react-redux'
-import { registerContacts } from '../actions/profile-actions'
-import loginCheck from '../login-check'
+const strings = require('../strings').default.friends
 
 
 class Friends extends Component {
 	static navigationOptions = {
-		title: "Friends",
+        title: strings.title,
 		tabBar: {
-			label: "Friends",
+            label: strings.label,
 			icon: ({tintColor}) => (
 				<Icon name="ios-people" size={30} color={tintColor} />
 			)
@@ -205,7 +202,7 @@ class Friends extends Component {
 				<Content>
 					{this._renderFriends()}
 					<NListItem header>
-						<Text>Contacts in Ventiger</Text>
+						<Text>{strings.contactsTitle}</Text>
 					</NListItem>
 					{this._renderContacts()}
 				</Content>

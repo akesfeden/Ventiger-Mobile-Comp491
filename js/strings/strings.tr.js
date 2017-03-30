@@ -15,7 +15,8 @@ module.exports = {
 		errorMismatch: "Numara alınmış :(",
 		errorMismatchPassword: "Şifreler uyumlu değil :(",
 		phoneLoadingMessage: "Telefon uygunluğu kontrol ediliyor...",
-		codeEntry: "Onay Kodunuz"
+        codeEntry: "Onay Kodunuz",
+        error: "Hata..."
 	},
 	login: {
 		phone: "Telefon Numarası",
@@ -29,13 +30,42 @@ module.exports = {
 		settings: "Ayarlar",
 		loading: "Yükleniyor",
 		editProfile: "Profilimi Düzenle",
-		unfriend: "Arkadaşlardan Çıkar"
-	},
-	notifications: {
-		accept: 'Kabul Et',
-		reject: 'Reddet',
-		friendRequests: 'Arkadaşlık İstekleri',
-		invitations: 'Etkinlik Davetleri',
-		seeProfile: 'Profilini Görüntüle'
-	}
+        friendshipSettings: 'Arkadaşlık Ayarları',
+        sendFriendRequest: 'Arkadaşlık İsteği Gönder',
+        unfriend: "Arkadaşlardan Çıkar"
+    },
+    events: {
+        title: "Etkinlikler",
+        label: "Etkinlikler"
+    },
+    friends: {
+        title: "Arkadaşlar",
+        label: "Arkadaşlar",
+        contactsTitle: "Ventiger'daki Kişileriniz"
+    },
+    settings: {
+        title: "Ayarlar",
+        logout: "Çıkış yap",
+        editPersonalInfo: "Kişisel Bilgileri Düzenle",
+        changePassword: "Parola Değiştir"
+    },
+    passwordSettings: {
+        oldPasswordPlaceholder: "Eski Parola",
+        newPasswordPlaceholder: "Yeni Parola",
+        repeatPasswordPlaceholder: "Yeni Parola (Tekrar)",
+        updateTitle: "Güncelle"
+    },
+    profileSettings: {
+        namePlaceholder: "İsim",
+        updatePlaceholder: "Güncelle"
+    },
+    notifications: {
+        title: "Bildirimler",
+        label: "Bildirimler",
+        seeProfile: "Profilini Görüntüle",
+        accept: "Kabul et",
+        reject: "Reddet",
+        friendRequests: "Arkadaşlık İstekleri",
+        invitations: "Etkinlik Davetleri"
+    }
 }

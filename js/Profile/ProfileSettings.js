@@ -1,13 +1,10 @@
-import React, {Component, PropTypes} from 'react'
-import {
-	View,
-	TextInput,
-	Text
-} from 'react-native'
-import { Button } from 'react-native-elements'
-import styles from '../Login/styles'
-import { graphql, gql, compose } from 'react-apollo'
-import loginCheck from '../login-check'
+import React, {Component} from "react";
+import {Text, TextInput, View} from "react-native";
+import {Button} from "react-native-elements";
+import styles from "../Login/styles";
+import {compose, gql, graphql} from "react-apollo";
+import loginCheck from "../login-check";
+const strings = require('../strings').default.profileSettings
 
 class ProfileSettings extends Component {
 
@@ -60,7 +57,7 @@ class ProfileSettings extends Component {
 		return (
 			<View>
 				<TextInput
-					placeholder='Name'
+					placeholder={strings.namePlaceholder}
 					onChangeText={(text) => this.setState({...this.state, name: text, nameEdited:this.state.nameEdited+1})}
 					style={styles.textInput}
 					autoFocus={true}
@@ -70,7 +67,7 @@ class ProfileSettings extends Component {
 				/>
 				{this._renderSuccess()}
 				<Button
-					title='Update'
+					title={strings.updatePlaceholder}
 					buttonStyle={{backgroundColor: '#0fac0e', marginTop:10}}
 					onPress={this._updateInfo.bind(this)}
 					disabled={this.state.nameEdited === 0}
