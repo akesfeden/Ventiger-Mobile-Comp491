@@ -183,7 +183,9 @@ export default compose(
 		props: ({mutate}) => ({
 			acceptFriend: (_id) => {
 				console.log('update._id ', _id)
-				mutate({variables: {_id}})
+				mutate({
+					variables: {_id},
+				})
 			}
 		})
 	}),
@@ -191,7 +193,9 @@ export default compose(
 		props: ({mutate}) => ({
 			rejectFriend: (_id) => {
 				console.log('reject._id ', _id)
-				mutate({variables: {_id}})
+				mutate({
+					variables: {_id}
+				})
 			}
 		})
 	})

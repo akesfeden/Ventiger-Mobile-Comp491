@@ -40,5 +40,5 @@ UserCardItem.propTypes = {
 	renderButtons: PropTypes.func,
 	onPress: PropTypes.func,
 	imageURL: PropTypes.string,
-	key: PropTypes.number
+	key: PropTypes.mixed
 }

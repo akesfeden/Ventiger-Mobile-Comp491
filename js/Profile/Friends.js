@@ -134,7 +134,7 @@ class Friends extends Component {
 					return (
 						<NListItem style={{marginLeft: 0, paddingLeft:0, paddingRight:0, paddingTop:0, paddingBottom:0}}>
 							<UserCardItem
-								key={i}
+								key={this._getFriends().length + i}
 								imageURL="https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg"
 								renderContent={() => (
 									<Text>{friend.name}</Text>
@@ -173,6 +173,7 @@ class Friends extends Component {
 					<Button
 						small
 						warning
+						onPress={() => this.props.cancelFriend(contact._id)}
 					>
 						<Text>Cancel Request</Text>
 					</Button>
@@ -203,11 +204,15 @@ class Friends extends Component {
 		return (
 			<Container>
 				<Content>
-					{this._renderFriends()}
+					<NList>
+						{this._renderFriends()}
+					</NList>
 					<NListItem header>
 						<Text>Contacts in Ventiger</Text>
 					</NListItem>
-					{this._renderContacts()}
+					<NList>
+						{this._renderContacts()}
+					</NList>
 				</Content>
 			</Container>
 		)
@@ -236,21 +241,18 @@ const addFriend = gql`
 	}
 `
 
-const acceptFriend = gql`
-	mutation($_id: ID!) {
-		acceptFriend(_id: $_id) {
-			_id
-			name
-		}
-	}
-`
-
 const rejectFriend = gql`
 	mutation($_id: ID!) {
 		rejectFriend(_id: $_id)
 	}
 `
 
+
+const cancelFriend = gql`
+	mutation($_id: ID!) {
+		cancelFriendRequest(_id: $_id)
+	}
+`
 
 
 const FriendsWithData = compose(
@@ -274,7 +276,15 @@ const FriendsWithData = compose(
 				mutate({variables: {_id}})
 			}
 		})
-	})
+	}),
+	graphql(cancelFriend, {
+		props: ({mutate}) => ({
+			cancelFriend: (_id) => {
+				console.log("cancelFriend ", _id)
+				mutate({variables: {_id}})
+			}
+		})
+	}),
 )(Friends)
 
 
