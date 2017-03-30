@@ -253,16 +253,17 @@ const cancelFriend = gql`
 const FriendsWithData = compose(
 	graphql(getData, {
 		options: ({contacts}) => {
-			if (!contacts) {
+			/*if (!contacts) {
 				console.warn('Contacts are not loaded')
 				contacts = []
-			}
+			}*/
 			return {
 				variables: {
 					phones: contacts
 				}
 			}
-		}
+		},
+		skip: props => !props.contacts
 	}),
 	graphql(addFriend, {
 		props: ({mutate}) => ({
