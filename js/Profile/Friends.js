@@ -78,7 +78,7 @@ class Friends extends Component {
 							)}
 							onPress={() => this._onFriendSelect(i)}
 							key={i}
-							imageURL="https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg"
+							imageURL="https://img.tinychan.org/img/1360567490218199.jpg"
 						/>
 					</NListItem>
 				)
@@ -132,7 +132,7 @@ class Friends extends Component {
 						<NListItem style={{marginLeft: 0, paddingLeft:0, paddingRight:0, paddingTop:0, paddingBottom:0}}>
 							<UserCardItem
 								key={this._getFriends().length + i}
-								imageURL="https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg"
+								imageURL="https://img.tinychan.org/img/1360567490218199.jpg"
 								renderContent={() => (
 									<Text>{friend.name}</Text>
 								)}
