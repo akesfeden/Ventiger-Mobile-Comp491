@@ -29,5 +29,12 @@ module.exports = {
 		settings: "Ayarlar",
 		loading: "Yükleniyor",
 		editProfile: "Profilimi Düzenle"
+	},
+	notifications: {
+		accept: 'Kabul Et',
+		reject: 'Reddet',
+		friendRequests: 'Arkadaşlık İstekleri',
+		invitations: 'Etkinlik Davetleri',
+		seeProfile: 'Profilini Görüntüle'
 	}
 }

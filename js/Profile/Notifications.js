@@ -1,11 +1,14 @@
 import React, { Component } from 'react'
 import {  Image } from 'react-native'
-import Icon from 'react-native-vector-icons/Ionicons'
+import VIcon from 'react-native-vector-icons/Ionicons'
 import { graphql, gql, compose } from 'react-apollo'
 import loginCheck from '../login-check'
+const strings = require('../strings').default.notifications
+//console.log('strings', strings)
 
 import { Container, ListItem, Text, Content,
-	Col, Grid, Thumbnail, Left, Right, Body } from 'native-base'
+	Col, Grid, Left, Right, Body, Card, CardItem
+	, Icon, Button, Row } from 'native-base'
 
 class Notifications extends Component {
 	static navigationOptions = {
@@ -13,7 +16,7 @@ class Notifications extends Component {
 		tabBar: {
 			label: "Notifications",
 			icon: ({tintColor}) => (
-				<Icon name="ios-notifications" size={30} color={tintColor} />
+				<VIcon name="ios-notifications" size={30} color={tintColor} />
 			)
 		}
 	}
@@ -47,66 +50,99 @@ class Notifications extends Component {
 			rejected: {...this.state.rejected, [_id]: 1}})
 	}
 
-	_renderFriendButtons(i) {
-		const { _id } = this._getFriendRequests()[i]
-		console.log(this._getFriendRequests())
-		if (this.state.accepted[_id]) {
-			return [(<Col size={1}>
-					<Text
-						style={{color:'white', backgroundColor:'blue'}}
-						onPress={
-							() => this.props.navigation.navigate('PersonCalendar', {_id})
-						}
-					>
-						See profile
-					</Text>
-				</Col>)]
+	_renderFriendRequests() {
+		const friendRequests = this._getFriendRequests()
+		if (!friendRequests) {
+			return null
 		}
-		return [(<Col size={1} tyle={{backgroundColor:'green', marginRight:2}}>
-			<Text onPress={() => this._acceptFriend(i)} style={{color:'white', backgroundColor:'green'}}>Accept</Text>
-		</Col>), (<Col size={1}>
-			<Text onPress={() => this._rejectFriend(i)} style={{color:'white', backgroundColor:'red'}}>Reject</Text>
-		</Col>)]
-	}
-
-	//TODO: see profile bug fix
-	_renderFriends() {
-
-		if (this._getFriendRequests()) {
-			const friendRequests = this._getFriendRequests()
-			return friendRequests
-				.filter(friend => !this.state.rejected[friend._id])
-				.map((friend, i) => {
-				return (<ListItem avatar key={i}>
-						<Left>
-							<Image
-								//source={{uri: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg'}}
-								source={{uri: 'https://img.tinychan.org/img/1360567490218199.jpg'}}
-								style={{"width":50, "height":50, marginTop: 5,
-							 borderRadius: 25, alignSelf: 'center'}}
-							/>
-						</Left>
-						<Body>
+		//console.log(friendRequests)
+		return friendRequests
+			.filter(friend => !this.state.rejected[friend._id])
+			.map((friend, i) => {
+				let a = 'can'
+				const lastSpace = friend.name.lastIndexOf(' ')
+				let name, surname
+				if (lastSpace == -1) {
+					name = friend.name
+				} else {
+					name = friend.name.substring(0, lastSpace)
+					surname = friend.name.substring(lastSpace+1, friend.name.length)
+				}
+				if (this.state.accepted[friend._id]) {
+					return (<CardItem key={i}>
 						<Grid>
-							<Col size={2}><Text>{friend.name}</Text></Col>
-							{this._renderFriendButtons(i)}
+							<Col size={3}>
+								<Image
+									//source={{uri: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg'}}
+									source={{uri: 'https://img.tinychan.org/img/1360567490218199.jpg'}}
+									style={{"width":50, "height":50, marginTop: 0,
+											borderRadius: 25, alignSelf: 'center'}}
+								/>
+
+							</Col>
+							<Col size={5} style={{alignSelf: 'center'}}>
+								<Text>{name}</Text>
+								<Text>{surname}</Text>
+							</Col>
+							<Col size={8} style={{alignSelf: 'center'}}>
+								<Button onPress={()=>this.props.navigation.navigate('PersonCalendar', friend)} small><Text>
+									{strings.seeProfile}
+								</Text></Button>
+							</Col>
 						</Grid>
-						</Body>
-					</ListItem>
+					</CardItem>
+					)
+				}
+				return (
+					<CardItem key={i}>
+						<Grid>
+							<Col size={3}>
+								<Image
+									//source={{uri: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg'}}
+									source={{uri: 'https://img.tinychan.org/img/1360567490218199.jpg'}}
+									style={{"width":50, "height":50, marginTop: 0,
+											borderRadius: 25, alignSelf: 'center'}}
+								/>
+
+							</Col>
+							<Col size={5} style={{alignSelf: 'center'}}>
+								<Text>{name}</Text>
+								<Text>{surname}</Text>
+							</Col>
+							<Col size={4} style={{alignSelf: 'center'}}>
+								<Button onPress={()=>this._acceptFriend(i)} success small><Text>
+									{strings.accept}
+								</Text></Button>
+							</Col>
+							<Col size={4} style={{alignSelf: 'center'}}>
+								<Button onPress={() => this._rejectFriend(i)} danger small><Text>
+									{strings.reject}
+								</Text></Button>
+							</Col>
+						</Grid>
+					</CardItem>
 				)
 			})
-		}
 	}
 
 	render(){
 		if (Object.keys(this.state.accepted).length == 0 && Object.keys(this.state.accepted).length == 0 && loginCheck()) {
 			this.props.data.refetch()
 		}
+		/*
+		 <ListItem itemDivider><Text>Friend Requests</Text></ListItem>
+		 {this._renderFriends()}
+		* */
 		return (
 			<Container>
 				<Content>
-					<ListItem itemDivider><Text>Friend Requests</Text></ListItem>
-						{this._renderFriends()}
+					<Card>
+						<ListItem itemDivider>
+							<Text>Friend Requests</Text>
+						</ListItem>
+						{this._renderFriendRequests()}
+					</Card>
+
 				</Content>
 				<Content>
 					<ListItem itemDivider>
@@ -128,6 +164,8 @@ const getData = gql`
 		}
 	}
 `
+
+//export default graphql(getData)(Notifications)
 
 const acceptFriend = gql`
 	mutation($_id: ID!) {
@@ -163,3 +201,5 @@ export default compose(
 		})
 	})
 )(Notifications)
+
+

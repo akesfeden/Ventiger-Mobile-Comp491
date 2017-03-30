@@ -29,5 +29,12 @@ module.exports = {
 		settings: "Settings",
 		loading: "Loading",
 		editProfile: "Edit Profile"
+	},
+	notifications: {
+		accept: 'Accept',
+		reject: 'Reject',
+		friendRequests: 'Friend Requests',
+		invitations: 'Event Invitations',
+		seeProfile: 'See Profile'
 	}
 }
