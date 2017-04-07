@@ -1,16 +1,32 @@
 import { AsyncStorage } from 'react-native'
 
 const tokenName = 'mojo'
+const expiryDateName = 'maho'
 
 class TokenStore {
 	static instance = null
 
-	saveToken(token) {
+	saveToken(token, daysToExpiry) {
 		this.loggedIn = true
+		const expiryTime = new Date()
+		const OFFSET = 1
+		expiryTime.setDate(expiryTime.getDate() + daysToExpiry - OFFSET)
 		AsyncStorage.setItem(tokenName, token)
+		AsyncStorage.setItem(expiryDateName, expiryTime)
 	}
 
 	async getToken() {
+		if (!this._expiryTime) {
+			try {
+				this._expiryTime = await AsyncStorage.getItem(expiryDateName)
+			} catch (e) {
+				console.error(e)
+				return null
+			}
+		}
+		if (this._expiryTime < new Date()) {
+			this.removeToken()
+		}
 		if (!this.token) {
 			try {
 				this.token = await AsyncStorage.getItem(tokenName)

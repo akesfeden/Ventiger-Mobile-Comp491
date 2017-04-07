@@ -47,7 +47,7 @@ class Login extends Component {
 		this.props.mutate({variables: {body}})
 			.then(async ({data}) => {
 				console.log("data", data)
-				await token().saveToken(data.login.token)
+				await token().saveToken(data.login.token, data.login.daysToExpiry)
 				this.props.checkLogin()
 				//this.props.navigation.dispatch(this.loginAction)
 			})
@@ -96,6 +96,7 @@ const loginMutation = gql`
 	mutation Login($body: LoginBody!){
 		login(body: $body) {
 			token
+			daysToExpiry
 		}
 	}
 `

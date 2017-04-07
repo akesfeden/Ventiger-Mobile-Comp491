@@ -10,7 +10,7 @@ import loginCheck from "../login-check";
 //import { List, ListView, ListItem } from 'react-native-elements'
 const Contacts = require('react-native-contacts')
 const strings = require('../strings').default.friends
-
+const demo = true
 
 class Friends extends Component {
 	static navigationOptions = {
@@ -109,6 +109,13 @@ class Friends extends Component {
 		const contact = this._getContacts()[i]
 		console.log('friend addition ', contact, i)
 		this.props.addFriend(contact._id)
+		if (demo) {
+			this.props.data.refetch()
+			/*const contacts  = this._getContacts()
+			const usr = contacts.find(usr => usr._id === contact._id)
+			usr.relation = 'REQUESTER'*/
+
+		}
 	}
 
 	_renderContacts() {
@@ -170,7 +177,12 @@ class Friends extends Component {
 					<Button
 						small
 						warning
-						onPress={() => this.props.cancelFriend(contact._id)}
+						onPress={() => {
+							this.props.cancelFriend(contact._id)
+							if (demo) {
+								this.props.data.refetch()
+							}
+						}}
 					>
 						<Text>Cancel Request</Text>
 					</Button>
