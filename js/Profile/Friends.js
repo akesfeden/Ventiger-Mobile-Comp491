@@ -10,7 +10,7 @@ import loginCheck from "../login-check";
 //import { List, ListView, ListItem } from 'react-native-elements'
 const Contacts = require('react-native-contacts')
 const strings = require('../strings').default.friends
-const demo = true
+const demo = false
 
 class Friends extends Component {
 	static navigationOptions = {

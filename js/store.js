@@ -1,4 +1,5 @@
-import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
+import { createStore, combineReducers, applyMiddleware, compose } from 'redux'
+import logger from 'redux-logger'
 //import ApolloClient from 'apollo-client';
 import registrationReducer from './reducers/registration'
 import promiseMiddleware from 'redux-promise'
@@ -16,15 +17,16 @@ export default function (client) {
 			apollo: client.reducer(),
 		}),
 		{}, // initial state
-		compose(
+		//compose(
 			applyMiddleware(
 				client.middleware(),
 				promiseMiddleware,
-				thunk
+				thunk,
+				logger()
 			)
 			// If you are using the devToolsExtension, you can add it here also
 			//(typeof window.__REDUX_DEVTOOLS_EXTENSION__ !== 'undefined') ? window.__REDUX_DEVTOOLS_EXTENSION__() : f => f,
-		)
+		//)
 	)
 }
 
