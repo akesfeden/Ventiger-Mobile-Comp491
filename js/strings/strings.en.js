@@ -66,6 +66,11 @@ module.exports = {
         accept: "Accept",
         reject: "Reject",
         friendRequests: "Friend Requests",
-        invitations: "Event Invitations"
+        invitations: "Event Invitations",
+        seeEvent: "See Event",
+        eventLocationLabel: "Location: ",
+        eventTimeLabel: "Time: ",
+        eventInviterLabel: "Inviter: ",
+        evenUnknownField: "Unknown"
 	}
 }
