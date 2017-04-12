@@ -1,8 +1,9 @@
 import React, {Component} from "react";
-import {Image, Text} from "react-native";
-import {Button, Col, Grid, Row} from "react-native-elements";
+import {Image, Text, ListView, ListItem} from "react-native";
+import {Button, Col, Grid, Row, Card} from "react-native-elements";
 import {compose, gql, graphql} from "react-apollo";
 import Icon from "react-native-vector-icons/Ionicons";
+import {Button as NButton} from 'native-base'
 import isLoggedIn from "../login-check";
 const strings = require('../strings').default.profile
 
@@ -109,6 +110,10 @@ class Calendar extends Component {
 		return null
 	}
 
+	_onCreateEvent() {
+		this.props.navigation.navigate('EventCreation')
+	}
+
 	render() {
 		console.log(isLoggedIn())
 		if (isLoggedIn()) {
@@ -134,20 +139,34 @@ class Calendar extends Component {
 								{this._renderProfile()}
 							</Text>
 							{this._renderSettingsButton()}
-
 					</Col>
 
 				</Row>
 				<Row size={5} style={{ marginTop:5, backgroundColor: '#eaeeff'}}>
-					<Text>Today</Text>
+					<Row size={1}>
+						<Col size={4}>
+						</Col>
+						<Col size={2}>
+							<Button icon={{name:'add'}} title={strings.newEvent}
+									onPress={this._onCreateEvent.bind(this)}
+									buttonStyle={{
+										marginTop: 5, marginLeft: 0,
+										marginRight: 0, paddingBottom: 3,
+										paddingTop: 3,
+										backgroundColor: '#3cae73',
+								}}
+							/>
+						</Col>
+					</Row>
 				</Row>
-				<Row size={3} style={{ marginTop:0, backgroundColor: '#fff9c4'}}>
-					<Text>Undetermined</Text>
+				<Row size={2} style={{ marginTop:0, backgroundColor: '#fff9c4'}}>
+
 				</Row>
 			</Grid>
 		)
 	}
 }
+//<Text>Today</Text>
 
 //TODO: reconsider when having nested relation
 const getProfile = gql`

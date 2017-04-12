@@ -4,6 +4,8 @@ import NameSettings from './Profile/ProfileSettings'
 import PasswordSettings from './Profile/PasswordSettings'
 import Calendar from './Profile/Calendar'
 import FriendshipSettings from './Profile/FriendshipSettings'
+import EventCreation from './Eventing/EventCreation'
+import Event from './Eventing/Event'
 import { StackNavigator } from 'react-navigation'
 
 
@@ -19,5 +21,9 @@ export default StackNavigator({
 	FriendshipSettings: {
 		path: 'FriendshipSettings/:_id',
 		screen: FriendshipSettings
+	},
+	EventCreation: {screen: EventCreation},
+	Event: {
+		screen: Event
 	}
 })
