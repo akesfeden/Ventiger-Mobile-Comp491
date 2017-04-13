@@ -1,12 +1,9 @@
 import React, {Component} from "react";
+import {Button, FormInput, FormLabel} from "react-native-elements";
+import {View} from "react-native";
+import {gql, graphql} from "react-apollo";
+import {NavigationActions} from "react-navigation";
 const strings = require('../strings').default.events
-import { FormLabel, FormInput, Button} from 'react-native-elements'
-import {
-	TextInput, Text, View, DatePickerIOS,
-	Modal, TouchableHighlight, Picker
-} from 'react-native'
-import {graphql, gql} from 'react-apollo'
-import { NavigationActions } from 'react-navigation'
 
 class EventCreation extends Component {
 	static navigationOptions = {
@@ -67,9 +64,9 @@ class EventCreation extends Component {
 				<FormInput onChangeText={this._onTitleChange.bind(this)}/>
 				<FormLabel>Event Location</FormLabel>
 				<FormInput onChangeText={this._onLocationChange.bind(this)}/>
-				<Button title="Create Event"
-						buttonStyle={{marginTop:10}}
-						onPress={this._onEventCreate.bind(this)}
+                <Button title={strings.createEvent}
+                        buttonStyle={{marginTop:10}}
+                        onPress={this._onEventCreate.bind(this)}
 				/>
 			</View>
 		)

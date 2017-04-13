@@ -71,13 +71,20 @@ class Friends extends Component {
 			return friends.map((friend, i) => {
 				return (
 
-					<NListItem style={{marginLeft: 0, paddingLeft:0, paddingRight:0, paddingTop:0, paddingBottom:0}}>
+                    <NListItem key={i}
+                               style={{
+                                   marginLeft: 0,
+                                   paddingLeft: 0,
+                                   paddingRight: 0,
+                                   paddingTop: 0,
+                                   paddingBottom: 0
+                               }}>
 						<UserCardItem
 							renderContent={() => (
 								<Text>{friend.name}</Text>
 							)}
 							onPress={() => this._onFriendSelect(i)}
-							key={i}
+
 							imageURL="https://img.tinychan.org/img/1360567490218199.jpg"
 						/>
 					</NListItem>
@@ -136,10 +143,17 @@ class Friends extends Component {
 					/>
 				)*/
 					return (
-						<NListItem style={{marginLeft: 0, paddingLeft:0, paddingRight:0, paddingTop:0, paddingBottom:0}}>
+                        <NListItem key={this._getFriends().length + i + 1}
+                                   style={{
+                                       marginLeft: 0,
+                                       paddingLeft: 0,
+                                       paddingRight: 0,
+                                       paddingTop: 0,
+                                       paddingBottom: 0
+                                   }}>
 							<UserCardItem
-								key={this._getFriends().length + i}
-								imageURL="https://img.tinychan.org/img/1360567490218199.jpg"
+
+                                imageURL="https://img.tinychan.org/img/1360567490218199.jpg"
 								renderContent={() => (
 									<Text>{friend.name}</Text>
 								)}

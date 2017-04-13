@@ -1,6 +1,6 @@
-import React, { Component, PropTypes } from 'react'
-import { Image } from 'react-native'
-import {Col, CardItem, Button, Text, Grid} from 'native-base'
+import React, {Component, PropTypes} from "react";
+import {Image} from "react-native";
+import {CardItem, Col, Grid, Text} from "native-base";
 
 export default class UserCardItem extends Component {
 	static contentSize=8
@@ -40,5 +40,4 @@ UserCardItem.propTypes = {
 	renderButtons: PropTypes.func,
 	onPress: PropTypes.func,
 	imageURL: PropTypes.string,
-	key: PropTypes.mixed
 }
