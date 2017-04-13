@@ -35,13 +35,11 @@ export default class EventInvitations extends Component {
 	}
 
 	_onAdd(_id) {
-		const friend = this._getFriends().find(friend => friend._id === _id)
-		this.setState({...this.state, inviteds: {...this.state.inviteds, [friend._id]: 1}})
+		this.setState({...this.state, inviteds: {...this.state.inviteds, [_id]: 1}})
 	}
 
 	_onRemove(_id) {
-		const friend = this._getFriends().find(friend => friend._id === _id)
-		this.setState({...this.state, inviteds: {...this.state.inviteds, [friend._id]: 0}})
+		this.setState({...this.state, inviteds: {...this.state.inviteds, [_id]: 0}})
 	}
 
 	_renderButton(_id, inviteds=false) {

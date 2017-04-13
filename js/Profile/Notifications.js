@@ -54,27 +54,23 @@ class Notifications extends Component {
         })
     }
 
-    async _acceptFriend(i) {
-        const {_id} = this._getFriendRequests()[i]
+    async _acceptFriend(_id) {
         await this.props.acceptFriend(_id)
         this._setRequestState('friend', 'accepted', _id);
 
     }
 
-    async _rejectFriend(i) {
-        const {_id} = this._getFriendRequests()[i]
+    async _rejectFriend(_id) {
         await this.props.rejectFriend(_id)
         this._setRequestState('friend', 'rejected', _id);
     }
 
-    async _acceptEventInvitation(i) {
-        const {_id} = this._getEventRequests()[i]
+    async _acceptEventInvitation(_id) {
         console.log("inv", await this.props.acceptEventInvitation(_id))
         this._setRequestState('event', 'accepted', _id);
     }
 
-    async _rejectEventInvitation(i) {
-        const {_id} = this._getEventRequests()[i]
+    async _rejectEventInvitation(_id) {
         await this.props.rejectEventInvitation(_id)
         this._setRequestState('event', 'rejected', _id);
     }
@@ -133,12 +129,12 @@ class Notifications extends Component {
                         renderButtons={() => {
                             return [
                                 (<Col size={UserCardItem.contentSize / 2} style={{alignSelf: 'center'}}>
-                                    <Button onPress={() => this._acceptFriend(i)} success small><Text>
+                                    <Button onPress={() => this._acceptFriend(friend._id)} success small><Text>
                                         {strings.accept}
                                     </Text></Button>
                                 </Col>),
                                 (<Col size={UserCardItem.contentSize / 2} style={{alignSelf: 'center'}}>
-                                    <Button onPress={() => this._rejectFriend(i)} danger small><Text>
+                                    <Button onPress={() => this._rejectFriend(friend._id)} danger small><Text>
                                         {strings.reject}
                                     </Text></Button>
                                 </Col>)]
@@ -169,7 +165,7 @@ class Notifications extends Component {
                             this.state.event.accepted[event._id]
                                 ? () => (
                                 <Col size={EventInvitationCardItem.contentSize / 2} style={{alignSelf: 'center'}}>
-                                    <Button onPress={() => this.props.navigation.navigate('PersonCalendar', event)}
+                                    <Button onPress={() => this.props.navigation.navigate('Event', event)}
                                             small>
                                         <Text>
                                             {strings.seeEvent}
@@ -179,12 +175,12 @@ class Notifications extends Component {
                             )
                                 : () => ([
                                 (<Col size={UserCardItem.contentSize / 2} style={{alignSelf: 'center'}}>
-                                    <Button onPress={() => this._acceptEventInvitation(i)} success small>
+                                    <Button onPress={() => this._acceptEventInvitation(event._id)} success small>
                                         <Text>{strings.accept}</Text>
                                     </Button>
                                 </Col>),
                                 (<Col size={UserCardItem.contentSize / 2} style={{alignSelf: 'center'}}>
-                                    <Button onPress={() => this._rejectEventInvitation(i)} danger small>
+                                    <Button onPress={() => this._rejectEventInvitation(event._id)} danger small>
                                         <Text>{strings.reject}</Text>
                                     </Button>
                                 </Col>)])
