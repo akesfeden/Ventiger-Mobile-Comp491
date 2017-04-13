@@ -6,6 +6,7 @@ import Calendar from './Profile/Calendar'
 import FriendshipSettings from './Profile/FriendshipSettings'
 import EventCreation from './Eventing/EventCreation'
 import Event from './Eventing/Event'
+import EventInvitations from './Eventing/EventInvitations'
 import { StackNavigator } from 'react-navigation'
 
 
@@ -23,7 +24,6 @@ export default StackNavigator({
 		screen: FriendshipSettings
 	},
 	EventCreation: {screen: EventCreation},
-	Event: {
-		screen: Event
-	}
+	Event: {screen: Event},
+	//EventInvitations: {screen: EventInvitations}
 })

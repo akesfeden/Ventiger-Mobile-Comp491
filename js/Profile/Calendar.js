@@ -114,6 +114,21 @@ class Calendar extends Component {
 		this.props.navigation.navigate('EventCreation')
 	}
 
+	_renderCreateEventButton() {
+		if (this.props.relation && this.props.relation === 'MYSELF') {
+			return (<Button icon={{name:'add'}} title={strings.newEvent}
+							onPress={this._onCreateEvent.bind(this)}
+							buttonStyle={{
+										marginTop: 5, marginLeft: 0,
+										marginRight: 0, paddingBottom: 3,
+										paddingTop: 3,
+										backgroundColor: '#3cae73',
+								}}/>
+			)
+		}
+		return null
+	}
+
 	render() {
 		console.log(isLoggedIn())
 		if (isLoggedIn()) {
@@ -147,15 +162,7 @@ class Calendar extends Component {
 						<Col size={4}>
 						</Col>
 						<Col size={2}>
-							<Button icon={{name:'add'}} title={strings.newEvent}
-									onPress={this._onCreateEvent.bind(this)}
-									buttonStyle={{
-										marginTop: 5, marginLeft: 0,
-										marginRight: 0, paddingBottom: 3,
-										paddingTop: 3,
-										backgroundColor: '#3cae73',
-								}}
-							/>
+							{this._renderCreateEventButton()}
 						</Col>
 					</Row>
 				</Row>

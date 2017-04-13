@@ -36,7 +36,8 @@ module.exports = {
     events: {
         title: "Events",
         label: "Events",
-		eventCreation: "New Event"
+		eventCreation: "New Event",
+		createEvent: "Create Event"
     },
     friends: {
         title: "Friends",

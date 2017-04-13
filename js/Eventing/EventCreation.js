@@ -1,9 +1,12 @@
 import React, {Component} from "react";
 import {Button, FormInput, FormLabel} from "react-native-elements";
 import {View} from "react-native";
-import {gql, graphql} from "react-apollo";
-import {NavigationActions} from "react-navigation";
+/*import {gql, graphql} from "react-apollo";
+import {NavigationActions} from "react-navigation";*/
 const strings = require('../strings').default.events
+import EventInvitations from './EventInvitations'
+import {compose, gql, graphql} from "react-apollo";
+import { NavigationActions } from 'react-navigation'
 
 class EventCreation extends Component {
 	static navigationOptions = {
@@ -12,7 +15,7 @@ class EventCreation extends Component {
 
 	constructor(props) {
 		super(props)
-		this.state = {datePicking:false}
+		this.state = {}
 
 	}
 
@@ -36,18 +39,26 @@ class EventCreation extends Component {
 	}
 
 	_onEventCreate() {
-		console.log("Mutation state", this.state)
+		//this._navigate(this.state)
+		this.setState({...this.state, clicked: true})
+	}
+
+	_isButtonDisabled() {
+		return !(this.state.title && this.state.title.length > 0)
+	}
+
+	_onComplete() {
+		const { title, location } = this.state//this.props.navigation.state.params
 		this.props.mutate({variables: {
 			body: {
-				title: this.state.title,
-				location: {
-					info: this.state.location
-				}
+				title,
+				location: location ? {
+					info: location
+				} : null,
 			}
 		}}).then(res => {
 			if (res.data.createEvent) {
 				console.log('Success...', res.data.createEvent)
-				//this.props.navigation.navigate('Event', res.data.createEvent)
 				this._navigate(res.data.createEvent)
 			} else {
 				console.log('Fail...')
@@ -58,28 +69,60 @@ class EventCreation extends Component {
 	}
 
 	render() {
+		// FIXME: hc
+		if (this.state.clicked) {
+			return (
+				<EventInvitations
+					eventInfo={this.state}
+					navigation={this.props.navigation}
+					data={this.props.data}
+					mutate={this.props.mutate}
+					goBack={() => this.setState({...this.state, clicked: false})}
+				/>
+			)
+		}
 		return (
 			<View>
 				<FormLabel >Event Title</FormLabel>
-				<FormInput onChangeText={this._onTitleChange.bind(this)}/>
+				<FormInput onChangeText={this._onTitleChange.bind(this)} value={this.state.title}/>
 				<FormLabel>Event Location</FormLabel>
-				<FormInput onChangeText={this._onLocationChange.bind(this)}/>
-                <Button title={strings.createEvent}
-                        buttonStyle={{marginTop:10}}
-                        onPress={this._onEventCreate.bind(this)}
+				<FormInput onChangeText={this._onLocationChange.bind(this)} value={this.state.location}/>
+                <Button title="Invite Friends"
+                        buttonStyle={{marginTop:10, backgroundColor: '#53c35f'}}
+						onPress={this._onEventCreate.bind(this)}
+						disabled={this._isButtonDisabled()}
 				/>
+				<Button title="Complete"
+						buttonStyle={{marginTop:10, backgroundColor: '#5990c3'}}
+						disabled={this._isButtonDisabled()}
+						onPress={this._onComplete.bind(this)}
+				/>
+
 			</View>
 		)
 	}
 }
 
+const getData = gql`
+	query {
+		viewer {	
+			friends(sortedBy: "name") {
+				_id
+				name
+			}
+		}
+	}
+`
 
 const createEventMutation = gql`
-mutation ($body: EventBody!) {
-	createEvent(body: $body) {
+mutation ($body: EventBody!, $userIds: [ID]) {
+	createEvent(body: $body, userIds: $userIds) {
 		_id
 		title
 	}
 }`
 
-export default graphql(createEventMutation)(EventCreation)
+export default compose(
+	graphql(createEventMutation),
+	graphql(getData)
+)(EventCreation)
