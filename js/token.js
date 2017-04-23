@@ -19,11 +19,13 @@ class TokenStore {
 		if (!this._expiryTime) {
 			try {
 				this._expiryTime = await AsyncStorage.getItem(expiryDateName)
+				this._expiryTime = new Date(this._expiryTime)
 			} catch (e) {
 				console.error(e)
 				return null
 			}
 		}
+		//console.log("Expiry time ", this._expiryTime < (new Date()).)
 		if (this._expiryTime < new Date()) {
 			this.removeToken()
 		}

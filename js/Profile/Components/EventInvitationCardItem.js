@@ -16,10 +16,9 @@ export default class EventInvitationCardItem extends Component {
     }
 
     render() {
-        console.log('Event Card Item Key', this.props.key)
         console.log('Event Card Item Title', this.props.eventTitle)
         return (
-            <CardItem key={this.props.key} onPress={this.props.onPress} style={{...this.props.styles}}>
+            <CardItem onPress={this.props.onPress} style={{...this.props.styles}}>
                 <Grid>
                     <Col size={3}>
                         <Image
@@ -68,11 +67,9 @@ export default class EventInvitationCardItem extends Component {
 }
 
 EventInvitationCardItem.propTypes = {
-    renderContent: PropTypes.func.isRequired,
     renderButtons: PropTypes.func,
     onPress: PropTypes.func,
     imageURL: PropTypes.string,
-    key: PropTypes.mixed,
     eventTitle: PropTypes.string,
     eventLocation: PropTypes.string,
     eventTime: PropTypes.string,

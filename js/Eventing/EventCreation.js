@@ -7,6 +7,12 @@ const strings = require('../strings').default.events
 import EventInvitations from './EventInvitations'
 import {compose, gql, graphql} from "react-apollo";
 import { NavigationActions } from 'react-navigation'
+import DropDown, {
+	Select,
+	Option,
+	OptionList
+} from 'react-native-selectme'
+import TimeSelect from './EventTimeSelector'
 
 class EventCreation extends Component {
 	static navigationOptions = {
@@ -16,7 +22,21 @@ class EventCreation extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {}
-
+		// TODO: internationalization
+		this.months = [
+			'January',
+			'February',
+			'March',
+			'April',
+			'May',
+			'June',
+			'July',
+			'August',
+			'September',
+			'October',
+			'November',
+			'December'
+		]
 	}
 
 	_navigate(params) {
@@ -68,6 +88,18 @@ class EventCreation extends Component {
 		})
 	}
 
+	_getOptionList() {
+		return this.refs['OPTIONLIST'];
+	}
+
+	//TODO: internatiolize
+	_onTimeSelect() {
+		this.setState({
+			...this.state,
+			selectingTime: true
+		})
+	}
+
 	render() {
 		// FIXME: hc
 		if (this.state.clicked) {
@@ -81,12 +113,24 @@ class EventCreation extends Component {
 				/>
 			)
 		}
+		if (this.state.selectingTime) {
+			return (
+				<TimeSelect onCancel={()=>this.setState({
+					...this.state, selectingTime: false
+				})}/>
+			)
+		}
 		return (
 			<View>
 				<FormLabel >Event Title</FormLabel>
 				<FormInput onChangeText={this._onTitleChange.bind(this)} value={this.state.title}/>
 				<FormLabel>Event Location</FormLabel>
 				<FormInput onChangeText={this._onLocationChange.bind(this)} value={this.state.location}/>
+				<Button
+					buttonStyle={{marginTop:10, backgroundColor: '#47c0c3'}}
+					title={"Select Time"}
+					onPress={this._onTimeSelect.bind(this)}
+				/>
                 <Button title="Invite Friends"
                         buttonStyle={{marginTop:10, backgroundColor: '#53c35f'}}
 						onPress={this._onEventCreate.bind(this)}

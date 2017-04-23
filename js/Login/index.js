@@ -46,7 +46,7 @@ class Login extends Component {
 		//TODO: cache token somewhere safe, refactor this
 		this.props.mutate({variables: {body}})
 			.then(async ({data}) => {
-				console.log("data", data)
+				console.log("login data", data)
 				await token().saveToken(data.login.token, data.login.daysToExpiry)
 				this.props.checkLogin()
 				//this.props.navigation.dispatch(this.loginAction)

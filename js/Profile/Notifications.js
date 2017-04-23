@@ -174,12 +174,12 @@ class Notifications extends Component {
                                 </Col>
                             )
                                 : () => ([
-                                (<Col size={UserCardItem.contentSize / 2} style={{alignSelf: 'center'}}>
+                                (<Col key={1} size={UserCardItem.contentSize / 2} style={{alignSelf: 'center'}}>
                                     <Button onPress={() => this._acceptEventInvitation(event._id)} success small>
                                         <Text>{strings.accept}</Text>
                                     </Button>
                                 </Col>),
-                                (<Col size={UserCardItem.contentSize / 2} style={{alignSelf: 'center'}}>
+                                (<Col key={2} size={UserCardItem.contentSize / 2} style={{alignSelf: 'center'}}>
                                     <Button onPress={() => this._rejectEventInvitation(event._id)} danger small>
                                         <Text>{strings.reject}</Text>
                                     </Button>
@@ -214,10 +214,12 @@ class Notifications extends Component {
 
                 </Content>
                 <Content>
-                    <ListItem itemDivider>
-                        <Text>{strings.invitations}</Text>
-                    </ListItem>
-                    {this._renderEventRequests()}
+                    <Card>
+                        <ListItem itemDivider>
+                            <Text>{strings.invitations}</Text>
+                        </ListItem>
+                        {this._renderEventRequests()}
+                    </Card>
                 </Content>
             </Container>
         )
@@ -231,16 +233,25 @@ const getData = gql`
 				_id
 				name
 			}
-			eventInvitations{
-				_id
-				title
-				invitor{
-				    name
-				}
-			}
+			 eventInvitations {
+			    _id
+                title
+                invitor {
+                    name
+                }
+            }
 		}
 	}
 `
+/*
+* eventInvitations{
+ _id
+ title
+ invitor{
+ name
+ }
+ }
+* */
 
 //export default graphql(getData)(Notifications)
 
