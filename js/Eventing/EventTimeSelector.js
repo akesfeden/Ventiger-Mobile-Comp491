@@ -16,9 +16,16 @@ export default class EventTimeSelector extends Component {
 
 	constructor(props) {
 		super(props)
+		console.log("Time Select ", props)
+		let startTime, endTime
+		if (props.time) {
+			startTime = props.time.startTime
+			endTime = props.time.endTime
+
+		}
 		this.state = {
-			startTime: new Date(),
-			endTime: (() => {
+			startTime: startTime || new Date(),
+			endTime: endTime || (() => {
 				const a = new Date()
 				a.setHours(a.getHours()+2)
 				return a

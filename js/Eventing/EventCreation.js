@@ -111,6 +111,7 @@ class EventCreation extends Component {
 		if (this.state.selectingTime) {
 			return (
 				<TimeSelect
+					time={this.state.time}
 					onCancel={()=>this.setState({
 						...this.state, selectingTime: false
 					})}
