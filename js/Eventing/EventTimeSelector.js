@@ -5,34 +5,49 @@ import {
 } from 'react-native';
 import { Text, Button, FormLabel } from 'react-native-elements'
 
-import DropDown, {
+/*import DropDown, {
 	Select,
 	Option,
 	OptionList
-} from 'react-native-selectme'
+} from 'react-native-selectme'*/
 
 
 export default class EventTimeSelector extends Component {
+
 	constructor(props) {
-		super(props);
-		this.months = [
-			'January',
-			'February',
-			'March',
-			'April',
-			'May',
-			'June',
-			'July',
-			'August',
-			'September',
-			'October',
-			'November',
-			'December'
-		]
+		super(props)
+		this.state = {
+			startTime: new Date(),
+			endTime: (() => {
+				const a = new Date()
+				a.setHours(a.getHours()+2)
+				return a
+			})()
+		}
 	}
 
-	_getMonthList() {
-		return this.refs['MONTHLIST'];
+	_onStartTimeChange(date) {
+		console.log('Date ', date)
+		this.setState({...this.state, startTime: date})
+	}
+
+	_onEndTimeChange(date) {
+		this.setState({...this.state, endTime: date})
+	}
+
+	_isValid() {
+		return this.state.startTime < this.state.endTime
+	}
+
+	_renderErrorText() {
+		if (!this._isValid()) {
+			return (
+				<Text style={{color: '#c35655'}}>
+					Start Time is after the End Time
+				</Text>
+			)
+		}
+		return null
 	}
 
 	render() {
@@ -44,23 +59,22 @@ export default class EventTimeSelector extends Component {
 				</Text>
 				<Text style={{fontSize:16}}>Starting Time</Text>
 				<DatePickerIOS
-					date={new Date()}
+					date={this.state.startTime}
 					mode="datetime"
+					onDateChange={this._onStartTimeChange.bind(this)}
 				/>
 				<Text style={{fontSize:16}}>Ending Time</Text>
 				<DatePickerIOS
-					date={(
-						() => {
-							const a = new Date()
-							a.setHours(a.getHours()+2)
-							return a
-						})()
-					}
+					date={this.state.endTime}
 					mode="datetime"
+					onDateChange={this._onEndTimeChange.bind(this)}
 				/>
+				{this._renderErrorText()}
 				<Button
 					title="Done"
 					buttonStyle={{backgroundColor: '#5dc370'}}
+					disabled={!this._isValid()}
+					onPress={() => this.props.onDone(this.state.startTime, this.state.endTime)}
 				/>
 				<Button
 					title="Cancel"
@@ -72,7 +86,30 @@ export default class EventTimeSelector extends Component {
 		)
 	}
 
-	/*render() {
+	/*
+	 constructor(props) {
+	 	super(props);
+	 this.months = [
+	 'January',
+	 'February',
+	 'March',
+	 'April',
+	 'May',
+	 'June',
+	 'July',
+	 'August',
+	 'September',
+	 'October',
+	 'November',
+	 'December'
+	 ]
+	 }
+	 _getMonthList() {
+
+	 return this.refs['MONTHLIST'];
+	 }
+
+	render() {
 		return (
 			<View>
 				<Text>Starting Time</Text>

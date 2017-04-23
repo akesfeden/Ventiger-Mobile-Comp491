@@ -116,13 +116,14 @@ export default class EventInvitations extends Component {
 	}
 
 	_onComplete() {
-		const { title, location } = this.props.eventInfo//this.props.navigation.state.params
+		const { title, location, time} = this.props.eventInfo//this.props.navigation.state.params
 		this.props.mutate({variables: {
 			body: {
 				title,
 				location: location ? {
 						info: location
 					} : null,
+				time: time || null
 			},
 			userIds: Object.keys(this.state.inviteds)
 		}}).then(res => {
@@ -157,7 +158,7 @@ export default class EventInvitations extends Component {
 					buttonStyle={{marginBottom:10, backgroundColor: '#c38c3b'}}
 					icon={{name: 'arrow-back'}}
 					title="Back to editing"
-					onPress={this.props.goBack}
+					onPress={()=>this.props.goBack(Object.keys(this.state.inviteds))}
 				/>
 				<EButton
 					buttonStyle={{marginBottom:10, backgroundColor: '#53c35f'}}
