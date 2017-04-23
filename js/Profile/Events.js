@@ -4,7 +4,9 @@ import {Button, Card, Icon as NIcon, Col, Container, Content, ListItem, Text, Gr
 import {gql, graphql} from 'react-apollo'
 const strings = require('../strings').default.events
 import {Image} from "react-native"
+import {Button as EButton} from 'react-native-elements'
 
+//TODO: pagination for timed events
 class Events extends Component {
 	static navigationOptions = {
         title: strings.title,
@@ -23,12 +25,94 @@ class Events extends Component {
 		}
 	}
 
+	constructor(props) {
+		super(props)
+		this.state = {
+			dateOffset:0
+		}
+	}
+
+	_getToday() {
+		return new Date()
+	}
+
+	_getCurrentDay() {
+		const today = this._getToday()
+		today.setDate(today.getDate()+this.state.dateOffset)
+		return today
+	}
+
+	_onNext() {
+		this.setState({...this.state, dateOffset: this.state.dateOffset+1})
+	}
+
+	_onPrev() {
+		this.setState({...this.state, dateOffset: this.state.dateOffset-1})
+	}
+
+	_onHome() {
+		this.setState({...this.state, dateOffset: 0})
+	}
+
 	_getEvents() {
 		try {
 			return this.props.data.viewer.events
 		} catch (err) {
 			return []
 		}
+	}
+
+	_renderTimedEvents() {
+		console.log("Events ", this._getEvents())
+		const formattedEventTime = event => {
+			const startTime = new Date(event.time.startTime)
+			const endTime = new Date(event.time.endTime)
+			return startTime.getHours() + ':' + startTime.getMinutes() + '-' + endTime.getHours() + ':' + endTime.getMinutes()
+		}
+		const isInCurrentDay = time_ => {
+			const currentDay = new Date(this._getCurrentDay())
+			const time = new Date(time_)
+			return time.getDate() == currentDay.getDate() && time.getMonth() == currentDay.getMonth() && time.getYear() == currentDay.getYear()
+		}
+		return this._getEvents()
+			.filter(e=>e.time && (isInCurrentDay(e.time.startTime) || isInCurrentDay(e.time.endTime)))
+			.sort((e1, e2) => e1.time.startTime > e2.time.startTime)
+			// TODO: internationalize
+			.map(e => {
+					let desc = ""
+					let cnt = 0
+					e.participants.forEach(p=>{
+						if (cnt < 3) {
+							cnt++
+							desc += (desc === "") ? p.name : (", " + p.name)
+						}
+					})
+					if (cnt == 3 && e.participants.length>3) {
+						desc += " and " + Math.max((e.participants.length-3), 0) + " others"
+					}
+					//desc = "Participants: " + desc
+					return (
+						<Card>
+							<CardItem  onPress={() => {
+							this.props.navigation.navigate('Event', e)
+						}}>
+								<Col size={1} >
+									<Image
+										source={{uri: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg'}}
+
+										style={{"width":50, "height":50, marginTop: 0,
+											borderRadius: 15, alignSelf: 'center'}}
+									/>
+								</Col>
+								<Col size={3} style={{alignSelf: 'center'}}>
+									<Title>{e.title + " (" + formattedEventTime(e)+")"}</Title>
+									<Text>{desc}</Text>
+								</Col>
+							</CardItem>
+						</Card>
+					)
+				}
+			)
 	}
 
 	_renderUntimedEvents() {
@@ -45,8 +129,8 @@ class Events extends Component {
 						desc += (desc === "") ? p.name : (", " + p.name)
 					}
 				})
-				if (cnt == 3 && e.participants.length>2) {
-					desc += " and " + Math.max((e.participants.length-2), 0) + " others"
+				if (cnt == 3 && e.participants.length>3) {
+					desc += " and " + Math.max((e.participants.length-3), 0) + " others"
 				}
 				//desc = "Participants: " + desc
 				return (
@@ -81,20 +165,19 @@ class Events extends Component {
 						<Card style={{marginBottom:0, paddingBottom:0}}>
 							<CardItem>
 								<Left>
-									<Button small warning>
+									<Button small warning onPress={this._onPrev.bind(this)}>
 										<Icon name='ios-arrow-back'/>
 									</Button>
 
 								</Left>
-								<Text style={{marginRight:20}}>
-									24 Haziran 2017
+								<Text style={{marginRight:10}}>
+									{this.state.dateOffset == 0 && `Today(${this._getCurrentDay().toDateString()})` || this._getCurrentDay().toDateString()}
 								</Text>
-								<Button small>
+								<Button small onPress={this._onHome.bind(this)}>
 									<NIcon name='home'/>
 								</Button>
 								<Right>
-
-									<Button small success>
+									<Button small success onPress={this._onNext.bind(this)}>
 										<Icon name='ios-arrow-forward'/>
 									</Button>
 								</Right>
@@ -103,21 +186,33 @@ class Events extends Component {
 					</Row>
 					<Row size={8}>
 						<Content style={{marginTop:0, paddingTop:0}}>
-							<Card>
-
-							</Card>
+							{this._renderTimedEvents()}
 						</Content>
 					</Row>
 					<Row size={2}>
-						<Card style={{backgroundColor:"#f9f2f7"}}>
-							<CardItem itemDivider style={{backgroundColor:"#f9f2f7"}}>
+						<Card style={{marginTop:20}}>
+							{/*style={{backgroundColor:"#f9f2f7"}}*/}
+							<CardItem itemDivider>
 								<Title>Time is Undetermined</Title>
 							</CardItem>
 						</Card>
 					</Row>
-					<Row size={7}>
+					<Row size={5}>
 						<Content>
 							{this._renderUntimedEvents()}
+						</Content>
+					</Row>
+					<Row size={2}>
+						<Content >
+							{/*TODO: Try to add this to top*/}
+							<EButton
+								buttonStyle={{backgroundColor: "#32c2ee", marginTop:5,marginRight:0, marginLeft:0}}
+								title="Create New Event"
+								icon={{name: 'add'}}
+								onPress={() => {
+									this.props.navigation.navigate('EventCreation')
+								}}
+							/>
 						</Content>
 					</Row>
 				</Grid>
