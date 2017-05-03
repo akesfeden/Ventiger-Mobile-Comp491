@@ -15,7 +15,7 @@ export default class EventInvitations extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			inviteds: {}
+			inviteds: props.inviteds || {}
 		}
 	}
 
@@ -92,6 +92,7 @@ export default class EventInvitations extends Component {
 	}
 
 	_renderInvitedsTitle() {
+		console.log('Inviteds ', this.state.inviteds)
 		if (Object.keys(this.state.inviteds)
 				.filter(key => this.state.inviteds[key]).length > 0) {
 			return (
@@ -158,7 +159,7 @@ export default class EventInvitations extends Component {
 					buttonStyle={{marginBottom:10, backgroundColor: '#c38c3b'}}
 					icon={{name: 'arrow-back'}}
 					title="Back to editing"
-					onPress={()=>this.props.goBack(Object.keys(this.state.inviteds))}
+					onPress={()=>this.props.goBack(this.state.inviteds)}
 				/>
 				<EButton
 					buttonStyle={{marginBottom:10, backgroundColor: '#53c35f'}}

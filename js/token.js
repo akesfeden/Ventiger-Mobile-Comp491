@@ -21,7 +21,7 @@ class TokenStore {
 				this._expiryTime = await AsyncStorage.getItem(expiryDateName)
 				this._expiryTime = new Date(this._expiryTime)
 			} catch (e) {
-				console.error(e)
+				console.warn(e)
 				return null
 			}
 		}

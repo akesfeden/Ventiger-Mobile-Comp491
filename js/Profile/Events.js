@@ -5,6 +5,7 @@ import {gql, graphql} from 'react-apollo'
 const strings = require('../strings').default.events
 import {Image} from "react-native"
 import {Button as EButton} from 'react-native-elements'
+import loginCheck from "../login-check";
 
 //TODO: pagination for timed events
 class Events extends Component {
@@ -30,6 +31,7 @@ class Events extends Component {
 		this.state = {
 			dateOffset:0
 		}
+		this.numRefetch = 0
 	}
 
 	_getToday() {
@@ -55,19 +57,22 @@ class Events extends Component {
 	}
 
 	_getEvents() {
-		try {
-			return this.props.data.viewer.events
-		} catch (err) {
-			return []
-		}
+		return (
+			this.props.data &&
+			this.props.data.viewer &&
+			this.props.data.viewer.events
+		)
 	}
 
 	_renderTimedEvents() {
+		if (!this._getEvents()) {
+			return null
+		}
 		console.log("Events ", this._getEvents())
 		const formattedEventTime = event => {
 			const startTime = new Date(event.time.startTime)
 			const endTime = new Date(event.time.endTime)
-			return startTime.getHours() + ':' + startTime.getMinutes() + '-' + endTime.getHours() + ':' + endTime.getMinutes()
+			return startTime.toTimeString().substring(0,5) + ' - ' + endTime.toTimeString().substring(0, 5)
 		}
 		const isInCurrentDay = time_ => {
 			const currentDay = new Date(this._getCurrentDay())
@@ -116,6 +121,9 @@ class Events extends Component {
 	}
 
 	_renderUntimedEvents() {
+		if (!this._getEvents()) {
+			return null
+		}
 		console.log("Events ", this._getEvents())
 		return this._getEvents()
 			.filter(e=>!e.time)
@@ -157,7 +165,16 @@ class Events extends Component {
 		)
 	}
 
+	componentWillReceiveProps(nextProps) {
+		console.log('Props ', nextProps)
+	}
+
 	render() {
+		if (loginCheck() && this.numRefetch == 0) {
+			this.props.data && this.props.data.refetch()
+			this.numRefetch++
+		}
+
 		return (
 			<Container>
 				<Grid>

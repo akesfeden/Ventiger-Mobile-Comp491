@@ -158,7 +158,7 @@ class Notifications extends Component {
                     <EventInvitationCardItem
                         eventTitle={event.title}
                         eventLocation={event.location}
-                        eventInviterInfo={event.invitor.name}
+                        eventInviterInfo={event.invitor && event.invitor.name}
                         eventTime={event.time}
                         key={i}
                         renderButtons={

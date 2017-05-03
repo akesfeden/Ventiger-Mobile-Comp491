@@ -62,7 +62,7 @@ class EventCreation extends Component {
 				} : null,
 				time: time || null
 			},
-			userIds: inviteds,
+			userIds: Object.keys(inviteds),
 		}}).then(res => {
 			if (res.data.createEvent) {
 				console.log('Success...', res.data.createEvent)
@@ -100,6 +100,7 @@ class EventCreation extends Component {
 		if (this.state.clicked) {
 			return (
 				<EventInvitations
+					inviteds={this.state.inviteds}
 					eventInfo={this.state}
 					navigation={this.props.navigation}
 					data={this.props.data}
@@ -147,7 +148,6 @@ class EventCreation extends Component {
 						disabled={this._isButtonDisabled()}
 						onPress={this._onComplete.bind(this)}
 				/>
-
 			</View>
 		)
 	}
