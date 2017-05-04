@@ -17,7 +17,7 @@ class Event extends Component {
 
 	constructor(props) {
 		super(props)
-		this.state = {data: {}}
+		this.state = {data: {}, filterMyTodos: false}
 	}
 
 	_getEvent() {
@@ -147,7 +147,8 @@ class Event extends Component {
 				</Col>
 			)
 		}
-		const todos = event.todos
+		const todos_ = this.state.filterMyTodos ? event.todos.filter(t=>t.takers.some(t=>t._id === me._id)) : event.todos
+		const todos = todos_
 			.sort((t1, t2) => Number(new Date(t2.createdAt)) > Number(new Date(t1.createdAt)))
 			.filter(t=>!t.done)
 		event.todos.filter(t=>t.done).forEach(t=>todos.push(t))
@@ -211,7 +212,11 @@ class Event extends Component {
 										}>
 											<Icon name='add'/>
 										</Button>
-
+										<Button small info bordered style={{marginLeft: 20}}
+												onPress={() => this.setState({...this.state, filterMyTodos:!this.state.filterMyTodos})}
+										>
+											<Text>{this.state.filterMyTodos ? 'Show All' : 'Filter Mines'}</Text>
+										</Button>
 								</CardItem>
 								{this._renderTodos()}
 							</Card>
