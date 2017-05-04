@@ -17,7 +17,7 @@ class Event extends Component {
 
 	constructor(props) {
 		super(props)
-		this.state = {data: {}, filterMyTodos: false}
+		this.state = {data: {}, filterMyTodos: false, focus: null}
 	}
 
 	_getEvent() {
@@ -92,8 +92,7 @@ class Event extends Component {
 		if (event.location) {
 			info.push(
 				(<CardItem style={{paddingTop:0}}>
-					<Text>Location: </Text>
-					<Text>{event.location.info || event.location.address}</Text>
+					<Text style={{fontSize: 14}}>Location: {event.location.info || event.location.address}</Text>
 				</CardItem>)
 			)
 		}
@@ -105,7 +104,7 @@ class Event extends Component {
 			}
 			info.push(
 				(<CardItem style={{paddingTop:0}}>
-					<Text>Starting: {formatTime(event.time.startTime)  + "\n"}Ending: {formatTime(event.time.endTime)}</Text>
+					<Text style={{fontSize: 14}}>{formatTime(event.time.startTime)  + " - " + formatTime(event.time.endTime)}</Text>
 				</CardItem>
 			))
 		}
@@ -161,13 +160,101 @@ class Event extends Component {
 				<ListItem key={todo._id} style={{padding:0}}>
 					<CardItem>
 						<Col size={5}>
-							<Text>{todo.description+'\n'+takers}</Text>
+							<Text style={{fontSize: 15}}>{todo.description+'\n'+takers}</Text>
 						</Col>
 						{renderButtons(todo)}
 					</CardItem>
 				</ListItem>
 			)
 		})
+	}
+
+	_renderContents() {
+		if (this.state.focus == 'todo') {
+			return (
+				<Row size={8}>
+					<Content>
+						<Card>
+							<CardItem itemDivider>
+								<Title>Todos</Title>
+								<Button small info bordered style={{marginLeft: 20}} onPress={()=>this.props.navigation.navigate('AddTodo', {
+													dispatcher: this.dispatcher})
+										}>
+									<Icon name='add'/>
+								</Button>
+								<Button small info bordered style={{marginLeft: 20}}
+										onPress={() => this.setState({...this.state, filterMyTodos:!this.state.filterMyTodos})}
+								>
+									<Text>{this.state.filterMyTodos ? 'Show All' : 'Filter Mines'}</Text>
+								</Button>
+								<Button small info bordered style={{marginLeft: 10}}
+										onPress={() => this.setState({...this.state, focus: null})}
+								>
+									<Text>Minimize</Text>
+								</Button>
+							</CardItem>
+							{this._renderTodos()}
+						</Card>
+					</Content>
+				</Row>
+			)
+		} else if(this.state.focus == 'poll') {
+			return (<Row size={8}>
+				<Content>
+					<Card>
+						<CardItem itemDivider>
+							<Title>Polls</Title>
+							<Button small info bordered style={{marginLeft: 20}}
+									onPress={() => this.setState({...this.state, focus: null})}
+							><Text>Minimize</Text></Button>
+						</CardItem>
+					</Card>
+				</Content>
+			</Row>)
+		}
+		return [
+			(<Row size={2}>
+					<Content>
+						<Card>
+							<CardItem itemDivider>
+								<Title>Event Info</Title>
+							</CardItem>
+							{this._renderEventInfo()}
+						</Card>
+					</Content>
+				</Row>
+			),
+			(<Row size={4}>
+				<Content>
+					<Card>
+						<CardItem  onPress = {() => this.setState({...this.state, focus: 'todo'})} itemDivider>
+							<Title>Todos</Title>
+							<Button small info bordered style={{marginLeft: 20}} onPress={()=>this.props.navigation.navigate('AddTodo', {
+													dispatcher: this.dispatcher})
+										}>
+								<Icon name='add'/>
+							</Button>
+							<Button small info bordered style={{marginLeft: 20}}
+									onPress={() => this.setState({...this.state, filterMyTodos:!this.state.filterMyTodos})}
+							>
+								<Text>{this.state.filterMyTodos ? 'Show All' : 'Filter Mines'}</Text>
+							</Button>
+						</CardItem>
+						{this._renderTodos()}
+					</Card>
+				</Content>
+			</Row>),
+			(<Row size={4}>
+				<Content>
+					<Card >
+						<CardItem onPress = {() => this.setState({...this.state, focus: 'poll'})} itemDivider>
+							<Title>Polls</Title>
+						</CardItem>
+					</Card>
+				</Content>
+				</Row>)
+		]
+
 	}
 
 	render() {
@@ -192,45 +279,7 @@ class Event extends Component {
 							</CardItem>
 						</Card>
 					</Row>
-					<Row size={3}>
-						<Content>
-							<Card>
-								<CardItem itemDivider>
-									<Title>Event Info</Title>
-								</CardItem>
-								{this._renderEventInfo()}
-							</Card>
-						</Content>
-					</Row>
-					<Row size={4}>
-						<Content>
-							<Card>
-								<CardItem itemDivider>
-										<Title>Todos</Title>
-										<Button small info bordered style={{marginLeft: 20}} onPress={()=>this.props.navigation.navigate('AddTodo', {
-													dispatcher: this.dispatcher})
-										}>
-											<Icon name='add'/>
-										</Button>
-										<Button small info bordered style={{marginLeft: 20}}
-												onPress={() => this.setState({...this.state, filterMyTodos:!this.state.filterMyTodos})}
-										>
-											<Text>{this.state.filterMyTodos ? 'Show All' : 'Filter Mines'}</Text>
-										</Button>
-								</CardItem>
-								{this._renderTodos()}
-							</Card>
-						</Content>
-					</Row>
-					<Row size={4}>
-						<Content>
-							<Card>
-								<CardItem itemDivider>
-									<Title>Polls</Title>
-								</CardItem>
-							</Card>
-						</Content>
-					</Row>
+					{this._renderContents()}
 				</Grid>
 			</Container>
 		)
