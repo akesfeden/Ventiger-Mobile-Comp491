@@ -4,15 +4,15 @@ import {
 	updateEvent,
 	registerMe,
 	addTodo,
-	todoAction
+	todoAction,
+	addPoll
 } from '../actions/event-actions'
 // TODO: reconsider client tool
 import client from '../client'
 import {gql, graphql} from 'react-apollo'
 import getStoreAccess from '../store-access'
 import reqres from './io-reqres'
-let store = null;
-const io = socket.io;
+let store = null
 import token from '../token'
 
 export default class EventDispatcher {
@@ -80,6 +80,43 @@ export default class EventDispatcher {
 		return true
 	}
 
+	async createPoll(body) {
+		const res = await reqres(
+			`mutation($body: PollBody!) {
+				createPoll(token: "${this.token}", body: $body, eventId: "${this._id}") {
+					_id
+					title
+					autoUpdateFields
+					autoUpdateType
+					open
+					multi
+					options {
+						_id
+						description
+						location {
+							info
+						}
+						time {
+							startTime
+							endTime
+						}
+						voters {
+							_id
+							name
+						}
+					}
+					createdAt
+				}
+			}`, {body})
+		console.log('Poll creation result ', res.data)
+		if (res.errors) {
+			console.warn('Poll creation errors ', res.errors)
+			return false
+		}
+		this.store.dispatch(addPoll(this._id, res.data.createPoll))
+		return true
+	}
+
 	async _setupQuery() {
 		this.token = await token().getToken()
 		reqres(`query{
@@ -120,6 +157,30 @@ export default class EventDispatcher {
 			 					}
 			 					createdAt
 			 					done
+			 				}
+			 				polls {
+			 					_id
+								title
+								autoUpdateFields
+								autoUpdateType
+								open
+								multi
+								options {
+									_id
+									description
+									location {
+										info
+									}
+									time {
+										startTime
+										endTime
+									}
+									voters {
+										_id
+										name
+									}
+								}
+								createdAt
 			 				}
 						}
 					}
@@ -208,5 +269,7 @@ export default class EventDispatcher {
 			this.handleSub(addTodo(this._id, data))
 		})
 	}
+
+
 
 }

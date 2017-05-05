@@ -3,7 +3,7 @@ import {
 	UPDATE_EVENT,
 	REGISTER_ME,
 	NEW_TODO,
-	TODO_TAKE
+	NEW_POLL
 } from '../actions/types'
 
 export default (state={}, action) => {
@@ -36,6 +36,18 @@ export default (state={}, action) => {
 				[action._id]: {
 					...state[action._id],
 					todos
+				}
+			}
+		case NEW_POLL:
+			const event_ = state[action._id]
+			const poll = action.data
+			const polls = event_.polls.filter(p => p._id != poll._id)
+			polls.push(poll)
+			return {
+				...state,
+				[action._id]: {
+					...event_,
+					polls
 				}
 			}
 		default:

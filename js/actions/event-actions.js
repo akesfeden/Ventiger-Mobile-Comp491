@@ -5,7 +5,8 @@ import {
 	NEW_TODO,
 	TODO_TAKE,
 	TODO_DONE,
-	TODO_RELEASE
+	TODO_RELEASE,
+	NEW_POLL
 } from './types'
 
 const identity = (type, _id, data) => ({
@@ -24,6 +25,8 @@ export const registerMe = info => ({
 })
 
 export const addTodo = (_id, todo) => identity(NEW_TODO, _id, todo)
+
+export const addPoll = (_id, poll) => identity(NEW_POLL, _id, poll)
 
 export const todoAction = (_id, data) => {
 	const typeMap = {

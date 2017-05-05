@@ -36,9 +36,16 @@ class Event extends Component {
 	componentWillReceiveProps(nextProps) {
 		if (this._getEvent()._id) {
 			const event = this._getEvent()
+			console.log('Next Props ', nextProps.events[event._id])
 			const nextTitle = nextProps.events[event._id].title
 			if (event.title !== nextTitle) {
 				console.log("New Title", nextTitle)
+				/*this.props.navigation.setState(
+					{
+						...this.props.navigation.state,
+						params: nextProps
+					},
+				)*/
 				this.props.navigation.dispatch(
 					NavigationActions.setParams({
 						params: {
@@ -119,8 +126,6 @@ class Event extends Component {
 		}
 		console.log('Event ', event)
 		const renderButtons = (todo) => {
-			console.log('Takers ', todo.takers)
-			console.log('Me ', me)
 			if (todo.done) {
 				return (
 					<Col size={2}>
@@ -152,8 +157,6 @@ class Event extends Component {
 			.filter(t=>!t.done)
 		event.todos.filter(t=>t.done).forEach(t=>todos.push(t))
 		return todos.map(todo => {
-			console.log('Takers ', todo.takers)
-			console.log('Me ', this._getMe())
 			let takers = String(Math.max(todo.takersRequired - todo.takers.length, 0)) + ' more taker(s) needed'
 			takers += todo.takers.length ? '\n@ ' + todo.takers.map(t=>t.name).join(",") : ''
 			return (
@@ -163,6 +166,30 @@ class Event extends Component {
 							<Text style={{fontSize: 15}}>{todo.description+'\n'+takers}</Text>
 						</Col>
 						{renderButtons(todo)}
+					</CardItem>
+				</ListItem>
+			)
+		})
+	}
+
+	_renderPolls() {
+		const event = this._getEvent()
+		if (!Object.keys(event).length) {
+			return
+		}
+		const polls = event.polls.filter(p => p.open).sort((t1, t2) => Number(new Date(t2.createdAt)) > Number(new Date(t1.createdAt)))
+		const inactivePolls = event.polls.filter(p => !p.open)
+		inactivePolls.forEach(p => polls.push(p))
+		return polls.map(poll => {
+			return (
+				<ListItem key={poll._id}>
+					<CardItem>
+						<Row>
+							<Text>{poll.title}</Text>
+						</Row>
+						<Row>
+							<Text>{poll.options.length} options</Text>
+						</Row>
 					</CardItem>
 				</ListItem>
 			)
@@ -204,10 +231,16 @@ class Event extends Component {
 					<Card>
 						<CardItem itemDivider>
 							<Title>Polls</Title>
+							<Button small info bordered style={{marginLeft: 20}} onPress={()=>this.props.navigation.navigate('CreatePoll', {
+													dispatcher: this.dispatcher})
+										}>
+								<Icon name='add'/>
+							</Button>
 							<Button small info bordered style={{marginLeft: 20}}
 									onPress={() => this.setState({...this.state, focus: null})}
 							><Text>Minimize</Text></Button>
 						</CardItem>
+						{this._renderPolls()}
 					</Card>
 				</Content>
 			</Row>)
@@ -224,7 +257,7 @@ class Event extends Component {
 					</Content>
 				</Row>
 			),
-			(<Row size={4}>
+			(<Row size={4} style={{marginTop: 5}}>
 				<Content>
 					<Card>
 						<CardItem  onPress = {() => this.setState({...this.state, focus: 'todo'})} itemDivider>
@@ -245,11 +278,17 @@ class Event extends Component {
 				</Content>
 			</Row>),
 			(<Row size={4}>
-				<Content>
+				<Content style={{marginTop: 5}}>
 					<Card >
 						<CardItem onPress = {() => this.setState({...this.state, focus: 'poll'})} itemDivider>
 							<Title>Polls</Title>
+							<Button small info bordered style={{marginLeft: 20}} onPress={()=>this.props.navigation.navigate('CreatePoll', {
+													dispatcher: this.dispatcher})
+										}>
+								<Icon name='add'/>
+							</Button>
 						</CardItem>
+						{this._renderPolls()}
 					</Card>
 				</Content>
 				</Row>)
