@@ -6,7 +6,9 @@ import {
 	TODO_TAKE,
 	TODO_DONE,
 	TODO_RELEASE,
-	NEW_POLL
+	NEW_POLL,
+	POLL_VOTE,
+	POLL_UNVOTE
 } from './types'
 
 const identity = (type, _id, data) => ({
@@ -27,6 +29,20 @@ export const registerMe = info => ({
 export const addTodo = (_id, todo) => identity(NEW_TODO, _id, todo)
 
 export const addPoll = (_id, poll) => identity(NEW_POLL, _id, poll)
+
+export const votingAction = (voter, eventId, pollId, optionId, action) => {
+	const typeMap = {
+		'VOTE': POLL_VOTE,
+		'UNVOTE': POLL_UNVOTE
+	}
+	return {
+		type: typeMap[action],
+		eventId,
+		pollId,
+		optionId,
+		voter
+	}
+}
 
 export const todoAction = (_id, data) => {
 	const typeMap = {

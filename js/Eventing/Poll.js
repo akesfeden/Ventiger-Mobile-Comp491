@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {Container, Content, Grid, Card, CardItem, ListItem, Button, Text, Col} from 'native-base'
+import {Container, Content, Grid, Card, CardItem, ListItem, Button, Text, Col, Badge} from 'native-base'
 import { connect } from 'react-redux'
 
 class Poll extends Component {
@@ -16,6 +16,9 @@ class Poll extends Component {
 		this.eventId = eventId
 		this.pollId = pollId
 		this.dispatcher = dispatcher
+		this.state = {
+			finalVotingResult: 'U' //unknown, symbol doesn't matter
+		}
 	}
 
 	_getEvent() {
@@ -70,22 +73,51 @@ class Poll extends Component {
 		return canVote
 	}
 
+	async _vote(o) {
+		const poll = this._getPoll()
+		this.setState({...this.state, finalVotingResult: 'U'})
+		this.state.finalVotingResult = await this.dispatcher.execVotingAction(this._getMe(), poll._id, o._id, 'VOTE')
+	}
+
+	async _unvote(o) {
+		const poll = this._getPoll()
+		const res = await this.dispatcher.execVotingAction(this._getMe(), poll._id, o._id, 'UNVOTE')
+		this.setState({...this.state, finalVotingResult: res})
+	}
+
 	_renderButton(o) {
 		if (this._canVote(o)) {
 			return (
-				<Button small primary>
+				<Button small primary onPress={() => this._vote(o)}>
 					<Text>Vote</Text>
 				</Button>
 			)
 		}
 		if (this._isVoted(o)) {
 			return (
-				<Button small danger>
-					<Text>Un-Vote</Text>
+				<Button small danger onPress={() => this._unvote(o)}>
+					<Text>UnVote</Text>
 				</Button>
 			)
 		}
 
+	}
+
+	_getWinner() {
+		const poll = this._getPoll()
+		if (!poll) {
+			return
+		}
+		let maxId = null, maxVote = -1
+		poll.options.forEach(o => {
+			if (o.voters.length > maxVote) {
+				maxId = o._id
+				maxVote = o.voters.length
+			} else if (o.voters.length == maxVote) {
+				maxId = null
+			}
+		})
+		return maxId
 	}
 
 	_renderOptions() {
@@ -93,12 +125,27 @@ class Poll extends Component {
 		if (!poll) {
 			return
 		}
-		return poll.options.map(o => {
+		const winner = this._getWinner()
+		const renderBadge = o => {
+			if (winner === null) {
+				return (<Badge info><Text>{String(o.voters.length)}</Text></Badge>)
+			}
+			if (o._id === winner) {
+				return (<Badge success><Text>{String(o.voters.length)}</Text></Badge>)
+			}
+			return (<Badge warning><Text>{String(o.voters.length)}</Text></Badge>)
+		}
+		return Array.from(poll.options)
+			//sort((o1, o2) => o2.voters.length > o1.voters.length)
+			.map(o => {
 			return (
 				<ListItem key={o._id}>
 					<CardItem>
 						<Col size={4}>
 							{this._renderOptionContents(o)}
+						</Col>
+						<Col size={1}>
+							{renderBadge(o)}
 						</Col>
 						<Col size={2}>
 							{this._renderButton(o)}
@@ -109,6 +156,21 @@ class Poll extends Component {
 		})
 	}
 
+	_renderVotingMessage () {
+		return null
+		if (this.state.finalVotingResult === false) {
+			// TODO: consider whatsapp-like error handling (i.e, queue the action and redo)
+			return (
+				<Text style={{color: '#7a1211'}}>Voting encountered internal error</Text>
+			)
+		}
+		if (this.state.finalVotingResult === true) {
+			return (
+				<Text style={{color: '#247a3b'}}>Your vote is registered</Text>
+			)
+		}
+
+	}
 
 	render() {
 		return (
@@ -117,6 +179,7 @@ class Poll extends Component {
 					<Card>
 						{this._renderOptions()}
 					</Card>
+					{this._renderVotingMessage()}
 				</Content>
 			</Container>
 		)

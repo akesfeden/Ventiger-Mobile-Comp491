@@ -120,7 +120,7 @@ class Event extends Component {
 			info.push(
 				(<CardItem style={{paddingTop:0}}>
 					<Text style={{fontSize: 14}} onPress={() => this._navigateToPoll(locationPoll)}>
-						Location: {(event.location && (event.location.info || event.location.address) || '') + ' ' + autoUpdateText('location', locationPoll)}
+						Location: {(event.location && (event.location.info || event.location.address) || '') + '\nEvent location is' + autoUpdateText('location', locationPoll)}
 					</Text>
 				</CardItem>)
 			)
@@ -135,10 +135,7 @@ class Event extends Component {
 			info.push(
 				(<CardItem style={{paddingTop:0}}>
 					<Text style={{fontSize: 14}}>
-						{event.time && (formatTime(event.time.startTime)  + " - " + formatTime(event.time.endTime)) || ''}
-					</Text>
-					<Text style={{fontSize: 14}} onPress={() => this._navigateToPoll(timePoll)}>
-						Event time is {autoUpdateText('time', timePoll)}
+						{event.time && (formatTime(event.time.startTime)  + " - " + formatTime(event.time.endTime)) || ''} {'\n'}Event time is {autoUpdateText('time', timePoll)}
 					</Text>
 				</CardItem>
 			))

@@ -5,15 +5,13 @@ import {
 	registerMe,
 	addTodo,
 	todoAction,
-	addPoll
+	addPoll,
+	votingAction
 } from '../actions/event-actions'
 // TODO: reconsider client tool
-import client from '../client'
-import {gql, graphql} from 'react-apollo'
-import getStoreAccess from '../store-access'
 import reqres from './io-reqres'
-let store = null
 import token from '../token'
+import getStoreAccess from '../store-access'
 
 export default class EventDispatcher {
 
@@ -114,6 +112,26 @@ export default class EventDispatcher {
 			return false
 		}
 		this.store.dispatch(addPoll(this._id, res.data.createPoll))
+		return true
+	}
+
+	async execVotingAction(voter, pollId, optionId, action) {
+		const res = await reqres(`
+			mutation {
+				performVotingAction(token: "${this.token}", eventId: "${this._id}" pollId: "${pollId}", optionId: "${optionId}", action: ${action})
+			}
+		`)
+		if (res.errors) {
+			console.warn('Poll voting errors ', res.errors)
+			return false
+		}
+		if (!res.data.performVotingAction) {
+			console.warn('Voting failed')
+			return false
+		} else {
+			console.log('Poll voting result ', res)
+		}
+		this.store.dispatch(votingAction(voter, this._id, pollId, optionId, action))
 		return true
 	}
 

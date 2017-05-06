@@ -3,7 +3,9 @@ import {
 	UPDATE_EVENT,
 	REGISTER_ME,
 	NEW_TODO,
-	NEW_POLL
+	NEW_POLL,
+	POLL_VOTE,
+	POLL_UNVOTE
 } from '../actions/types'
 
 export default (state={}, action) => {
@@ -53,6 +55,33 @@ export default (state={}, action) => {
 					],
 					polls
 				}
+			}
+		case POLL_VOTE:
+		case POLL_UNVOTE:
+			const {voter, pollId, optionId, eventId} = action
+			const thepoll = state[eventId].polls.find(p => p._id === pollId)
+			const theoption = thepoll.options.find(o => o._id === optionId)
+			const voters = theoption.voters.filter(v => v._id !== voter._id)
+			if (action.type === POLL_VOTE) {
+				voters.push(voter)
+			}
+			const newoption = {...theoption, voters}
+			const options = []
+			thepoll.options.forEach(o => {
+				if (o._id === optionId) {
+					options.push(newoption)
+				} else {
+					options.push(o)
+				}
+			})
+			const newpoll = {...thepoll, options}
+			const newpolls = state[eventId].polls.filter(p => p._id !== pollId)
+			newpolls.push(newpoll)
+			const newevent = {...state[eventId], polls: newpolls}
+			console.log('New polls ', newpolls)
+			return {
+				...state,
+				[eventId]: newevent
 			}
 		default:
 			return state
