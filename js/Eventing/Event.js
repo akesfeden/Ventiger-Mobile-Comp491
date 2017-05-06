@@ -17,7 +17,7 @@ class Event extends Component {
 
 	constructor(props) {
 		super(props)
-		this.state = {data: {}, filterMyTodos: false, focus: null}
+		this.state = {data: {}, filterMyTodos: false, focus: null, propCnt: 1}
 	}
 
 	_getEvent() {
@@ -34,6 +34,7 @@ class Event extends Component {
 
 	// TODO: make this work
 	componentWillReceiveProps(nextProps) {
+		this.setState({...this.state, propCnt: this.state.propCnt+1})
 		if (this._getEvent()._id) {
 			const event = this._getEvent()
 			console.log('Next Props ', nextProps.events[event._id])
@@ -93,7 +94,7 @@ class Event extends Component {
 		if (!event.polls) {
 			return
 		}
-		return event.polls.find(p => p.autoUpdateFields.some(f => f === fieldname))
+		return event.polls.find(p => p.open && p.autoUpdateFields.some(f => f === fieldname))
 	}
 
 	_navigateToPoll(poll) {
@@ -115,8 +116,10 @@ class Event extends Component {
 		const autoUpdateText = (field, poll) => autoUpdate.includes(field)
 			? `Event ${field} is connected to poll  ${poll.title}`
 			: ''
+		const locationPoll = this._getConnectedPoll('location')
 		if (event.location || autoUpdate.includes('location')) {
-			const locationPoll = this._getConnectedPoll('location')
+
+			console.log('Location poll ', locationPoll)
 			info.push(
 				(<CardItem style={{paddingTop:0}}>
 					<Text style={{fontSize: 14}} onPress={() => this._navigateToPoll(locationPoll)}>

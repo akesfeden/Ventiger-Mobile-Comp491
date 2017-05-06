@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import {Container, Content, Grid, Card, CardItem, ListItem, Button, Text, Col, Badge} from 'native-base'
+import {Button as LButton} from 'react-native-elements'
 import { connect } from 'react-redux'
 
 class Poll extends Component {
@@ -76,7 +77,8 @@ class Poll extends Component {
 	async _vote(o) {
 		const poll = this._getPoll()
 		this.setState({...this.state, finalVotingResult: 'U'})
-		this.state.finalVotingResult = await this.dispatcher.execVotingAction(this._getMe(), poll._id, o._id, 'VOTE')
+		const res = await this.dispatcher.execVotingAction(this._getMe(), poll._id, o._id, 'VOTE')
+		this.setState({...this.state, finalVotingResult: res})
 	}
 
 	async _unvote(o) {
@@ -86,6 +88,10 @@ class Poll extends Component {
 	}
 
 	_renderButton(o) {
+		const poll = this._getPoll()
+		if (!poll.open) {
+			return
+		}
 		if (this._canVote(o)) {
 			return (
 				<Button small primary onPress={() => this._vote(o)}>
@@ -157,7 +163,6 @@ class Poll extends Component {
 	}
 
 	_renderVotingMessage () {
-		return null
 		if (this.state.finalVotingResult === false) {
 			// TODO: consider whatsapp-like error handling (i.e, queue the action and redo)
 			return (
@@ -172,6 +177,24 @@ class Poll extends Component {
 
 	}
 
+	_renderCompleteButton() {
+		const poll = this._getPoll()
+		if (!poll || poll.creator._id !== this._getMe()._id || !poll.open) {
+			return
+		}
+		return (
+			<LButton
+				buttonStyle={{marginTop:20, marginLeft: 30, marginRight: 30, backgroundColor: '#39b0aa'}}
+				title='Close Poll'
+				onPress={() => this.dispatcher.closePoll(poll._id)}
+			/>
+		)
+	}
+
+	_renderClosedStatus() {
+
+	}
+
 	render() {
 		return (
 			<Container>
@@ -180,6 +203,7 @@ class Poll extends Component {
 						{this._renderOptions()}
 					</Card>
 					{this._renderVotingMessage()}
+					{this._renderCompleteButton()}
 				</Content>
 			</Container>
 		)

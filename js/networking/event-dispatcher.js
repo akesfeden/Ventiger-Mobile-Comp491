@@ -6,7 +6,8 @@ import {
 	addTodo,
 	todoAction,
 	addPoll,
-	votingAction
+	votingAction,
+	pollComplete
 } from '../actions/event-actions'
 // TODO: reconsider client tool
 import reqres from './io-reqres'
@@ -104,6 +105,10 @@ export default class EventDispatcher {
 						}
 					}
 					createdAt
+					creator {
+						_id
+						name
+					}
 				}
 			}`, {body})
 		console.log('Poll creation result ', res.data)
@@ -133,6 +138,21 @@ export default class EventDispatcher {
 		}
 		this.store.dispatch(votingAction(voter, this._id, pollId, optionId, action))
 		return true
+	}
+
+	async closePoll(pollId) {
+		const res = await reqres(`
+			mutation {
+				completePoll(eventId: "${this._id}", pollId: "${pollId}", token: "${this.token}")
+			}
+		`)
+		if (res.errors) {
+			console.warn('Poll closing errors ', res.errors)
+			return false
+		}
+		console.log('Result of poll closing ', res)
+		this.store.dispatch(pollComplete(this._id, pollId))
+		return res.data.completePoll
 	}
 
 	async _setupQuery() {
@@ -199,6 +219,10 @@ export default class EventDispatcher {
 									}
 								}
 								createdAt
+								creator {
+									_id
+									name
+								}
 			 				}
 						}
 					}
@@ -291,6 +315,10 @@ export default class EventDispatcher {
 							}
 						}
 						createdAt
+						creator {
+							_id
+							name
+						}
 					}
 					performVotingActionSub(eventId: "${this._id}") {
 						performer {
@@ -302,6 +330,18 @@ export default class EventDispatcher {
 						pollId
 						fieldsToUnset
 						autoUpdate {
+							location {
+								info
+							}
+							time {
+								startTime
+								endTime
+							}
+						}
+					}
+					completePollSub(eventId: "${this._id}") {
+						pollId
+						update {
 							location {
 								info
 							}
@@ -337,6 +377,9 @@ export default class EventDispatcher {
 		io.on(channels.performVotingActionSub, data => {
 			console.log('New vote received ', data)
 			this.handleSub(votingAction(data.performer, this._id, data.pollId, data.optionId, data.action, data.autoUpdate, data.fieldsToUnset))
+		})
+		io.on(channels.completePollSub, data => {
+			this.handleSub(pollComplete(this._id, data.pollId, data.update))
 		})
 	}
 

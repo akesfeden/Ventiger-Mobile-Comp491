@@ -8,7 +8,8 @@ import {
 	TODO_RELEASE,
 	NEW_POLL,
 	POLL_VOTE,
-	POLL_UNVOTE
+	POLL_UNVOTE,
+	POLL_CLOSE
 } from './types'
 
 const identity = (type, _id, data) => ({
@@ -45,6 +46,13 @@ export const votingAction = (voter, eventId, pollId, optionId, action, autoUpdat
 		fieldsToUnset
 	}
 }
+
+export const pollComplete = (eventId, pollId, update) => ({
+	type: POLL_CLOSE,
+	eventId,
+	pollId,
+	update
+})
 
 export const todoAction = (_id, data) => {
 	const typeMap = {

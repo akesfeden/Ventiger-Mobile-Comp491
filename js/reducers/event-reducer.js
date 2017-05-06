@@ -5,7 +5,8 @@ import {
 	NEW_TODO,
 	NEW_POLL,
 	POLL_VOTE,
-	POLL_UNVOTE
+	POLL_UNVOTE,
+	POLL_CLOSE
 } from '../actions/types'
 
 export default (state={}, action) => {
@@ -45,14 +46,15 @@ export default (state={}, action) => {
 			const poll = action.data
 			const polls = event_.polls.filter(p => p._id != poll._id)
 			polls.push(poll)
+			const newAutos = [
+				...event_.autoUpdateFields.filter(f => !poll.autoUpdateFields.includes(f)),
+				poll.autoUpdateFields
+			]
 			return {
 				...state,
 				[action._id]: {
 					...event_,
-					autoUpdateFields: [
-						...event_.autoUpdateFields,
-						poll.autoUpdateFields
-					],
+					autoUpdateFields: newAutos,
 					polls
 				}
 			}
@@ -108,6 +110,28 @@ export default (state={}, action) => {
 			return {
 				...state,
 				[eventId]: newevent
+			}
+		case POLL_CLOSE:
+			const allPolls = state[action.eventId].polls
+			const upPolls = []
+			allPolls.forEach(p => {
+				if (p._id === action.pollId) {
+					upPolls.push({...p, open: false})
+				} else {
+					upPolls.push(p)
+				}
+			})
+			const myAutoUpdates = allPolls.find(p => p._id === action.pollId).autoUpdateFields
+			const newAutoUpdates = state[action.eventId].autoUpdateFields.filter(f => !myAutoUpdates.includes(f))
+			const endUpdate = action.update || {}
+			return {
+				...state,
+				[action.eventId]: {
+					...state[action.eventId],
+					...endUpdate,
+					autoUpdateFields: newAutoUpdates,
+					polls: upPolls
+				}
 			}
 		default:
 			return state
