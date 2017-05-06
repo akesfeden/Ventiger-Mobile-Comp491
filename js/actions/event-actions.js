@@ -30,7 +30,7 @@ export const addTodo = (_id, todo) => identity(NEW_TODO, _id, todo)
 
 export const addPoll = (_id, poll) => identity(NEW_POLL, _id, poll)
 
-export const votingAction = (voter, eventId, pollId, optionId, action) => {
+export const votingAction = (voter, eventId, pollId, optionId, action, autoUpdate, fieldsToUnset) => {
 	const typeMap = {
 		'VOTE': POLL_VOTE,
 		'UNVOTE': POLL_UNVOTE
@@ -40,7 +40,9 @@ export const votingAction = (voter, eventId, pollId, optionId, action) => {
 		eventId,
 		pollId,
 		optionId,
-		voter
+		voter,
+		autoUpdate,
+		fieldsToUnset
 	}
 }
 

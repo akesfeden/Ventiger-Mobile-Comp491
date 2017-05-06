@@ -292,6 +292,25 @@ export default class EventDispatcher {
 						}
 						createdAt
 					}
+					performVotingActionSub(eventId: "${this._id}") {
+						performer {
+							_id
+							name
+						}
+						action
+						optionId
+						pollId
+						fieldsToUnset
+						autoUpdate {
+							location {
+								info
+							}
+							time {
+								startTime
+								endTime
+							}
+						}
+					}
 				}
 			`)
 			console.log('Channel names ', channels)
@@ -314,6 +333,10 @@ export default class EventDispatcher {
 		io.on(channels.createPollSub, data => {
 			console.log('New poll received ', data)
 			this.handleSub(addPoll(this._id, data))
+		})
+		io.on(channels.performVotingActionSub, data => {
+			console.log('New vote received ', data)
+			this.handleSub(votingAction(data.performer, this._id, data.pollId, data.optionId, data.action, data.autoUpdate, data.fieldsToUnset))
 		})
 	}
 

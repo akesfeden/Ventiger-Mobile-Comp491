@@ -58,7 +58,7 @@ export default (state={}, action) => {
 			}
 		case POLL_VOTE:
 		case POLL_UNVOTE:
-			const {voter, pollId, optionId, eventId} = action
+			const {voter, pollId, optionId, eventId, autoUpdate, fieldsToUnset} = action
 			const thepoll = state[eventId].polls.find(p => p._id === pollId)
 			const theoption = thepoll.options.find(o => o._id === optionId)
 			const voters = theoption.voters.filter(v => v._id !== voter._id)
@@ -78,6 +78,32 @@ export default (state={}, action) => {
 			const newpolls = state[eventId].polls.filter(p => p._id !== pollId)
 			newpolls.push(newpoll)
 			const newevent = {...state[eventId], polls: newpolls}
+			if (fieldsToUnset && fieldsToUnset.length) {
+				console.log('Unsetting is being performed')
+				const unset = {}
+				fieldsToUnset.forEach(f => unset[f] = null)
+				return {
+					...state,
+					[eventId]: {
+						...newevent,
+						...unset,
+					}
+				}
+			}
+			if (autoUpdate) {
+				console.log('Autoupdate is being performed')
+				const update = {}
+				thepoll.autoUpdateFields.forEach(f => {
+					update[f] = autoUpdate[f]
+				})
+				return {
+					...state,
+					[eventId]: {
+						...newevent,
+						...update
+					}
+				}
+			}
 			console.log('New polls ', newpolls)
 			return {
 				...state,

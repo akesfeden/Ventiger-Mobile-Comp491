@@ -113,14 +113,14 @@ class Event extends Component {
 		const autoUpdate = event.autoUpdateFields || []
 		const info = []
 		const autoUpdateText = (field, poll) => autoUpdate.includes(field)
-			? 'connected to poll ' + poll.title
+			? `Event ${field} is connected to poll  ${poll.title}`
 			: ''
 		if (event.location || autoUpdate.includes('location')) {
 			const locationPoll = this._getConnectedPoll('location')
 			info.push(
 				(<CardItem style={{paddingTop:0}}>
 					<Text style={{fontSize: 14}} onPress={() => this._navigateToPoll(locationPoll)}>
-						Location: {(event.location && (event.location.info || event.location.address) || '') + '\nEvent location is' + autoUpdateText('location', locationPoll)}
+						Location: {(event.location && (event.location.info || event.location.address) || '') + '\n' +autoUpdateText('location', locationPoll)}
 					</Text>
 				</CardItem>)
 			)
@@ -134,8 +134,8 @@ class Event extends Component {
 			const timePoll = this._getConnectedPoll('time')
 			info.push(
 				(<CardItem style={{paddingTop:0}}>
-					<Text style={{fontSize: 14}}>
-						{event.time && (formatTime(event.time.startTime)  + " - " + formatTime(event.time.endTime)) || ''} {'\n'}Event time is {autoUpdateText('time', timePoll)}
+					<Text style={{fontSize: 14}} onPress={() => this._navigateToPoll(timePoll)}>
+						{event.time && (formatTime(event.time.startTime)  + " - " + formatTime(event.time.endTime)) || ''} {'\n'}{autoUpdateText('time', timePoll)}
 					</Text>
 				</CardItem>
 			))
