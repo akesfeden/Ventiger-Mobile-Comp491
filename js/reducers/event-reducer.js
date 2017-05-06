@@ -47,6 +47,10 @@ export default (state={}, action) => {
 				...state,
 				[action._id]: {
 					...event_,
+					autoUpdateFields: [
+						...event_.autoUpdateFields,
+						poll.autoUpdateFields
+					],
 					polls
 				}
 			}

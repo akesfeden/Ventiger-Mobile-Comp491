@@ -211,6 +211,7 @@ export default class EventDispatcher {
 		}
 	}
 
+	//TODO: use fragments
 	async _setupSubs() {
 		let channels
 		try {
@@ -249,6 +250,30 @@ export default class EventDispatcher {
 			 			createdAt
 			 			done
 					}
+					createPollSub(eventId: "${this._id}") {
+						_id
+						title
+						autoUpdateFields
+						autoUpdateType
+						open
+						multi
+						options {
+							_id
+							description
+							location {
+								info
+							}
+							time {
+								startTime
+								endTime
+							}
+							voters {
+								_id
+								name
+							}
+						}
+						createdAt
+					}
 				}
 			`)
 			console.log('Channel names ', channels)
@@ -267,6 +292,10 @@ export default class EventDispatcher {
 		io.on(channels.performTodoActionSub,  data => {
 			console.log('Todo action received', data)
 			this.handleSub(addTodo(this._id, data))
+		})
+		io.on(channels.createPollSub, data => {
+			console.log('New poll received ', data)
+			this.handleSub(addPoll(this._id, data))
 		})
 	}
 

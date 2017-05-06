@@ -1,7 +1,7 @@
 import React, {Component} from "react"
 import { View, DatePickerIOS , Text} from 'react-native'
 import { NavigationActions } from 'react-navigation'
-import {Button, FormInput, FormLabel, CheckBox, ButtonGroup} from "react-native-elements"
+import {Button, FormInput, FormLabel, CheckBox, ButtonGroup, Grid, Row, Col} from "react-native-elements"
 
 export default class CreatePoll extends Component {
 	static navigationOptions = {
@@ -19,12 +19,14 @@ export default class CreatePoll extends Component {
 			connectTime: false,
 			selectedIndex: 0,
 			addingOptions: false,
+			settingConnections: false,
 			options: [],
 			startTime,
 			endTime,
 			editingStartTime: false,
 			editingEndTime: false,
-			location: null
+			location: null,
+			multi: true
 		}
 		//this._initOptionState()
 	}
@@ -34,7 +36,9 @@ export default class CreatePoll extends Component {
 		const body = {
 			title: this.state.title,
 			autoUpdateFields: [],
-			options: this.state.options//this._addOption(true)
+			options: this.state.options,
+			multi: this.state.multi
+			//this._addOption(true)
 		}
 		if (this.state.connectLocation) {
 			body.autoUpdateFields.push('location')
@@ -55,8 +59,11 @@ export default class CreatePoll extends Component {
 				break
 			default: break
 		}
-		await dispatcher.createPoll(body)
-		this.props.navigation.dispatch(NavigationActions.back())
+		const success = await dispatcher.createPoll(body)
+		// TODO: add error message
+		if (success) {
+			this.props.navigation.dispatch(NavigationActions.back())
+		}
 	}
 
 	_reinitOptionState(options) {
@@ -79,7 +86,7 @@ export default class CreatePoll extends Component {
 		const component1 = () => <Text style={{alignSelf:'center'}}>Always</Text>
 		const component2 = () => <Text style={{alignSelf:'center'}}>End</Text>
 		const component3 = () => <Text style={{alignSelf:'center'}}>Never</Text>
-		const buttons = [{ element: component1 }, { element: component2 }, { element: component3 }]
+		const buttons = [{ element: component1 }, { element: component2 }]//, { element: component3 }]
 		if (this.state.connectLocation || this.state.connectTime) {
 			return [
 				(<FormLabel>Auto-update mode</FormLabel>),
@@ -103,31 +110,50 @@ export default class CreatePoll extends Component {
 					value={this.state.title}
 				/>
 				<CheckBox
+					title='Allow voting multiple options'
+					checked={this.state.multi}
+					onPress = {() => this.setState({...this.state, multi: !this.state.multi})}
+				/>
+				<Button
+					buttonStyle={{marginTop:20, marginLeft: 30, marginRight: 30, backgroundColor: '#54aec3'}}
+					title='Setup Connections'
+					onPress={() => {
+									this.setState({...this.state, settingConnections: true})
+								}}
+					disabled={!Boolean(this.state.title.length)}
+				/>
+			</View>
+		)
+	}
+
+	_renderConnections() {
+		return (
+			<View>
+				<CheckBox
 					title='Connect Time'
 					checked={this.state.connectTime}
 					onPress = {() => this.setState({
-								...this.state,
-						 		connectTime: !this.state.connectTime
-							})}
+												...this.state,
+												connectTime: !this.state.connectTime
+											})}
 				/>
 				<CheckBox
-					title='Connect Location'
-					checked={this.state.connectLocation}
-					onPress = {() => this.setState({
-							...this.state,
-						 	connectLocation: !this.state.connectLocation
-						 })}
+				title='Connect Location'
+				checked={this.state.connectLocation}
+				onPress = {() => this.setState({
+					...this.state,
+					connectLocation: !this.state.connectLocation
+				})}
 				/>
 				{this._renderAutoUpdate()}
 				<Button
-					buttonStyle={{marginTop:20, marginLeft: 30, marginRight: 30, backgroundColor: '#54aec3'}}
+					buttonStyle={{marginTop:20, marginLeft: 30, marginRight: 30, backgroundColor: '#c369b6'}}
 					title='Start Adding Options'
 					onPress={() => {
-							this.setState({...this.state, addingOptions: true})
-						}}
+									this.setState({...this.state, addingOptions: true})
+								}}
 					disabled={!Boolean(this.state.title.length)}
 				/>
-
 			</View>
 		)
 	}
@@ -240,6 +266,9 @@ export default class CreatePoll extends Component {
 					{this._renderOptionAdder()}
 				</View>
 			)
+		}
+		if (this.state.settingConnections) {
+			return this._renderConnections()
 		}
 		return this._renderStart()
 	}

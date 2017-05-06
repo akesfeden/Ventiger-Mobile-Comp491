@@ -88,30 +88,58 @@ class Event extends Component {
 		return null
 	}
 
+	_getConnectedPoll(fieldname) {
+		const event = this._getEvent()
+		if (!event.polls) {
+			return
+		}
+		return event.polls.find(p => p.autoUpdateFields.some(f => f === fieldname))
+	}
+
+	_navigateToPoll(poll) {
+		if (!poll) {
+			return
+		}
+		this.props.navigation.navigate('Poll', {
+			pollId: poll._id,
+			title: poll.title,
+			eventId: this._getEvent()._id,
+			dispatcher: this.dispatcher
+		})
+	}
+
 	_renderEventInfo() {
 		const event = this._getEvent()
-		if (Array.isArray(event.autoUpdateFields) && event.autoUpdateFields.length) {
-			return (
-				<Text>Add Autoupdate Support!</Text>
-			)
-		}
+		const autoUpdate = event.autoUpdateFields || []
 		const info = []
-		if (event.location) {
+		const autoUpdateText = (field, poll) => autoUpdate.includes(field)
+			? 'connected to poll ' + poll.title
+			: ''
+		if (event.location || autoUpdate.includes('location')) {
+			const locationPoll = this._getConnectedPoll('location')
 			info.push(
 				(<CardItem style={{paddingTop:0}}>
-					<Text style={{fontSize: 14}}>Location: {event.location.info || event.location.address}</Text>
+					<Text style={{fontSize: 14}} onPress={() => this._navigateToPoll(locationPoll)}>
+						Location: {(event.location && (event.location.info || event.location.address) || '') + ' ' + autoUpdateText('location', locationPoll)}
+					</Text>
 				</CardItem>)
 			)
 		}
-		if (event.time) {
+		if (event.time || autoUpdate.includes('time')) {
 			console.log('Time ', CardItem)
 			const formatTime = time => {
 				const date = new Date(time)
 				return date.toDateString() + ' ' + date.toTimeString().substring(0, 5)
 			}
+			const timePoll = this._getConnectedPoll('time')
 			info.push(
 				(<CardItem style={{paddingTop:0}}>
-					<Text style={{fontSize: 14}}>{formatTime(event.time.startTime)  + " - " + formatTime(event.time.endTime)}</Text>
+					<Text style={{fontSize: 14}}>
+						{event.time && (formatTime(event.time.startTime)  + " - " + formatTime(event.time.endTime)) || ''}
+					</Text>
+					<Text style={{fontSize: 14}} onPress={() => this._navigateToPoll(timePoll)}>
+						Event time is {autoUpdateText('time', timePoll)}
+					</Text>
 				</CardItem>
 			))
 		}
@@ -182,8 +210,13 @@ class Event extends Component {
 		inactivePolls.forEach(p => polls.push(p))
 		return polls.map(poll => {
 			return (
-				<ListItem key={poll._id}>
-					<CardItem>
+				<ListItem key={poll._id}
+				>
+					<CardItem onPress={() => {
+						  		this.props.navigation.navigate('Poll', {
+						  			pollId: poll._id, title: poll.title, eventId: event._id, dispatcher: this.dispatcher
+						  		})
+						  	}}>
 						<Row>
 							<Text>{poll.title}</Text>
 						</Row>
@@ -278,7 +311,7 @@ class Event extends Component {
 				</Content>
 			</Row>),
 			(<Row size={4}>
-				<Content style={{marginTop: 5}}>
+				<Content style={{marginTop: 10}}>
 					<Card >
 						<CardItem onPress = {() => this.setState({...this.state, focus: 'poll'})} itemDivider>
 							<Title>Polls</Title>
