@@ -24,3 +24,7 @@ export const NEW_POLL = "NEW_POLL"
 export const POLL_CLOSE = "POLL_CLOSE"
 export const POLL_VOTE = "POLL_VOTE"
 export const POLL_UNVOTE = "POLL_UNVOTE"
+//Chats
+export const INIT_CHAT = "INIT_CHAT"
+export const NEW_MESSAGE = "NEW_MESSAGE"
+export const MESSAGE_REMOVE = "MESSAGE_REMOVE"

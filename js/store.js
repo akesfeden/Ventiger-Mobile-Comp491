@@ -7,6 +7,7 @@ import loginReducer from  './reducers/login'
 import thunk from 'redux-thunk'
 import profileReducer from './reducers/profile-reducer'
 import eventReducer from './reducers/event-reducer'
+import chatReducer from './reducers/chat-reducer'
 
 //const client = new ApolloClient();
 export default function (client) {
@@ -16,7 +17,8 @@ export default function (client) {
 			registration: registrationReducer,
 			profile: profileReducer,
 			apollo: client.reducer(),
-			event: eventReducer
+			event: eventReducer,
+			chat: chatReducer
 		}),
 		{}, // initial state
 		//compose(

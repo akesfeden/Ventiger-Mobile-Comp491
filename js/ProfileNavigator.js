@@ -9,6 +9,8 @@ import Event from './Eventing/Event'
 import AddTodo from './Eventing/AddTodo'
 import CreatePoll from './Eventing/CreatePoll'
 import Poll from './Eventing/Poll'
+import Chat from './Eventing/Chat'
+import CreateChat from './Eventing/CreateChat'
 import { StackNavigator } from 'react-navigation'
 
 
@@ -29,5 +31,7 @@ export default StackNavigator({
 	Event: {screen: Event},
 	AddTodo: {screen: AddTodo},
 	CreatePoll: {screen: CreatePoll},
-	Poll: {screen: Poll}
+	Poll: {screen: Poll},
+	Chat: {screen: Chat},
+	CreateChat: {screen: CreateChat}
 })

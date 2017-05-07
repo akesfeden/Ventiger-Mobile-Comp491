@@ -1,11 +1,12 @@
 import React, {Component} from "react"
 import {Image} from "react-native"
 import {Button as EButton} from "react-native-elements";
-import {Grid, Container, Row, Col, Card, CardItem, Content, Text, Title, Button, List, ListItem, Icon} from 'native-base'
+import {Grid, Container, Row, Col, Card, CardItem, Content, Text, Title, Button, List, ListItem, Icon, Badge} from 'native-base'
 const strings = require('../strings').default.profile
 import { connect } from 'react-redux'
 import { NavigationActions } from 'react-navigation'
 import Dispatcher from '../networking/event-dispatcher'
+import ChatDispatcher from '../networking/chat-dispatcher'
 
 class Event extends Component {
 	static navigationOptions = {
@@ -30,6 +31,7 @@ class Event extends Component {
 
 	componentDidMount() {
 		this.dispatcher = new Dispatcher(this.props.navigation.state.params._id)
+		this.chatDispatcher = new ChatDispatcher(this.props.navigation.state.params._id)
 	}
 
 	// TODO: make this work
@@ -109,7 +111,7 @@ class Event extends Component {
 		})
 	}
 
-	_renderEventInfo() {
+	/*_renderEventInfo() {
 		const event = this._getEvent()
 		const autoUpdate = event.autoUpdateFields || []
 		const info = []
@@ -144,6 +146,46 @@ class Event extends Component {
 			))
 		}
 		return info
+	}*/
+
+	_renderPoll(poll, fieldname) {
+		if (!poll) {
+			return
+		}
+		return (
+			<Text style={{fontSize: 14}} onPress={() => this._navigateToPoll(poll)}>
+				( {fieldname} is connected to poll {poll.title} )
+			</Text>
+		)
+	}
+
+	_renderEventInfo() {
+		const event = this._getEvent()
+		const locationPoll = this._getConnectedPoll('location')
+		const timePoll = this._getConnectedPoll('time')
+		const formatTime = time => {
+			const date = new Date(time)
+			return date.toDateString() + ' ' + date.toTimeString().substring(0, 5)
+		}
+		return [
+			(<CardItem style={{paddingTop:0}}>
+				<Text style={{fontSize: 14}} onPress={() => this._navigateToPoll(locationPoll)}>
+					Location: {(event.location && (event.location.info || event.location.address) || '')}
+				</Text>
+				{this._renderPoll(locationPoll, 'Location')}
+			</CardItem>),
+			(<CardItem style={{paddingTop:0}}>
+				<Text style={{fontSize: 14}} onPress={() => this._navigateToPoll(timePoll)}>
+					{event.time && (formatTime(event.time.startTime)  + " - " + formatTime(event.time.endTime)) || ''}
+				</Text>
+				{this._renderPoll(timePoll, 'Time')}
+			</CardItem>),
+			(<CardItem>
+				<Button small success onPress={() => this.props.navigation.navigate('Chat', {event: this._getEvent(), topic: 'Event Info'})}>
+					<Text>Discuss</Text>
+				</Button>
+			</CardItem>)
+		]
 	}
 
 	_renderTodos() {
@@ -229,6 +271,50 @@ class Event extends Component {
 		})
 	}
 
+	_getChats(asArray=true) {
+		const event = this._getEvent()
+		if (!Object.keys(event).length || !this.props.chats || !this.props.chats[event._id]) {
+			return asArray && [] || {}
+		}
+		const chats = this.props.chats[event._id]
+		if (asArray) {
+			return Object.keys(chats).map(k => chats[k])
+		}
+		return chats
+	}
+
+	_renderTopicGroup(group) {
+		return group.map(g => {
+			if (g) {
+				return (
+					<Col size={1}>
+						<Text>{g.context}</Text>
+						<Badge info><Text>{g.messageInc}</Text></Badge>
+					</Col>
+				)
+			}
+		})
+	}
+
+	_renderChatTopics() {
+		const sorted = Array.from(this._getChats())
+			.sort((c1, c2) => c1.context > c2.context)
+		const rows = []
+		const step = 3
+		for (let i = 0; i < sorted.length; i += step) {
+			const group = []
+			for (let j = 0; j < step; ++j) {
+				group.push(sorted[i+j])
+			}
+			rows.push((<CardItem>
+				<Row size={1}>
+					{this._renderTopicGroup(group)}
+				</Row>
+			</CardItem>))
+		}
+		return rows
+	}
+
 	_renderContents() {
 		if (this.state.focus == 'todo') {
 			return (
@@ -236,7 +322,7 @@ class Event extends Component {
 					<Content>
 						<Card>
 							<CardItem itemDivider>
-								<Title>Todos</Title>
+								<Title>TODOs</Title>
 								<Button small info bordered style={{marginLeft: 20}} onPress={()=>this.props.navigation.navigate('AddTodo', {
 													dispatcher: this.dispatcher})
 										}>
@@ -277,9 +363,28 @@ class Event extends Component {
 					</Card>
 				</Content>
 			</Row>)
+		} else if (this.state.focus == 'chat') {
+			return (<Row size={8}>
+				<Content style={{marginTop: 5}}>
+					<Card>
+						<CardItem itemDivider onPress = {() => this.setState({...this.state, focus: 'chat'})}>
+							<Title>Chat Topics</Title>
+							<Button small info bordered style={{marginLeft: 20}} onPress={()=>this.props.navigation.navigate('CreateChat', {
+													dispatcher: this.chatDispatcher, event: this._getEvent()})
+										}>
+								<Icon name='add'/>
+							</Button>
+							<Button small info bordered style={{marginLeft: 20}}
+									onPress={() => this.setState({...this.state, focus: null})}
+							><Text>Minimize</Text></Button>
+						</CardItem>
+						{this._renderChatTopics()}
+					</Card>
+				</Content>
+			</Row>)
 		}
 		return [
-			(<Row size={2}>
+			(<Row size={3}>
 					<Content>
 						<Card>
 							<CardItem itemDivider>
@@ -294,7 +399,7 @@ class Event extends Component {
 				<Content>
 					<Card>
 						<CardItem  onPress = {() => this.setState({...this.state, focus: 'todo'})} itemDivider>
-							<Title>Todos</Title>
+							<Title>TODOs</Title>
 							<Button small info bordered style={{marginLeft: 20}} onPress={()=>this.props.navigation.navigate('AddTodo', {
 													dispatcher: this.dispatcher})
 										}>
@@ -311,7 +416,22 @@ class Event extends Component {
 				</Content>
 			</Row>),
 			(<Row size={4}>
-				<Content style={{marginTop: 10}}>
+				<Content style={{marginTop: 5}}>
+					<Card>
+						<CardItem itemDivider onPress = {() => this.setState({...this.state, focus: 'chat'})}>
+							<Title>Chat Topics</Title>
+							<Button small info bordered style={{marginLeft: 20}} onPress={()=>this.props.navigation.navigate('CreateChat', {
+													dispatcher: this.chatDispatcher, event: this._getEvent()})
+										}>
+								<Icon name='add'/>
+							</Button>
+						</CardItem>
+						{this._renderChatTopics()}
+					</Card>
+				</Content>
+			</Row>),
+			(<Row size={5}>
+				<Content style={{marginTop: 5}}>
 					<Card >
 						<CardItem onPress = {() => this.setState({...this.state, focus: 'poll'})} itemDivider>
 							<Title>Polls</Title>
@@ -326,7 +446,6 @@ class Event extends Component {
 				</Content>
 				</Row>)
 		]
-
 	}
 
 	render() {
@@ -340,8 +459,8 @@ class Event extends Component {
 									<Image
 										source={{uri: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg'}}
 
-										style={{"width": 75, "height":75, marginTop: 0,
-											borderRadius: 25, alignSelf: 'center'}}
+										style={{"width": 60, "height":60, marginTop: 0,
+											borderRadius: 20, alignSelf: 'center'}}
 									/>
 								</Col>
 								<Col size={3} style={{alignSelf: 'center'}}>
@@ -359,7 +478,7 @@ class Event extends Component {
 }
 
 export default connect(
-	(state) => ({ events: state.event })
+	(state) => ({ events: state.event, chats: state.chat })
 )(Event)
 
 
