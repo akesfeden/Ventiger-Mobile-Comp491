@@ -154,7 +154,7 @@ class Event extends Component {
 		}
 		return (
 			<Text style={{fontSize: 14}} onPress={() => this._navigateToPoll(poll)}>
-				( {fieldname} is connected to poll {poll.title} )
+				({poll.title})
 			</Text>
 		)
 	}

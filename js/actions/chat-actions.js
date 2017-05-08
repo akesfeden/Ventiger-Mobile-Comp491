@@ -1,5 +1,6 @@
 import {
-	INIT_CHAT
+	INIT_CHAT,
+	INC_CHAT
 } from './types'
 
 export const initChat = (eventId, chatId, payload) => {
@@ -10,3 +11,10 @@ export const initChat = (eventId, chatId, payload) => {
 		payload
 	}
 }
+
+export const incrementChat = (eventId, chatId, num) => ({
+	type: INC_CHAT,
+	eventId,
+	chatId,
+	num
+})

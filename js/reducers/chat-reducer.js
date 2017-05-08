@@ -1,5 +1,6 @@
 import {
-	INIT_CHAT
+	INIT_CHAT,
+	INC_CHAT
 } from '../actions/types'
 
 export default (state={}, action) => {
@@ -14,6 +15,17 @@ export default (state={}, action) => {
 			return {
 				...state,
 				[action.eventId]: newEventData
+			}
+		case INC_CHAT:
+			return {
+				...state,
+				[action.eventId]: {
+					...state[action.eventId],
+					[action.chatId]: {
+						...state[action.eventId][action.chatId],
+						messageInc: action.num
+					}
+				}
 			}
 		default:
 			return state
