@@ -7,7 +7,8 @@ import {
 	todoAction,
 	addPoll,
 	votingAction,
-	pollComplete
+	pollComplete,
+	addParticipant
 } from '../actions/event-actions'
 // TODO: reconsider client tool
 import reqres from './io-reqres'
@@ -351,6 +352,10 @@ export default class EventDispatcher {
 							}
 						}
 					}
+					acceptEventInvitationSub(eventId: "${this._id}") {
+						_id
+						name
+					}
 				}
 			`)
 			console.log('Channel names ', channels)
@@ -380,6 +385,10 @@ export default class EventDispatcher {
 		})
 		io.on(channels.completePollSub, data => {
 			this.handleSub(pollComplete(this._id, data.pollId, data.update))
+		})
+		io.on(channels.acceptEventInvitationSub, data => {
+			console.log('New participant received ', data)
+			this.handleSub(addParticipant(this._id, data))
 		})
 	}
 

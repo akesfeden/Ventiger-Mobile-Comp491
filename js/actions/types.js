@@ -14,6 +14,7 @@ export const CONTACTS = "CONTACTS"
 export const REGISTER_ME = "REGISTER_ME"
 export const INIT_EVENT = "INIT_EVENT"
 export const UPDATE_EVENT = "UPDATE_EVENT"
+export const NEW_PARTICIPANT = "NEW_PARTICIPANT"
 //Todo management
 export const NEW_TODO = "NEW_TODO"
 export const TODO_TAKE = "TODO_TAKE"

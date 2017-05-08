@@ -6,7 +6,8 @@ import {
 	NEW_POLL,
 	POLL_VOTE,
 	POLL_UNVOTE,
-	POLL_CLOSE
+	POLL_CLOSE,
+	NEW_PARTICIPANT
 } from '../actions/types'
 
 export default (state={}, action) => {
@@ -28,6 +29,17 @@ export default (state={}, action) => {
 			return {
 				...state,
 				me: action.info
+			}
+		case NEW_PARTICIPANT:
+			return {
+				...state,
+				[action._id]: {
+					...state[action._id],
+					participants: [
+						...state[action._id].participants.filter(p => p._id !== action.data._id),
+						action.data
+					]
+				}
 			}
 		case NEW_TODO:
 			const event = state[action._id]

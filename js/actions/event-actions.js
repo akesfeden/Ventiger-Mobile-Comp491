@@ -2,6 +2,7 @@ import {
 	INIT_EVENT,
 	UPDATE_EVENT,
 	REGISTER_ME,
+	NEW_PARTICIPANT,
 	NEW_TODO,
 	TODO_TAKE,
 	TODO_DONE,
@@ -66,3 +67,5 @@ export const todoAction = (_id, data) => {
 		type: typeMap[data.action]
 	}
 }
+
+export const addParticipant = (eventId, participant) => identity(NEW_PARTICIPANT, eventId, participant)
