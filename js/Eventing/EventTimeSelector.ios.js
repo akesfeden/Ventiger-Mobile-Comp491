@@ -1,67 +1,17 @@
-import React, {Component} from "react";
-import {
-	View,
-	DatePickerIOS
-} from 'react-native';
-import { Text, Button, FormLabel } from 'react-native-elements'
-
-/*import DropDown, {
-	Select,
-	Option,
-	OptionList
-} from 'react-native-selectme'*/
+import React from "react";
+import {DatePickerIOS, View} from "react-native";
+import {Button, Text} from "react-native-elements";
+import EventTimeSelectorBase from "./EventTimeSelectorBase";
 
 
-export default class EventTimeSelector extends Component {
+export default class EventTimeSelector extends EventTimeSelectorBase {
 
-	constructor(props) {
-		super(props)
-		console.log("Time Select ", props)
-		let startTime, endTime
-		if (props.time) {
-			startTime = props.time.startTime
-			endTime = props.time.endTime
-
-		}
-		this.state = {
-			startTime: startTime || new Date(),
-			endTime: endTime || (() => {
-				const a = new Date()
-				a.setHours(a.getHours()+2)
-				return a
-			})()
-		}
-	}
-
-	_onStartTimeChange(date) {
-		console.log('Date ', date)
-		this.setState({...this.state, startTime: date})
-	}
-
-	_onEndTimeChange(date) {
-		this.setState({...this.state, endTime: date})
-	}
-
-	_isValid() {
-		return this.state.startTime < this.state.endTime
-	}
-
-	_renderErrorText() {
-		if (!this._isValid()) {
-			return (
-				<Text style={{color: '#c35655'}}>
-					Start Time is after the End Time
-				</Text>
-			)
-		}
-		return null
-	}
 
 	render() {
-		return (
+        return (
 			<View>
 				<Text style={
-					{fontSize:18, marginBottom:10, alignSelf:'center'}}>
+                    {fontSize: 18, marginBottom: 10, alignSelf: 'center'}}>
 					Select Event Time
 				</Text>
 				<Text style={{fontSize:16}}>Starting Time</Text>
@@ -76,7 +26,7 @@ export default class EventTimeSelector extends Component {
 					mode="datetime"
 					onDateChange={this._onEndTimeChange.bind(this)}
 				/>
-				{this._renderErrorText()}
+                {this._renderErrorText()}
 				<Button
 					title="Done"
 					buttonStyle={{backgroundColor: '#5dc370'}}
@@ -90,7 +40,7 @@ export default class EventTimeSelector extends Component {
 				/>
 			</View>
 
-		)
+        )
 	}
 
 	/*
