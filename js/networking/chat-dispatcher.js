@@ -4,7 +4,8 @@ import token from '../token'
 import getStoreAccess from '../store-access'
 import {
 	initChat,
-	incrementChat
+	incrementChat,
+	newMessage
 } from '../actions/chat-actions'
 
 // TODO: superclass
@@ -76,6 +77,27 @@ export default class ChatDispatcher {
 		}).catch(err => {
 			console.warn('Error fetching chats ', err)
 		})
+	}
+
+	async _fetchMessages(eventId, chatId, accessCode, limit, negativeOffset = 0) {
+		 const res = await reqres(`query {
+		 	viewer(token: "${this.token}") {
+				chat (chatId: "${chatId}", accessCode: "${accessCode}", limit: ${limit}, negativeOffset: ${negativeOffset}) {
+					messages {
+						index
+						sentAt
+						content
+						sender
+						removed
+					}
+				}
+			}
+		}`)
+		if (res.errors) {
+		 	return console.warn('Errors ', res.errors)
+		}
+		console.log('Response ', res.data.viewer.chat.messages)
+		this.store.dispatch(newMessage(eventId, chatId, res.data.viewer.chat.messages))
 	}
 
 	handleSub(action) {

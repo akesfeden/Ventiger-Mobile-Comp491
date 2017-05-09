@@ -1,7 +1,9 @@
 import React, {Component} from "react"
 import {Image} from "react-native"
 import {Button as EButton} from "react-native-elements";
-import {Grid, Container, Row, Col, Card, CardItem, Content, Text, Title, Button, List, ListItem, Icon, Badge} from 'native-base'
+import {Grid, Container, Row, Col, Card, CardItem, Content, Text, Title,
+	Button, List, ListItem, Icon, Badge, Tab, Tabs, Header
+} from 'native-base'
 const strings = require('../strings').default.profile
 import { connect } from 'react-redux'
 import { NavigationActions } from 'react-navigation'
@@ -153,8 +155,8 @@ class Event extends Component {
 			return
 		}
 		return (
-			<Text style={{fontSize: 14}} onPress={() => this._navigateToPoll(poll)}>
-				({poll.title})
+			<Text onPress={() => this._navigateToPoll(poll)}>
+				Poll: {poll.title}
 			</Text>
 		)
 	}
@@ -167,16 +169,39 @@ class Event extends Component {
 			const date = new Date(time)
 			return date.toDateString() + ' ' + date.toTimeString().substring(0, 5)
 		}
-		return [
+		return (
+			<CardItem>
+				<Col size={1}>
+					<Row>
+						<Text>Location: {event.location && event.location.info || 'not set'}</Text>
+					</Row>
+					<Row>
+						{this._renderPoll(locationPoll, 'Location')}
+					</Row>
+				</Col>
+				<Col size={2}>
+					<Row>
+						<Text>From: {event.time && formatTime(event.time.startTime) || 'not set'}</Text>
+					</Row>
+					<Row>
+						<Text>To: {event.time && formatTime(event.time.startTime) || 'not set'}</Text>
+					</Row>
+					<Row>
+						{this._renderPoll(timePoll, 'Time')}
+					</Row>
+				</Col>
+			</CardItem>
+		)
+		/*return [
 			(<CardItem style={{paddingTop:0}}>
-				<Text style={{fontSize: 14}} onPress={() => this._navigateToPoll(locationPoll)}>
+				<Text onPress={() => this._navigateToPoll(locationPoll)}>
 					Location: {(event.location && (event.location.info || event.location.address) || '')}
 				</Text>
 				{this._renderPoll(locationPoll, 'Location')}
 			</CardItem>),
 			(<CardItem style={{paddingTop:0}}>
-				<Text style={{fontSize: 14}} onPress={() => this._navigateToPoll(timePoll)}>
-					{event.time && (formatTime(event.time.startTime)  + " - " + formatTime(event.time.endTime)) || ''}
+				<Text onPress={() => this._navigateToPoll(timePoll)}>
+					{event.time && (formatTime(event.time.startTime)  + " - " + formatTime(event.time.endTime)) || 'Time is not set'}
 				</Text>
 				{this._renderPoll(timePoll, 'Time')}
 			</CardItem>),
@@ -185,7 +210,7 @@ class Event extends Component {
 					<Text>Discuss</Text>
 				</Button>
 			</CardItem>)
-		]
+		]*/
 	}
 
 	_renderTodos() {
@@ -288,7 +313,9 @@ class Event extends Component {
 			if (g) {
 				return (
 					<Col size={1}>
-						<Text>{g.context}</Text>
+						<Text  onPress={() => this.props.navigation.navigate('Chat',  {title: this._getEvent().title,
+						 	eventId: this._getEvent()._id, chatId: g._id, dispatcher: this.chatDispatcher
+						 })}>{g.context}</Text>
 						<Badge info><Text>{g.messageInc}</Text></Badge>
 					</Col>
 				)
@@ -470,12 +497,65 @@ class Event extends Component {
 							</CardItem>
 						</Card>
 					</Row>
-					{this._renderContents()}
+					<Row size={2}>
+						<Content>
+							{this._renderEventInfo()}
+						</Content>
+					</Row>
+					<Row size={9}>
+						<Content>
+							<Tabs>
+								<Tab heading="Chat">
+
+										<CardItem itemDivider onPress = {() => this.setState({...this.state, focus: 'chat'})}>
+											<Button small info bordered style={{marginLeft: 20}} onPress={()=>this.props.navigation.navigate('CreateChat', {
+														dispatcher: this.chatDispatcher, event: this._getEvent()})
+											}>
+												<Icon name='add'/>
+											</Button>
+										</CardItem>
+										{this._renderChatTopics()}
+
+								</Tab>
+								<Tab heading="TODOs">
+
+										<CardItem  onPress = {() => this.setState({...this.state, focus: 'todo'})} itemDivider>
+											<Button small info bordered style={{marginLeft: 20}} onPress={()=>this.props.navigation.navigate('AddTodo', {
+													dispatcher: this.dispatcher})
+										}>
+												<Icon name='add'/>
+											</Button>
+											<Button small info bordered style={{marginLeft: 20}}
+													onPress={() => this.setState({...this.state, filterMyTodos:!this.state.filterMyTodos})}
+											>
+												<Text>{this.state.filterMyTodos ? 'Show All' : 'Filter Mines'}</Text>
+											</Button>
+										</CardItem>
+										{this._renderTodos()}
+
+								</Tab>
+								<Tab heading="Polls">
+
+										<CardItem onPress = {() => this.setState({...this.state, focus: 'poll'})} itemDivider>
+											<Button small info bordered style={{marginLeft: 20}} onPress={()=>this.props.navigation.navigate('CreatePoll', {
+													dispatcher: this.dispatcher})
+										}>
+												<Icon name='add'/>
+											</Button>
+										</CardItem>
+										{this._renderPolls()}
+
+								</Tab>
+							</Tabs>
+						</Content>
+					</Row>
 				</Grid>
 			</Container>
 		)
 	}
 }
+//{this._renderContents()}
+
 
 export default connect(
 	(state) => ({ events: state.event, chats: state.chat })

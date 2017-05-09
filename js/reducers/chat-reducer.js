@@ -1,6 +1,7 @@
 import {
 	INIT_CHAT,
-	INC_CHAT
+	INC_CHAT,
+	NEW_MESSAGE
 } from '../actions/types'
 
 export default (state={}, action) => {
@@ -24,6 +25,28 @@ export default (state={}, action) => {
 					[action.chatId]: {
 						...state[action.eventId][action.chatId],
 						messageInc: action.num
+					}
+				}
+			}
+		case NEW_MESSAGE:
+			let newMessages
+			if (Array.isArray(action.data)) {
+				newMessages = [...(state[action.eventId][action.chatId].messages || []), ...action.data]
+			} else {
+				newMessages = [...(state[action.eventId][action.chatId].messages), action.data]
+			}
+			const keys = {}
+			newMessages.forEach(m => {
+				keys[m.index] = m
+			})
+			let newMessages_ = Object.keys(keys).sort().map(k => newMessages[k])
+			return {
+				...state,
+				[action.eventId]: {
+					...state[action.eventId],
+					[action.chatId]: {
+						...state[action.eventId][action.chatId],
+						messages: newMessages_
 					}
 				}
 			}
