@@ -69,6 +69,11 @@ export default class ChatDispatcher {
 				return
 			}
 			this.fetched = true
+			if (!data.data.viewer.chats.length) {
+				// TODO: internatialize
+				this.newChat(this.eventId, 'General')
+				return
+			}
 			data.data.viewer.chats.forEach(chat => {
 				this.store.dispatch(initChat(this.eventId, chat._id, chat))
 				this._subscribeTopicInc(chat._id)
@@ -79,7 +84,7 @@ export default class ChatDispatcher {
 		})
 	}
 
-	async _fetchMessages(eventId, chatId, accessCode, limit, negativeOffset = 0) {
+	async fetchMessages(eventId, chatId, accessCode, limit, negativeOffset = 0) {
 		 const res = await reqres(`query {
 		 	viewer(token: "${this.token}") {
 				chat (chatId: "${chatId}", accessCode: "${accessCode}", limit: ${limit}, negativeOffset: ${negativeOffset}) {
@@ -96,8 +101,49 @@ export default class ChatDispatcher {
 		if (res.errors) {
 		 	return console.warn('Errors ', res.errors)
 		}
+
 		console.log('Response ', res.data.viewer.chat.messages)
 		this.store.dispatch(newMessage(eventId, chatId, res.data.viewer.chat.messages))
+		this._subscribeToChat(chatId, accessCode)
+	}
+
+	async _subscribeToChat(chatId, accessCode) {
+		const channelNames = await reqres(`subscription {
+			sendMessageSub(chatId: "${chatId}", accessCode: "${accessCode}") {
+				index
+				content
+				sentAt
+				removed
+				sender
+			}
+		}`)
+		console.log('Send message channel ', channelNames)
+		socket.io.on(channelNames.sendMessageSub, data => {
+			console.log('Message subscription result ', data)
+			this.store.dispatch(newMessage(this.eventId, chatId, data))
+		})
+	}
+
+	async sendMessage(chatId, accessCode, content) {
+		const res = await reqres(`
+			mutation ($body: EventMessageInput!){
+				sendMessage(token: "${this.token}", body: $body) {
+					index
+					content
+					sentAt
+					removed
+					sender
+				}
+			}
+		`, {
+			body: {
+				chatId,
+				accessCode,
+				content
+			}
+		})
+		console.log('Send message result ', res)
+		this.store.dispatch(newMessage(this.eventId, chatId, res.data.sendMessage))
 	}
 
 	handleSub(action) {

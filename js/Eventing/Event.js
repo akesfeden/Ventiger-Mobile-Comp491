@@ -1,6 +1,5 @@
 import React, {Component} from "react"
 import {Image} from "react-native"
-import {Button as EButton} from "react-native-elements";
 import {Grid, Container, Row, Col, Card, CardItem, Content, Text, Title,
 	Button, List, ListItem, Icon, Badge, Tab, Tabs, Header
 } from 'native-base'
@@ -113,43 +112,6 @@ class Event extends Component {
 		})
 	}
 
-	/*_renderEventInfo() {
-		const event = this._getEvent()
-		const autoUpdate = event.autoUpdateFields || []
-		const info = []
-		const autoUpdateText = (field, poll) => autoUpdate.includes(field)
-			? `Event ${field} is connected to poll  ${poll.title}`
-			: ''
-		const locationPoll = this._getConnectedPoll('location')
-		if (event.location || autoUpdate.includes('location')) {
-
-			console.log('Location poll ', locationPoll)
-			info.push(
-				(<CardItem style={{paddingTop:0}}>
-					<Text style={{fontSize: 14}} onPress={() => this._navigateToPoll(locationPoll)}>
-						Location: {(event.location && (event.location.info || event.location.address) || '') + '\n' +autoUpdateText('location', locationPoll)}
-					</Text>
-				</CardItem>)
-			)
-		}
-		if (event.time || autoUpdate.includes('time')) {
-			console.log('Time ', CardItem)
-			const formatTime = time => {
-				const date = new Date(time)
-				return date.toDateString() + ' ' + date.toTimeString().substring(0, 5)
-			}
-			const timePoll = this._getConnectedPoll('time')
-			info.push(
-				(<CardItem style={{paddingTop:0}}>
-					<Text style={{fontSize: 14}} onPress={() => this._navigateToPoll(timePoll)}>
-						{event.time && (formatTime(event.time.startTime)  + " - " + formatTime(event.time.endTime)) || ''} {'\n'}{autoUpdateText('time', timePoll)}
-					</Text>
-				</CardItem>
-			))
-		}
-		return info
-	}*/
-
 	_renderPoll(poll, fieldname) {
 		if (!poll) {
 			return
@@ -256,7 +218,21 @@ class Event extends Component {
 			takers += todo.takers.length ? '\n@ ' + todo.takers.map(t=>t.name).join(",") : ''
 			return (
 				<ListItem key={todo._id} style={{padding:0}}>
-					<CardItem>
+					<CardItem onPress = {
+						() => {
+							if (!todo.takers.some(t => t._id === this._getMe()._id)) {
+								return
+							}
+							let chat = Object.keys(this.props.chats[this._getEvent()._id]).find(cid => this.props.chats[this._getEvent()._id][cid].context === 't_' + todo.description)
+							if (chat) {
+								chat = this.props.chats[this._getEvent()._id][chat]
+								console.log('Chat found ', chat)
+								this.props.navigation.navigate('Chat',  {title: todo.description,
+						 			eventId: this._getEvent()._id, chatId: chat._id, dispatcher: this.chatDispatcher,
+						 			todo
+						 		})
+							}
+						 }}>
 						<Col size={5}>
 							<Text style={{fontSize: 15}}>{todo.description+'\n'+takers}</Text>
 						</Col>
@@ -325,6 +301,7 @@ class Event extends Component {
 
 	_renderChatTopics() {
 		const sorted = Array.from(this._getChats())
+			.filter(c => !c.context.startsWith('t_'))
 			.sort((c1, c2) => c1.context > c2.context)
 		const rows = []
 		const step = 3
@@ -340,139 +317,6 @@ class Event extends Component {
 			</CardItem>))
 		}
 		return rows
-	}
-
-	_renderContents() {
-		if (this.state.focus == 'todo') {
-			return (
-				<Row size={8}>
-					<Content>
-						<Card>
-							<CardItem itemDivider>
-								<Title>TODOs</Title>
-								<Button small info bordered style={{marginLeft: 20}} onPress={()=>this.props.navigation.navigate('AddTodo', {
-													dispatcher: this.dispatcher})
-										}>
-									<Icon name='add'/>
-								</Button>
-								<Button small info bordered style={{marginLeft: 20}}
-										onPress={() => this.setState({...this.state, filterMyTodos:!this.state.filterMyTodos})}
-								>
-									<Text>{this.state.filterMyTodos ? 'Show All' : 'Filter Mines'}</Text>
-								</Button>
-								<Button small info bordered style={{marginLeft: 10}}
-										onPress={() => this.setState({...this.state, focus: null})}
-								>
-									<Text>Minimize</Text>
-								</Button>
-							</CardItem>
-							{this._renderTodos()}
-						</Card>
-					</Content>
-				</Row>
-			)
-		} else if(this.state.focus == 'poll') {
-			return (<Row size={8}>
-				<Content>
-					<Card>
-						<CardItem itemDivider>
-							<Title>Polls</Title>
-							<Button small info bordered style={{marginLeft: 20}} onPress={()=>this.props.navigation.navigate('CreatePoll', {
-													dispatcher: this.dispatcher})
-										}>
-								<Icon name='add'/>
-							</Button>
-							<Button small info bordered style={{marginLeft: 20}}
-									onPress={() => this.setState({...this.state, focus: null})}
-							><Text>Minimize</Text></Button>
-						</CardItem>
-						{this._renderPolls()}
-					</Card>
-				</Content>
-			</Row>)
-		} else if (this.state.focus == 'chat') {
-			return (<Row size={8}>
-				<Content style={{marginTop: 5}}>
-					<Card>
-						<CardItem itemDivider onPress = {() => this.setState({...this.state, focus: 'chat'})}>
-							<Title>Chat Topics</Title>
-							<Button small info bordered style={{marginLeft: 20}} onPress={()=>this.props.navigation.navigate('CreateChat', {
-													dispatcher: this.chatDispatcher, event: this._getEvent()})
-										}>
-								<Icon name='add'/>
-							</Button>
-							<Button small info bordered style={{marginLeft: 20}}
-									onPress={() => this.setState({...this.state, focus: null})}
-							><Text>Minimize</Text></Button>
-						</CardItem>
-						{this._renderChatTopics()}
-					</Card>
-				</Content>
-			</Row>)
-		}
-		return [
-			(<Row size={3}>
-					<Content>
-						<Card>
-							<CardItem itemDivider>
-								<Title>Event Info</Title>
-							</CardItem>
-							{this._renderEventInfo()}
-						</Card>
-					</Content>
-				</Row>
-			),
-			(<Row size={4} style={{marginTop: 5}}>
-				<Content>
-					<Card>
-						<CardItem  onPress = {() => this.setState({...this.state, focus: 'todo'})} itemDivider>
-							<Title>TODOs</Title>
-							<Button small info bordered style={{marginLeft: 20}} onPress={()=>this.props.navigation.navigate('AddTodo', {
-													dispatcher: this.dispatcher})
-										}>
-								<Icon name='add'/>
-							</Button>
-							<Button small info bordered style={{marginLeft: 20}}
-									onPress={() => this.setState({...this.state, filterMyTodos:!this.state.filterMyTodos})}
-							>
-								<Text>{this.state.filterMyTodos ? 'Show All' : 'Filter Mines'}</Text>
-							</Button>
-						</CardItem>
-						{this._renderTodos()}
-					</Card>
-				</Content>
-			</Row>),
-			(<Row size={4}>
-				<Content style={{marginTop: 5}}>
-					<Card>
-						<CardItem itemDivider onPress = {() => this.setState({...this.state, focus: 'chat'})}>
-							<Title>Chat Topics</Title>
-							<Button small info bordered style={{marginLeft: 20}} onPress={()=>this.props.navigation.navigate('CreateChat', {
-													dispatcher: this.chatDispatcher, event: this._getEvent()})
-										}>
-								<Icon name='add'/>
-							</Button>
-						</CardItem>
-						{this._renderChatTopics()}
-					</Card>
-				</Content>
-			</Row>),
-			(<Row size={5}>
-				<Content style={{marginTop: 5}}>
-					<Card >
-						<CardItem onPress = {() => this.setState({...this.state, focus: 'poll'})} itemDivider>
-							<Title>Polls</Title>
-							<Button small info bordered style={{marginLeft: 20}} onPress={()=>this.props.navigation.navigate('CreatePoll', {
-													dispatcher: this.dispatcher})
-										}>
-								<Icon name='add'/>
-							</Button>
-						</CardItem>
-						{this._renderPolls()}
-					</Card>
-				</Content>
-				</Row>)
-		]
 	}
 
 	render() {
@@ -553,6 +397,8 @@ class Event extends Component {
 			</Container>
 		)
 	}
+
+
 }
 //{this._renderContents()}
 
@@ -561,4 +407,139 @@ export default connect(
 	(state) => ({ events: state.event, chats: state.chat })
 )(Event)
 
+
+// DEATH CODE
+
+/*_renderContents() {
+ if (this.state.focus == 'todo') {
+ return (
+ <Row size={8}>
+ <Content>
+ <Card>
+ <CardItem itemDivider>
+ <Title>TODOs</Title>
+ <Button small info bordered style={{marginLeft: 20}} onPress={()=>this.props.navigation.navigate('AddTodo', {
+ dispatcher: this.dispatcher})
+ }>
+ <Icon name='add'/>
+ </Button>
+ <Button small info bordered style={{marginLeft: 20}}
+ onPress={() => this.setState({...this.state, filterMyTodos:!this.state.filterMyTodos})}
+ >
+ <Text>{this.state.filterMyTodos ? 'Show All' : 'Filter Mines'}</Text>
+ </Button>
+ <Button small info bordered style={{marginLeft: 10}}
+ onPress={() => this.setState({...this.state, focus: null})}
+ >
+ <Text>Minimize</Text>
+ </Button>
+ </CardItem>
+ {this._renderTodos()}
+ </Card>
+ </Content>
+ </Row>
+ )
+ } else if(this.state.focus == 'poll') {
+ return (<Row size={8}>
+ <Content>
+ <Card>
+ <CardItem itemDivider>
+ <Title>Polls</Title>
+ <Button small info bordered style={{marginLeft: 20}} onPress={()=>this.props.navigation.navigate('CreatePoll', {
+ dispatcher: this.dispatcher})
+ }>
+ <Icon name='add'/>
+ </Button>
+ <Button small info bordered style={{marginLeft: 20}}
+ onPress={() => this.setState({...this.state, focus: null})}
+ ><Text>Minimize</Text></Button>
+ </CardItem>
+ {this._renderPolls()}
+ </Card>
+ </Content>
+ </Row>)
+ } else if (this.state.focus == 'chat') {
+ return (<Row size={8}>
+ <Content style={{marginTop: 5}}>
+ <Card>
+ <CardItem itemDivider onPress = {() => this.setState({...this.state, focus: 'chat'})}>
+ <Title>Chat Topics</Title>
+ <Button small info bordered style={{marginLeft: 20}} onPress={()=>this.props.navigation.navigate('CreateChat', {
+ dispatcher: this.chatDispatcher, event: this._getEvent()})
+ }>
+ <Icon name='add'/>
+ </Button>
+ <Button small info bordered style={{marginLeft: 20}}
+ onPress={() => this.setState({...this.state, focus: null})}
+ ><Text>Minimize</Text></Button>
+ </CardItem>
+ {this._renderChatTopics()}
+ </Card>
+ </Content>
+ </Row>)
+ }
+ return [
+ (<Row size={3}>
+ <Content>
+ <Card>
+ <CardItem itemDivider>
+ <Title>Event Info</Title>
+ </CardItem>
+ {this._renderEventInfo()}
+ </Card>
+ </Content>
+ </Row>
+ ),
+ (<Row size={4} style={{marginTop: 5}}>
+ <Content>
+ <Card>
+ <CardItem  onPress = {() => this.setState({...this.state, focus: 'todo'})} itemDivider>
+ <Title>TODOs</Title>
+ <Button small info bordered style={{marginLeft: 20}} onPress={()=>this.props.navigation.navigate('AddTodo', {
+ dispatcher: this.dispatcher})
+ }>
+ <Icon name='add'/>
+ </Button>
+ <Button small info bordered style={{marginLeft: 20}}
+ onPress={() => this.setState({...this.state, filterMyTodos:!this.state.filterMyTodos})}
+ >
+ <Text>{this.state.filterMyTodos ? 'Show All' : 'Filter Mines'}</Text>
+ </Button>
+ </CardItem>
+ {this._renderTodos()}
+ </Card>
+ </Content>
+ </Row>),
+ (<Row size={4}>
+ <Content style={{marginTop: 5}}>
+ <Card>
+ <CardItem itemDivider onPress = {() => this.setState({...this.state, focus: 'chat'})}>
+ <Title>Chat Topics</Title>
+ <Button small info bordered style={{marginLeft: 20}} onPress={()=>this.props.navigation.navigate('CreateChat', {
+ dispatcher: this.chatDispatcher, event: this._getEvent()})
+ }>
+ <Icon name='add'/>
+ </Button>
+ </CardItem>
+ {this._renderChatTopics()}
+ </Card>
+ </Content>
+ </Row>),
+ (<Row size={5}>
+ <Content style={{marginTop: 5}}>
+ <Card >
+ <CardItem onPress = {() => this.setState({...this.state, focus: 'poll'})} itemDivider>
+ <Title>Polls</Title>
+ <Button small info bordered style={{marginLeft: 20}} onPress={()=>this.props.navigation.navigate('CreatePoll', {
+ dispatcher: this.dispatcher})
+ }>
+ <Icon name='add'/>
+ </Button>
+ </CardItem>
+ {this._renderPolls()}
+ </Card>
+ </Content>
+ </Row>)
+ ]
+ }*/
 

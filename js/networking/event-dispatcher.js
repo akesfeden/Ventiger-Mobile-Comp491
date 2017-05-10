@@ -55,6 +55,21 @@ export default class EventDispatcher {
 			return false
 		}
 		this.store.dispatch(addTodo(this._id, res.data.addTodo))
+		reqres(`mutation {
+			createChat(token: "${this.token}", body: {eventId: "${this._id}", context: "t_${res.data.addTodo.description}"}) {
+				_id
+				context
+				messageInc
+				messages {
+					index
+					content
+					sentAt
+					sender
+				}
+			}
+		}`)
+			.then(r => console.log('Chat creation result for todo', r))
+			.catch(e => console.warn('Chat creation ', e))
 		return true
 	}
 

@@ -36,10 +36,11 @@ export default (state={}, action) => {
 				newMessages = [...(state[action.eventId][action.chatId].messages), action.data]
 			}
 			const keys = {}
+			console.log('New messages ', newMessages)
 			newMessages.forEach(m => {
 				keys[m.index] = m
 			})
-			let newMessages_ = Object.keys(keys).sort().map(k => newMessages[k])
+			let newMessages_ = Object.keys(keys).sort().map(k => keys[k])
 			return {
 				...state,
 				[action.eventId]: {
