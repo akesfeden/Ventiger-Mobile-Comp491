@@ -31,7 +31,8 @@ module.exports = {
         friendshipSettings: 'Friendship Settings',
         sendFriendRequest: 'Send Friend Request',
         unfriend: "Remove Friend",
-		newEvent: "New Event"
+        newEvent: "New Event",
+        search: "Search Event"
 	},
     events: {
         title: "Events",

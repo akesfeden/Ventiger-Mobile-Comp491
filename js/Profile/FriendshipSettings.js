@@ -1,14 +1,14 @@
-import React, { Component } from 'react'
-import { View, Text, TextInput } from 'react-native'
-import { Button } from 'react-native-elements'
+import React, {Component} from "react";
+import {View} from "react-native";
+import {Button} from "react-native-elements";
+import {gql, graphql} from "react-apollo";
 const strings = require('../strings').default.profile
-import { graphql, gql } from 'react-apollo'
 
 
 class FriendshipSettings extends Component {
 	static navigationOptions = {
-		title:
-			({state}) => {
+		title: ({navigation}) => {
+            const {state} = navigation
 			console.log('State', state)
 				return (state.params && state.params.name)
 			}

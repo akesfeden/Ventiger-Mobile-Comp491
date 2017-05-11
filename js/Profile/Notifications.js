@@ -10,12 +10,11 @@ const strings = require('../strings').default.notifications
 class Notifications extends Component {
     static navigationOptions = {
         title: strings.title,
-        tabBar: {
-            label: strings.label,
-            icon: ({tintColor}) => (
-                <VIcon name="ios-notifications" size={30} color={tintColor}/>
-            )
-        }
+        tabBarLabel: strings.label,
+        tabBarIcon: ({tintColor}) => (
+            <VIcon name="ios-notifications" size={30} color={tintColor}/>
+        )
+
     }
 
     constructor(props) {
@@ -190,13 +189,16 @@ class Notifications extends Component {
             })
     }
 
-
-    render() {
-        const respondedRequestCount = [this.state.friend.accepted, this.state.friend.rejected, this.state.event.accepted, this.state.event.rejected]
+    _findRespondedRequestCount() {
+        return [this.state.friend.accepted, this.state.friend.rejected, this.state.event.accepted, this.state.event.rejected]
             .map((obj) => Object.keys(obj).length)
             .reduce((acc, val) => acc + val, 0)
-        if (respondedRequestCount == 0 && loginCheck()) {
-            this.props.data.refetch()
+    }
+
+
+    render() {
+        if (this._findRespondedRequestCount() == 0 && loginCheck()) {
+            return null
         }
         /*
          <ListItem itemDivider><Text>Friend Requests</Text></ListItem>
@@ -224,6 +226,20 @@ class Notifications extends Component {
             </Container>
         )
     }
+
+    _tryRefetch() {
+        if (this._findRespondedRequestCount() == 0 && loginCheck()) {
+            this.props.data.refetch()
+        }
+    }
+
+    componentDidMount() {
+        this._tryRefetch()
+    }
+
+    componentDidUpdate() {
+        this._tryRefetch()
+    }
 }
 
 const getData = gql`
@@ -244,14 +260,14 @@ const getData = gql`
 	}
 `
 /*
-* eventInvitations{
+ * eventInvitations{
  _id
  title
  invitor{
  name
  }
  }
-* */
+ * */
 
 //export default graphql(getData)(Notifications)
 

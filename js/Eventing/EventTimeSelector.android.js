@@ -73,8 +73,9 @@ export default class EventTimeSelector extends EventTimeSelectorBase {
                     onPress={onPress}
                     background={TouchableNativeFeedback.SelectableBackground()}>
                     <View style={{alignSelf: 'center', width: '100%', height: 50, backgroundColor: '#33668822'}}>
-                        <Text
-                            style={{alignSelf: 'center', fontSize: 20, margin: 10}}>{text}</Text>
+                        <Text style={{alignSelf: 'center', fontSize: 20, margin: 10}}>
+                            {text}
+                        </Text>
                     </View>
                 </TouchableNativeFeedback>
             </View>

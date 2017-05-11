@@ -15,12 +15,10 @@ const demo = false
 class Friends extends Component {
 	static navigationOptions = {
         title: strings.title,
-		tabBar: {
-            label: strings.label,
-			icon: ({tintColor}) => (
+        tabBarLabel: strings.label,
+        tabBarIcon: ({tintColor}) => (
 				<Icon name="ios-people" size={30} color={tintColor} />
 			)
-		}
 	}
 
 	constructor(props) {
@@ -222,7 +220,7 @@ class Friends extends Component {
 		console.log("Friends data", this.props.data)
 		console.log("my contacts: ", this.props.contacts)
 		if (loginCheck()) {
-			this.props.data.refetch()
+            return null
 		}
 		return (
 			<Container>
@@ -238,6 +236,20 @@ class Friends extends Component {
 			</Container>
 		)
 	}
+
+    _tryRefetch() {
+        if (loginCheck()) {
+            this.props.data.refetch()
+        }
+    }
+
+    componentDidMount() {
+        this._tryRefetch()
+    }
+
+    componentDidUpdate() {
+        this._tryRefetch()
+    }
 }
 
 const getData = gql`

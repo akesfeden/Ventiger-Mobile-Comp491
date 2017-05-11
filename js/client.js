@@ -1,16 +1,16 @@
-import ApolloClient, { createNetworkInterface, toIdValue } from 'apollo-client'
-import token from './token'
+import ApolloClient, {createNetworkInterface} from "apollo-client";
+import token from "./token";
 // TODO: refactor api address
-const apiAddress = "http://localhost:3000/api/graphql"
+export const apiAddress = "http://10.0.2.2:3000/api/graphql"
 
 function dataIdFromObject(result) {
 	if (result._id && result.__typename) {
 		return result.__typename + '/' + result._id
 	}
 
-	if (result._id && !result.__typename) {
-		return result._id
-	}
+    // if (result._id && !result.__typename) {
+    // 	return result._id
+    // }
 	// console.log('result', result)
 	return null
 }
@@ -31,7 +31,7 @@ const client = new ApolloClient({
 	networkInterface,
 	addTypename: true,
 	dataIdFromObject: dataIdFromObject,
-	//shouldBatch: true
+    //shouldBatch: true
 	/*customResolvers: {
 	 Mutation: {
 	 login: (_, args) => toIdValue(dataIdFromObject({
@@ -40,5 +40,4 @@ const client = new ApolloClient({
 	 }
 	 }*/
 })
-
 export default client

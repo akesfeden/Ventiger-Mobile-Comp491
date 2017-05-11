@@ -1,4 +1,4 @@
-import { AsyncStorage } from 'react-native'
+import {AsyncStorage} from "react-native";
 
 const tokenName = 'mojo'
 const expiryDateName = 'maho'
@@ -21,7 +21,7 @@ class TokenStore {
 				this._expiryTime = await AsyncStorage.getItem(expiryDateName)
 				this._expiryTime = new Date(this._expiryTime)
 			} catch (e) {
-				console.error(e)
+                console.warn(e)
 				return null
 			}
 		}

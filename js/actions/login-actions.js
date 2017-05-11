@@ -1,5 +1,5 @@
-import token from '../token'
-import { LOGIN, LOGOUT } from './types'
+import token from "../token";
+import {LOGIN, LOGOUT} from "./types";
 
 export async function loginCheck() {
 	const something = await token().getToken()
@@ -13,7 +13,7 @@ export async function logout() {
 	let isLoggedIn = null
 	try {
 		await token().removeToken()
-		console.log("token", await token().getToken())
+        //console.log("token", await token().getToken())
 		isLoggedIn = false
 	} catch (e) {
 		console.error(e)
