@@ -10,7 +10,7 @@ import loginCheck from "../login-check";
 //import { List, ListView, ListItem } from 'react-native-elements'
 const Contacts = require('react-native-contacts')
 const strings = require('../strings').default.friends
-const demo = false
+const demo = true
 
 class Friends extends Component {
 	static navigationOptions = {
@@ -288,6 +288,7 @@ const FriendsWithData = compose(
 				contacts = []
 			}*/
 			return {
+				pollInterval: 30000,
 				variables: {
 					phones: contacts
 				}

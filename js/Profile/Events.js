@@ -170,7 +170,7 @@ class Events extends Component {
 	}
 
 	render() {
-		if (loginCheck() && this.numRefetch == 0) {
+		if (loginCheck()) {// && this.numRefetch == 0) {
 			this.props.data && this.props.data.refetch()
 			this.numRefetch++
 		}
