@@ -1,12 +1,15 @@
 import React, {Component} from "react";
 import {TextInput, View} from "react-native";
-import {Button} from "react-native-elements";
+import {Button, FormLabel, FormInput} from "react-native-elements";
 import styles from "../Login/styles";
 import {gql, graphql} from "react-apollo";
 const strings = require('../strings').default.passwordSettings
 
 class PasswordSettings extends Component {
 
+	static navigationOptions = {
+		title: 'Change Password',
+	}
 	constructor(props) {
 		super(props)
 		this.state = {
@@ -35,28 +38,24 @@ class PasswordSettings extends Component {
 	render() {
 		return (
 			<View>
-				<TextInput
-					placeholder={strings.oldPasswordPlaceholder}
+				<FormLabel>{strings.oldPasswordPlaceholder}</FormLabel>
+				<FormInput
 					onChangeText={(text) => this.setState({...this.state, oldPassword: text})}
-					style={styles.textInput}
 					autoFocus={true}
 					secureTextEntry={true}
 				/>
-
-				<TextInput
-					placeholder={strings.newPasswordPlaceholder}
+				<FormLabel>{strings.newPasswordPlaceholder}</FormLabel>
+				<FormInput
 					onChangeText={(text) => this.setState({...this.state, newPassword: text})}
-					style={styles.textInput}
 					secureTextEntry={true}
 				/>
-				<TextInput
-					placeholder={strings.repeatPasswordPlaceholder}
+				<FormLabel>{strings.repeatPasswordPlaceholder}</FormLabel>
+				<FormInput
 					onChangeText={(text) => this.setState({...this.state, repeatNewPassword: text})}
-					style={styles.textInput}
 					secureTextEntry={true}
 				/>
 				<Button
-					title={strings.updateTitle}
+					title={'Change Password'}
 					buttonStyle={{backgroundColor: '#ff4b48', marginTop:10}}
 					onPress={this._updatePassword.bind(this)}
 				/>

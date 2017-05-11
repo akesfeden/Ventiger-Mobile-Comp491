@@ -222,7 +222,11 @@ class Friends extends Component {
 		console.log("Friends data", this.props.data)
 		console.log("my contacts: ", this.props.contacts)
 		if (loginCheck()) {
-			this.props.data.refetch()
+			try {
+				this.props.data.refetch()
+			} catch (err) {
+				console.warn(err)
+			}
 		}
 		return (
 			<Container>

@@ -1,7 +1,6 @@
 import React, {Component} from "react";
 import {Text, TextInput, View} from "react-native";
-import {Button} from "react-native-elements";
-import styles from "../Login/styles";
+import {Button, FormLabel, FormInput} from "react-native-elements";
 import {compose, gql, graphql} from "react-apollo";
 import loginCheck from "../login-check";
 const strings = require('../strings').default.profileSettings
@@ -56,10 +55,9 @@ class ProfileSettings extends Component {
 		}
 		return (
 			<View>
-				<TextInput
-					placeholder={strings.namePlaceholder}
+				<FormLabel>{strings.namePlaceholder}</FormLabel>
+				<FormInput
 					onChangeText={(text) => this.setState({...this.state, name: text, nameEdited:this.state.nameEdited+1})}
-					style={styles.textInput}
 					autoFocus={true}
 					autoCapitalize={'words'}
 					defaultValue={this._getProfileData()}

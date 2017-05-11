@@ -196,12 +196,8 @@ class Notifications extends Component {
             .map((obj) => Object.keys(obj).length)
             .reduce((acc, val) => acc + val, 0)
         if (respondedRequestCount == 0 && loginCheck()) {
-            this.props.data.refetch()
+            this.props.data && this.props.data.refetch()
         }
-        /*
-         <ListItem itemDivider><Text>Friend Requests</Text></ListItem>
-         {this._renderFriends()}
-         * */
         return (
             <Container>
                 <Content>
