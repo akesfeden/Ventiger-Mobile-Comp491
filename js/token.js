@@ -12,6 +12,7 @@ class TokenStore {
 		const OFFSET = 1
 		expiryTime.setDate(expiryTime.getDate() + daysToExpiry - OFFSET)
 		AsyncStorage.setItem(tokenName, token)
+		console.log('expiryTime ', expiryTime)
 		AsyncStorage.setItem(expiryDateName, expiryTime)
 	}
 

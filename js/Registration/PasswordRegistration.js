@@ -15,6 +15,7 @@ from '../actions/registration-actions'
 import { connect } from 'react-redux'
 import { gql, graphql } from 'react-apollo'
 import strings from '../strings'
+import { FormLabel, FormInput } from 'react-native-elements'
 
 class PasswordRegistration extends Component {
 	static navigationOptions = {
@@ -77,21 +78,19 @@ class PasswordRegistration extends Component {
 
 	render() {
 		return (
-			<View style={styles.container}>
-				<TextInput placeholder={strings.registration.password}
-						   style={styles.textInput}
-						   secureTextEntry={true}
-						   onChangeText={this._handlePasswordEntry.bind(this)}
-						   autoFocus={true}
-						   onSubmitEditing={() => this.refs.Repeat.focus()}
-
+			<View>
+				<FormLabel>{strings.registration.password}</FormLabel>
+				<FormInput
+					secureTextEntry={true}
+					onChangeText={this._handlePasswordEntry.bind(this)}
+					autoFocus={true}
+					onSubmitEditing={() => this.refs.Repeat.focus()}
 				/>
-				<TextInput placeholder={strings.registration.repeatPassword}
-						   ref = "Repeat"
-						   secureTextEntry={true}
-						   style={styles.textInput}
-						   onChangeText={this._handleRepeatPasswordEntry.bind(this)}
-
+				<FormLabel>{strings.registration.repeatPassword}</FormLabel>
+				<FormInput
+					ref = "Repeat"
+					secureTextEntry={true}
+					onChangeText={this._handleRepeatPasswordEntry.bind(this)}
 				/>
 				{this._renderErrorMessage()}
 				<Next text={strings.registration.next}

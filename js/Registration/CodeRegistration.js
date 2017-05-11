@@ -7,6 +7,7 @@ import {connect} from "react-redux";
 import token from "../token";
 import {loginCheck} from "../actions/login-actions";
 import NextButton from "./Components/Next";
+import { FormLabel, FormInput } from 'react-native-elements'
 const strings = require('../strings').default.registration
 
 
@@ -26,7 +27,7 @@ class CodeRegistration extends Component {
 		/*this.completeAction = NavigationActions.reset({
 			index: 0,
 			actions: [
-				NavigationActions.navigate({routeName: 'Profile'})
+		 buttonStyle={{marginTop:10, backgroundColor: '#5990c3'}}	NavigationActions.navigate({routeName: 'Profile'})
 			]
 		})*/
 	}
@@ -61,7 +62,7 @@ class CodeRegistration extends Component {
 		}})
 			.then(async (res) => {
 				console.log(res)
-				await token().saveToken(res.data.sendValidationCode.token)
+				await token().saveToken(res.data.sendValidationCode.token, Number(res.data.sendValidationCode.daysToExpiry))
 				this.props.completeRegistration(res)
 				/*this.props.navigation.dispatch(
 					this.completeAction
@@ -74,10 +75,9 @@ class CodeRegistration extends Component {
 
 	render() {
 		return (
-			<View style={styles.container}>
-				<TextInput placeholder={strings.codeEntry}
-						   style={styles.textInput}
-						   onChangeText={this._handleTextChange.bind(this)}
+			<View>
+				<FormLabel>{strings.codeEntry}</FormLabel>
+				<FormInput onChangeText={this._handleTextChange.bind(this)}
 						   autoFocus={true}
 						   autoCapitalize={"none"}
 				/>

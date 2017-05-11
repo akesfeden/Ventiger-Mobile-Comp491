@@ -1,18 +1,16 @@
 import React, { Component, PropTypes } from 'react'
-import Button from 'react-native-button'
+//import Button from 'react-native-button'
 import styles from '../styles'
+import { Button } from 'react-native-elements'
 
 export default class Next extends Component {
 	render() {
 		return (
-			<Button containerStyle={styles.containerStyle}
-					containerStyleDisabled={styles.containerStyleDisabled}
-					style={styles.style}
-					styleDisabled={styles.style}
+			<Button title={this.props.text}
+					buttonStyle={{marginTop:10, backgroundColor: '#5990c3'}}
 					disabled={this.props.disabled}
-					onPress={this.props.onPress}>
-				{this.props.text}
-			</Button>
+					onPress={this.props.onPress}
+			/>
 		)
 	}
 }

@@ -3,7 +3,7 @@ import {
 	View,
 	TextInput
 } from 'react-native'
-import Button from 'react-native-button'
+//import Button from 'react-native-button'
 import styles from './styles'
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
@@ -12,6 +12,7 @@ import globalStrings from '../strings'
 import token from '../token'
 import { connect } from 'react-redux'
 import { loginCheck } from '../actions/login-actions'
+import { FormLabel, FormInput, Button } from 'react-native-elements'
 
 const strings = globalStrings.login
 
@@ -58,29 +59,26 @@ class Login extends Component {
 
 	render() {
 		return (
-			<View style={styles.container}>
-				<TextInput placeholder={strings.phone}
+			<View>
+				<FormLabel>{strings.phone}</FormLabel>
+				<FormInput
 						   onChangeText={(text) => this.setState({...this.state, phone: text})}
 						   value={this.state.phone}
-						   style={styles.textInput}
 						   keyboardType={'phone-pad'}
 						   autoFocus={true}
 				/>
-				<TextInput placeholder={strings.password}
-						   secureTextEntry={true}
+				<FormLabel>{strings.password}</FormLabel>
+				<FormInput secureTextEntry={true}
 						   onChangeText={(text) => {
 						   		this.setState({...this.state, password: text})
 						   }}
 						   value={this.state.password}
-						   style={styles.textInput}
 				/>
-				<Button containerStyle={styles.containerStyle}
-						containerStyleDisabled
-						style={styles.style}
-						styleDisabled={styles.style}
-						onPress={this._performLogin.bind(this)}>
-					{strings.title}
-				</Button>
+				<Button
+						buttonStyle={{margin: 20, backgroundColor: '#5990c3'}}
+						onPress={this._performLogin.bind(this)}
+						title = {strings.title}
+				/>
 			</View>
 		);
 	}

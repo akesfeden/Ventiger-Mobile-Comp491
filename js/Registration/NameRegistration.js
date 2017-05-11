@@ -8,6 +8,7 @@ import Next from './Components/Next'
 import styles from './styles'
 import { registerName } from '../actions/registration-actions'
 import { connect } from 'react-redux'
+import { FormLabel, FormInput } from 'react-native-elements'
 const strings = require('../strings').default.registration
 
 class NameRegistration extends Component {
@@ -30,10 +31,9 @@ class NameRegistration extends Component {
 
 	render() {
 		return (
-			<View style={styles.container}>
-				<TextInput placeholder={strings.name}
-						   style={styles.textInput}
-						   onChangeText={this._handleNameEntry.bind(this)}
+			<View>
+				<FormLabel>{strings.name}</FormLabel>
+				<FormInput onChangeText={this._handleNameEntry.bind(this)}
 						   autoFocus={true}
 						   autoCapitalize={'words'}
 				/>

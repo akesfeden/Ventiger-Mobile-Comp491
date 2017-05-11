@@ -14,6 +14,8 @@ import {
 } from '../actions/registration-actions'
 import Next from './Components/Next'
 import globalStrings from '../strings'
+import { FormLabel, FormInput } from 'react-native-elements'
+
 const strings = globalStrings.registration
 ////import { NavigationActions } from 'react-navigation'
 
@@ -96,12 +98,11 @@ class PhoneRegistration extends Component {
 		// console.log(this.props.onPhoneChange)
 
 		return (
-			<View style={styles.container}>
-				<TextInput placeholder={strings.phone}
-						   style={styles.textInput}
-						   keyboardType={'phone-pad'}
+			<View>
+				<FormLabel>{strings.phone}</FormLabel>
+				<FormInput keyboardType={'phone-pad'}
 						   onChangeText={this._handlePhoneChange.bind(this)}
-						   editable={this.state.editable}
+						   disabled={!this.state.editable}
 						   autoFocus={true}
 				/>
 				{ this._renderErrorText.bind(this)() }
@@ -114,6 +115,16 @@ class PhoneRegistration extends Component {
 	}
 }
 
+/*
+*
+ <TextInput placeholder={strings.phone}
+ style={styles.textInput}
+ keyboardType={'phone-pad'}
+ onChangeText={this._handlePhoneChange.bind(this)}
+ editable={this.state.editable}
+ autoFocus={true}
+ />
+* */
 
 PhoneRegistration.propTypes = {
 	data: PropTypes.shape({
