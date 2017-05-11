@@ -1,11 +1,13 @@
-import {applyMiddleware, combineReducers, createStore} from "redux";
-import logger from "redux-logger";
+import { createStore, combineReducers, applyMiddleware, compose } from 'redux'
+import logger from 'redux-logger'
 //import ApolloClient from 'apollo-client';
-import registrationReducer from "./reducers/registration";
-import promiseMiddleware from "redux-promise";
-import loginReducer from "./reducers/login";
-import thunk from "redux-thunk";
-import profileReducer from "./reducers/profile-reducer";
+import registrationReducer from './reducers/registration'
+import promiseMiddleware from 'redux-promise'
+import loginReducer from  './reducers/login'
+import thunk from 'redux-thunk'
+import profileReducer from './reducers/profile-reducer'
+import eventReducer from './reducers/event-reducer'
+import chatReducer from './reducers/chat-reducer'
 import searchReducer from "./reducers/search-reducer";
 
 //const client = new ApolloClient();
@@ -16,7 +18,9 @@ export default function (client) {
 			registration: registrationReducer,
 			profile: profileReducer,
 			apollo: client.reducer(),
-            search: searchReducer
+            search: searchReducer,
+			event: eventReducer,
+			chat: chatReducer
 		}),
 		{}, // initial state
 		//compose(

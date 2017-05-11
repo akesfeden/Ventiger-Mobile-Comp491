@@ -1,7 +1,7 @@
-const io = require('socket.io-client')
+const io = require('socket.io-client');
 
 class Socket {
-	static instance = null
+	static instance = null;
 	constructor() {
 		if (Socket.instance != null) {
 			throw Error('Singleton!')

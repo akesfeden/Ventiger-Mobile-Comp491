@@ -96,13 +96,13 @@ class Events extends Component {
         this.setState({...this.state, dateOffset: 0})
     }
 
-    _getEvents() {
-        return (
-            this.props.data &&
-            this.props.data.viewer &&
-            this.props.data.viewer.events
-        )
-    }
+	_getEvents() {
+		try {
+			return this.props.data.viewer.events
+		} catch (err) {
+			return []
+		}
+	}
 
     _renderSingleEvent(e, key, formattedEventTimeFunc) {
         let desc = ""
@@ -179,21 +179,26 @@ class Events extends Component {
             .map((e, i) => this._renderSingleEvent(e, i))
     }
 
-    render() {
-        console.log('AEVENTS', this.props)
-        if (loginCheck() && this.numRefetch == 0) {
-            return null
-        }
-        return (
-            <Container>
-                <Grid>
-                    <Row size={2}>
-                        <Card style={{marginBottom: 0, paddingBottom: 0}}>
-                            <CardItem>
-                                <Left>
-                                    <Button small warning onPress={this._onPrev.bind(this)}>
-                                        <Icon name='ios-arrow-back'/>
-                                    </Button>
+	componentWillReceiveProps(nextProps) {
+		console.log('Props ', nextProps)
+	}
+
+	render() {
+		if (loginCheck() && this.numRefetch == 0) {
+			this.props.data && this.props.data.refetch()
+			this.numRefetch++
+		}
+
+		return (
+			<Container>
+				<Grid>
+					<Row size={2}>
+						<Card style={{marginBottom:0, paddingBottom:0}}>
+							<CardItem>
+								<Left>
+									<Button small warning onPress={this._onPrev.bind(this)}>
+										<Icon name='ios-arrow-back'/>
+									</Button>
 
                                 </Left>
                                 <Text style={{marginRight: 10}}>
@@ -246,20 +251,7 @@ class Events extends Component {
         )
     }
 
-    _tryRefetch() {
-        if (loginCheck() && this.numRefetch == 0) {
-            this.props.data && this.props.data.refetch()
-            this.numRefetch++
-        }
-    }
 
-    componentDidMount() {
-        this._tryRefetch()
-    }
-
-    componentDidUpdate() {
-        this._tryRefetch()
-    }
 }
 
 const getData = gql`
@@ -281,5 +273,5 @@ const getData = gql`
 	}
 `
 
-export default graphql(getData, {options: {fetchPolicy: 'network-only'}})(Events)
+export default graphql(getData)(Events)
 
