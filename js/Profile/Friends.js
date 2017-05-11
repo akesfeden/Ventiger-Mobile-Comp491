@@ -288,7 +288,7 @@ const FriendsWithData = compose(
 				contacts = []
 			}*/
 			return {
-				pollInterval: 30000,
+				pollInterval: 60000,
 				variables: {
 					phones: contacts
 				}
