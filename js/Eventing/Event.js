@@ -324,7 +324,7 @@ class Event extends Component {
 			<Container>
 				<Grid>
 					<Row size={2}>
-						<Card style={{marginBottom:0, paddingBottom:0}}>
+						<Card style={{margin:0, paddingBottom:0}}>
 							<CardItem>
 								<Col size={1} >
 									<Image
